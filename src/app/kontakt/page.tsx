@@ -1,17 +1,7 @@
-"use client";
-import { useState } from "react";
-import { CheckCircle2, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { Footer, Header, PageHero } from "@/components/SiteChrome";
+import QuoteForm from "@/components/QuoteForm";
 export default function Page() {
-  const [sent, setSent] = useState(false);
-  function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    localStorage.setItem(
-      `mtponos-kontakt-${Date.now()}`,
-      JSON.stringify(Object.fromEntries(new FormData(e.currentTarget))),
-    );
-    setSent(true);
-  }
   return (
     <>
       <Header />
@@ -52,64 +42,9 @@ export default function Page() {
             </div>
           </div>
           <div id="upit" className="contact-form">
-            {sent ? (
-              <div className="success-inline">
-                <CheckCircle2 />
-                <h2>Upit je sačuvan.</h2>
-                <p>
-                  Ovo je prototip — podaci su sačuvani samo na ovom uređaju i
-                  nisu poslani kompaniji.
-                </p>
-                <button onClick={() => setSent(false)}>Novi upit</button>
-              </div>
-            ) : (
-              <>
-                <span className="eyebrow">UPIT ZA PONUDU</span>
-                <h2>Pošaljite nam osnovne informacije.</h2>
-                <form onSubmit={submit}>
-                  <label>
-                    Ime i prezime
-                    <input required name="ime" />
-                  </label>
-                  <div className="form-row">
-                    <label>
-                      Telefon
-                      <input required name="telefon" type="tel" />
-                    </label>
-                    <label>
-                      E-mail
-                      <input required name="email" type="email" />
-                    </label>
-                  </div>
-                  <label>
-                    Proizvod ili šifra
-                    <input
-                      name="proizvod"
-                      defaultValue={
-                        typeof window !== "undefined"
-                          ? (new URLSearchParams(window.location.search).get(
-                              "proizvod",
-                            ) ?? "")
-                          : ""
-                      }
-                    />
-                  </label>
-                  <label>
-                    Površina prostora
-                    <input name="povrsina" placeholder="npr. 28 m²" />
-                  </label>
-                  <label>
-                    Poruka
-                    <textarea name="poruka" rows={5} />
-                  </label>
-                  <label className="consent">
-                    <input type="checkbox" required />
-                    Saglasan/na sam da se podaci koriste radi odgovora na upit.
-                  </label>
-                  <button type="submit">Sačuvaj demo upit</button>
-                </form>
-              </>
-            )}
+            <span className="eyebrow">UPIT</span>
+            <h2>Pošaljite nam osnovne informacije.</h2>
+            <QuoteForm context="inquiry" />
           </div>
         </section>
       </main>

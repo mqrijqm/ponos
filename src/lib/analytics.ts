@@ -1,2 +1,2 @@
-export type AnalyticsEvent='visualizer_started'|'room_uploaded'|'room_selected'|'floor_area_confirmed'|'product_filtered'|'product_selected'|'comparison_started'|'calculator_completed'|'quote_started'|'quote_submitted'|'phone_clicked'|'location_clicked';
+export type AnalyticsEvent='visualizer_started'|'room_uploaded'|'room_selected'|'floor_area_confirmed'|'product_filtered'|'product_selected'|'comparison_started'|'calculator_opened'|'calculator_completed'|'quote_started'|'quote_submitted'|'phone_clicked'|'location_clicked';
 export function track(event:AnalyticsEvent,data:Record<string,unknown>={}){if(process.env.NODE_ENV==='development')console.info('[analytics placeholder]',event,data)}

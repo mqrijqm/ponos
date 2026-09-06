@@ -8,7 +8,7 @@ export default function ProductGrid({ items }: { items: CatalogItem[] }) {
       {items.map((p) => (
         <article className="catalog-card" key={p.code}>
           <Link
-            href={`/artikli/${encodeURIComponent(p.code)}`}
+            href={`/proizvodi/artikli/${encodeURIComponent(p.code)}`}
             className="catalog-image"
           >
             <Image
@@ -23,7 +23,7 @@ export default function ProductGrid({ items }: { items: CatalogItem[] }) {
             {p.brand} · {p.collection}
           </small>
           <h2>
-            <Link href={`/artikli/${encodeURIComponent(p.code)}`}>
+            <Link href={`/proizvodi/artikli/${encodeURIComponent(p.code)}`}>
               {p.name}
             </Link>
           </h2>
@@ -33,7 +33,7 @@ export default function ProductGrid({ items }: { items: CatalogItem[] }) {
           </p>
           <Link
             className="detail-link"
-            href={`/artikli/${encodeURIComponent(p.code)}`}
+            href={`/proizvodi/artikli/${encodeURIComponent(p.code)}`}
           >
             Detalji <ArrowRight size={15} />
           </Link>

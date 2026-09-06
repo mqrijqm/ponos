@@ -8,6 +8,60 @@ export type CatalogItem = {
   category: string;
   texture: number;
 };
+
+/* ------------------------------------------------------------------
+   CIJENE I PAKOVANJE
+
+   PAZNJA: vrijednosti ispod su PRIVREMENE (placeholder). Postavljene su
+   po kategoriji da bi kalkulator radio; nisu stvarne cijene MT PONOS-a.
+
+   Kad stignu pravi podaci:
+   - opsta pravila po kategoriji -> categoryPricing
+   - odstupanje za pojedinacni artikal -> pricingOverrides (kljuc je `code`)
+------------------------------------------------------------------- */
+export type Pricing = {
+  /** KM po jedinici (m2, odnosno duzni metar za lajsne) */
+  price: number;
+  /** m2 (ili duznih metara) po paketu */
+  packageCoverage: number;
+  unit: "m²" | "m¹";
+  /** da li kalkulator povrsine ima smisla za ovu kategoriju */
+  areaBased: boolean;
+};
+
+const categoryPricing: Record<string, Pricing> = {
+  laminati: { price: 24, packageCoverage: 2.22, unit: "m²", areaBased: true },
+  "spc-vinyl-decking": { price: 39, packageCoverage: 2.257, unit: "m²", areaBased: true },
+  parketi: { price: 72, packageCoverage: 3.03, unit: "m²", areaBased: true },
+  "zidni-paneli": { price: 85, packageCoverage: 1.69, unit: "m²", areaBased: true },
+  lajsne: { price: 9, packageCoverage: 2.4, unit: "m¹", areaBased: false },
+};
+
+const pricingOverrides: Record<string, Partial<Pricing>> = {
+  // "5953": { price: 26.5, packageCoverage: 2.13 },
+};
+
+const fallbackPricing: Pricing = {
+  price: 24,
+  packageCoverage: 2.22,
+  unit: "m²",
+  areaBased: true,
+};
+
+export function pricingFor(item: CatalogItem): Pricing {
+  const base = categoryPricing[item.category] ?? fallbackPricing;
+  return { ...base, ...pricingOverrides[item.code] };
+}
+
+/** Debljina utice na cijenu laminata — dok nema pravih podataka, gruba skala. */
+export function priceFor(item: CatalogItem): number {
+  const { price } = pricingFor(item);
+  const mm = Number.parseFloat((item.thickness ?? "").replace(",", "."));
+  if (item.category !== "laminati" || Number.isNaN(mm)) return price;
+  if (mm >= 12) return Math.round(price * 1.42 * 10) / 10;
+  if (mm >= 10) return Math.round(price * 1.2 * 10) / 10;
+  return price;
+}
 export const catalog: CatalogItem[] = [
   {
     code: "5953",

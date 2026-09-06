@@ -1,22 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowRight,
-  Calculator,
-  CheckCircle2,
-  Layers3,
-  MapPin,
-  Menu,
-  Phone,
-  Send,
-  ShieldCheck,
-  X,
-} from "lucide-react";
+import { Menu, ShoppingBasket, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Product, products } from "@/data/products";
+import { CatalogItem, categories } from "@/data/catalog";
+import Calculator, { calculableItems } from "./Calculator";
+import { useQuote } from "./QuoteProvider";
 import { track } from "@/lib/analytics";
-import { Footer } from "./SiteChrome";
+import { Footer, ProductsNav } from "./SiteChrome";
+import QualityPage from "./QualityPage";
 
 const heroDetails = [1, 2, 3, 4, 5].map(
   (number) => `/images/hero/detail-${number}.jpg`,
@@ -27,6 +19,41 @@ const heroDetailAlts = [
   "Profil višeslojne podne obloge",
   "Mat završna obrada drvenog poda",
   "Uzorci podnih obloga u različitim nijansama drveta",
+];
+
+type ProcessStep = {
+  number: string;
+  title: string;
+  description: string;
+  image?: string;
+  alt?: string;
+};
+
+const processSteps: ProcessStep[] = [
+  {
+    number: "1.",
+    title: "Izmjerite prostor",
+    description: "Izmjerite dužinu i širinu prostorije za informativni proračun.",
+    image: "/images/process/step-01-measure.png",
+    alt: "Osoba mjeri prostoriju sa drvenim podom",
+  },
+  {
+    number: "2.",
+    title: "Uporedite artikle",
+    description: "Pregledajte dekore, kolekcije i tehničke karakteristike.",
+  },
+  {
+    number: "3.",
+    title: "Zatražite ponudu",
+    description: "Pošaljite izabrani proizvod i potrebnu količinu našem prodajnom timu.",
+  },
+];
+
+const trustPoints = [
+  "Više od 20 godina iskustva",
+  "Veleprodaja i maloprodaja",
+  "Proizvodi dostupni na lageru",
+  "Stručno savjetovanje pri izboru",
 ];
 
 function HeroDetail({ slot, className = "" }: { slot: number; className?: string }) {
@@ -43,7 +70,7 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
           return (current + offset) % heroDetails.length;
         });
         rotate();
-      }, 2600 + slot * 470 + Math.random() * 1300);
+      }, 1100 + slot * 160 + Math.random() * 550);
     };
     rotate();
     return () => clearTimeout(timer);
@@ -58,7 +85,7 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.7, ease: "easeInOut" }}
+          transition={{ duration: 0.42, ease: "easeOut" }}
         >
           <Image
             src={heroDetails[imageIndex]}
@@ -75,68 +102,24 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
 export default function SitePage() {
   const [menu, setMenu] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(false);
+  const [activeProcessStep, setActiveProcessStep] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
-  const [quote, setQuote] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [selected, setSelected] = useState<Product>(products[0]);
-  const [length, setLength] = useState(5);
-  const [width, setWidth] = useState(4);
-  const [extra, setExtra] = useState(0);
-  const [waste, setWaste] = useState(10);
-  const calc = useMemo(() => {
-    const area = Math.max(0, length * width + extra),
-      total = area * (1 + waste / 100),
-      packages = Math.ceil(total / selected.packageCoverage);
-    return {
-      area,
-      total,
-      packages,
-      value: packages * selected.packageCoverage * selected.price,
-    };
-  }, [length, width, extra, waste, selected]);
-  useEffect(() => {
-    if (quote) {
-      document.body.style.overflow = "hidden";
-      track("quote_started");
-    } else document.body.style.overflow = "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [quote]);
+  const [calcItem, setCalcItem] = useState<CatalogItem>(calculableItems[0]);
+  const { openQuote } = useQuote();
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setHeaderVisible(!entry.isIntersecting);
-        if (entry.isIntersecting) setMenu(false);
+        const proslo = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        setHeaderVisible(proslo);
+        if (!proslo) setMenu(false);
       },
       { threshold: 0, rootMargin: "-80px 0px 0px 0px" },
     );
     observer.observe(hero);
     return () => observer.disconnect();
   }, []);
-  function openQuote(p = selected) {
-    setSelected(p);
-    setSuccess(false);
-    setQuote(true);
-  }
-  function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    localStorage.setItem(
-      `mtponos-upit-${Date.now()}`,
-      JSON.stringify({
-        ...data,
-        product: selected.code,
-        area: calc.total,
-        packages: calc.packages,
-        requestId: `MTP-${Date.now().toString(36).toUpperCase()}`,
-      }),
-    );
-    track("quote_submitted");
-    setSuccess(true);
-  }
   return (
     <>
       <header
@@ -153,14 +136,13 @@ export default function SitePage() {
             src="/logo-ponos.svg"
             alt="MT PONOS — podne obloge"
             width={300}
-            height={83}
+            height={79}
             priority
           />
         </a>
         <nav>
+          <ProductsNav />
           {[
-            ["Naslovna", "/"],
-            ["Podovi", "/proizvodi"],
             ["Vizualizator", "/vizualizator"],
             ["O nama", "/o-nama"],
             ["Savjeti", "/savjeti"],
@@ -171,15 +153,12 @@ export default function SitePage() {
             </a>
           ))}
         </nav>
-        <a
-          className="phone"
-          href="tel:+38751386386"
-          onClick={() => track("phone_clicked")}
+        <button
+          className="header-cta header-cta-svg"
+          aria-label="Vidi ponudu"
+          onClick={() => openQuote()}
         >
-          <Phone size={16} /> +387 51 386 386
-        </a>
-        <button className="header-cta" onClick={() => openQuote()}>
-          Zatraži ponudu
+          <Image src="/cta-dugme.svg" alt="" width={340} height={104} priority />
         </button>
         <button
           className="menu"
@@ -190,9 +169,18 @@ export default function SitePage() {
         </button>
         {menu && (
           <div className="mobile-nav">
+            <a onClick={() => setMenu(false)} href="/proizvodi">Sva ponuda</a>
+            {categories.map((c) => (
+              <a
+                key={c.slug}
+                className="mobile-sub"
+                onClick={() => setMenu(false)}
+                href={`/proizvodi/${c.slug}`}
+              >
+                {c.title}
+              </a>
+            ))}
             {[
-              ["Naslovna", "/"],
-              ["Podovi", "/proizvodi"],
               ["Vizualizator", "/vizualizator"],
               ["O nama", "/o-nama"],
               ["Savjeti", "/savjeti"],
@@ -206,6 +194,10 @@ export default function SitePage() {
         )}
       </header>
       <main id="top">
+        {/* Rezervisano za novi hero — sadrzaj dolazi kasnije. */}
+        <section className="placeholder-section" aria-hidden="true" data-placeholder="1" />
+        {/* Druga sekcija u nizu, jos neodredjena. */}
+        <section className="placeholder-section" aria-hidden="true" data-placeholder="2" />
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />
@@ -219,22 +211,13 @@ export default function SitePage() {
               priority
               sizes="100vw"
             />
-            <a className="home-hero-logo" href="#top" aria-label="MT PONOS — početna">
-              <Image
-                src="/logo-ponos.svg?hero=svgg-20260904"
-                alt="PONOS — podne obloge"
-                width={300}
-                height={83}
-                priority
-                unoptimized
-              />
-            </a>
             <div className="home-hero-copy">
               <strong>KOLEKCIJA PODOVA</strong>
-              <b>laminati • parketi • vinil</b>
               <p>Materijali birani za dugotrajne, skladne i tople prostore.</p>
             </div>
-            <span className="home-hero-year">2026</span>
+            <span className="home-hero-basket" aria-label="Korpica">
+              <ShoppingBasket size={22} strokeWidth={1.6} />
+            </span>
           </div>
           <div className="home-hero-panel">
             <div className="detail-strip">
@@ -248,7 +231,10 @@ export default function SitePage() {
                 <HeroDetail slot={4} />
               </div>
             </div>
-            <h1 className="home-hero-title"><span>PONOS</span><b>PROSTORA</b></h1>
+            <h1 className="home-hero-title">
+              <span>PONOS</span>
+              <b>PROSTORA</b>
+            </h1>
           </div>
         </section>
         <section id="kalkulator" className="calculator-section">
@@ -260,140 +246,83 @@ export default function SitePage() {
               paketa i informativnu vrijednost materijala za trenutno odabrani
               pod.
             </p>
-            <div className="calc-product">
-              <Image
-                src={selected.texture}
-                alt="Tekstura poda u kalkulatoru"
-                width={120}
-                height={120}
-              />
-              <span>
-                <small>{selected.manufacturer}</small>
-                <b>{selected.name}</b>
-                <em>
-                  {selected.code} · {selected.packageCoverage} m²/paket
-                </em>
-              </span>
-            </div>
           </div>
-          <div className="calculator">
-            <div className="calc-inputs">
-              <label>
-                Dužina prostorije (m)
-                <input
-                  min="0"
-                  step="0.1"
-                  type="number"
-                  value={length}
-                  onChange={(e) => setLength(+e.target.value)}
-                />
-              </label>
-              <label>
-                Širina prostorije (m)
-                <input
-                  min="0"
-                  step="0.1"
-                  type="number"
-                  value={width}
-                  onChange={(e) => setWidth(+e.target.value)}
-                />
-              </label>
-              <label>
-                Dodatna površina (m²)
-                <input
-                  min="0"
-                  step="0.1"
-                  type="number"
-                  value={extra}
-                  onChange={(e) => setExtra(+e.target.value)}
-                />
-              </label>
-              <fieldset>
-                <legend>Otpad / rezerva</legend>
-                {[5, 10, 15].map((n) => (
-                  <label key={n}>
-                    <input
-                      type="radio"
-                      name="waste"
-                      checked={waste === n}
-                      onChange={() => setWaste(n)}
-                    />
-                    {n}%
-                  </label>
-                ))}
-              </fieldset>
-            </div>
-            <div className="calc-results">
-              <span>
-                Površina prostorije <b>{calc.area.toFixed(2)} m²</b>
-              </span>
-              <span>
-                Potrebno sa rezervom <b>{calc.total.toFixed(2)} m²</b>
-              </span>
-              <span>
-                Broj paketa <b>{calc.packages}</b>
-              </span>
-              <span>
-                Informativna vrijednost <b>{calc.value.toFixed(2)} KM</b>
-              </span>
-            </div>
-            <p>
-              Proračun je informativnog karaktera. Konačnu količinu potrebno je
-              potvrditi prije narudžbe.
-            </p>
-            <button
-              onClick={() => {
-                track("calculator_completed");
-                openQuote();
-              }}
-            >
-              Zatraži ponudu sa proračunom <ArrowRight size={17} />
-            </button>
-          </div>
+          <Calculator
+            item={calcItem}
+            showPicker
+            onItemChange={setCalcItem}
+            onRequestQuote={(result) => {
+              track("calculator_completed");
+              openQuote(calcItem, result);
+            }}
+          />
         </section>
-        <section className="benefits">
-          <div>
-            <span className="eyebrow">OD IDEJE DO ODLUKE</span>
-            <h2>
-              Lakši izbor. <em>Sigurnija odluka.</em>
-            </h2>
+        <section className="how process-section">
+          <div className="how-heading">
+            <span className="eyebrow">KAKO FUNKCIONIŠE</span>
           </div>
-          <div className="benefit-grid">
-            {[
-              [Layers3, "Uporedite vrste, boje i dekore"],
-              [ShieldCheck, "Dobijte stručnu preporuku"],
-              [Calculator, "Izračunajte potrebnu količinu"],
-              [Send, "Pošaljite kompletan upit prodajnom timu"],
-            ].map(([Icon, t], i) => {
-              const C = Icon as typeof Layers3;
+          <div
+            className="process-accordion"
+            style={{
+              gridTemplateColumns: processSteps
+                .map((_, index) => (index === activeProcessStep ? "1.7fr" : ".65fr"))
+                .join(" "),
+            }}
+          >
+            {processSteps.map((step, index) => {
+              const isActive = index === activeProcessStep;
               return (
-                <article key={String(t)}>
-                  <span>0{i + 1}</span>
-                  <C />
-                  <h3>{String(t)}</h3>
-                </article>
+                <motion.button
+                  key={step.number}
+                  type="button"
+                  className={`process-card${isActive ? " is-active" : ""}`}
+                  aria-expanded={isActive}
+                  onClick={() => setActiveProcessStep(index)}
+                  onFocus={() => setActiveProcessStep(index)}
+                  onMouseEnter={() => setActiveProcessStep(index)}
+                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {step.image && (
+                    <span className="process-card-media">
+                      <Image
+                        src={step.image}
+                        alt={step.alt ?? ""}
+                        fill
+                        sizes="(max-width: 767px) 100vw, 38vw"
+                        priority={index === 0}
+                      />
+                    </span>
+                  )}
+                  <span className="process-card-copy">
+                    <b>{step.number}</b>
+                    <strong>{step.title}</strong>
+                    <span className="process-card-description">{step.description}</span>
+                    <span className="process-card-indicator" aria-hidden="true">
+                      <Image src="/logo-ponos-mark.svg" alt="" width={32} height={32} />
+                    </span>
+                  </span>
+                </motion.button>
               );
             })}
           </div>
         </section>
-        <section className="how">
+        <section className="how legacy-how">
           <div>
             <span className="eyebrow">KAKO FUNKCIONIŠE</span>
-            <h2>Tri jednostavna koraka</h2>
           </div>
           {[
             [
-              "01",
+              "1.",
               "Izmjerite prostor",
               "Izmjerite dužinu i širinu prostorije za informativni proračun.",
             ],
             [
-              "02",
+              "2.",
               "Uporedite artikle",
               "Pregledajte dekore, kolekcije i tehničke karakteristike.",
             ],
             [
-              "03",
+              "3.",
               "Zatražite ponudu",
               "Pošaljite izabrani proizvod i potrebnu količinu našem prodajnom timu.",
             ],
@@ -406,213 +335,22 @@ export default function SitePage() {
           ))}
         </section>
         <section className="trust">
-          <ShieldCheck />
-          <h2>Podovi se biraju za godine koje dolaze.</h2>
-          <div>
-            {[
-              "Više od 20 godina iskustva",
-              "Veleprodaja i maloprodaja",
-              "Proizvodi dostupni na lageru",
-              "Stručno savjetovanje pri izboru",
-            ].map((x) => (
-              <span key={x}>
-                <CheckCircle2 size={18} />
-                {x}
-              </span>
-            ))}
+          <div className="trust-inner">
+            <span className="eyebrow">ZAŠTO MT PONOS</span>
+            <h2>Podovi se biraju za godine koje dolaze.</h2>
+            <ul className="trust-list">
+              {trustPoints.map((point, index) => (
+                <li key={point}>
+                  <span>{`0${index + 1}`}</span>
+                  <p>{point}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
-        <section id="kontakt" className="contact">
-          <div>
-            <span className="eyebrow">KONTAKT I LOKACIJE</span>
-            <h2>Posjetite nas u Banjoj Luci.</h2>
-            <p>
-              Za provjeru dostupnosti, savjet pri izboru ili ponudu — javite nam
-              se ili donesite mjere u jednu od naših poslovnica.
-            </p>
-            <a href="mailto:info@mtponos.com">info@mtponos.com</a>
-            <div className="contact-actions">
-              <a href="tel:+38751386386" onClick={() => track("phone_clicked")}>
-                <Phone size={17} /> Pozovite nas
-              </a>
-              <button onClick={() => openQuote()}>
-                <Send size={17} /> Pošaljite upit
-              </button>
-            </div>
-          </div>
-          <div className="locations">
-            <article>
-              <MapPin />
-              <div>
-                <small>Sjedište, veleprodaja i maloprodaja</small>
-                <h3>Put srpskih branilaca 47</h3>
-                <p>
-                  Derviši, Banja Luka
-                  <br />
-                  +387 51 386 380
-                  <br />
-                  +387 51 386 386
-                </p>
-                <a
-                  target="_blank"
-                  href="https://maps.google.com/?q=Put+srpskih+branilaca+47+Banja+Luka"
-                  onClick={() => track("location_clicked")}
-                >
-                  Otvori lokaciju <ArrowRight size={15} />
-                </a>
-              </div>
-            </article>
-            <article>
-              <MapPin />
-              <div>
-                <small>Poslovnica Lazarevo</small>
-                <h3>Branka Popovića 41</h3>
-                <p>
-                  Banja Luka
-                  <br />
-                  +387 51 370 330
-                </p>
-                <a
-                  target="_blank"
-                  href="https://maps.google.com/?q=Branka+Popovica+41+Banja+Luka"
-                  onClick={() => track("location_clicked")}
-                >
-                  Otvori lokaciju <ArrowRight size={15} />
-                </a>
-              </div>
-            </article>
-            <div className="hours">
-              <b>Radno vrijeme</b>
-              <span>Ponedjeljak–petak: 08:00–19:00</span>
-              <span>Subota: 08:00–16:00</span>
-              <span>Nedjelja: zatvoreno</span>
-            </div>
-          </div>
-        </section>
+        <QualityPage />
       </main>
       <Footer />
-      <AnimatePresence>
-        {quote && (
-          <motion.div
-            className="modal-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onMouseDown={(e) => e.target === e.currentTarget && setQuote(false)}
-          >
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="quote-title"
-              className="quote-modal"
-              initial={{ x: 40, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 40, opacity: 0 }}
-            >
-              <button
-                className="modal-close"
-                aria-label="Zatvori upit"
-                onClick={() => setQuote(false)}
-              >
-                <X />
-              </button>
-              {success ? (
-                <div className="success">
-                  <CheckCircle2 />
-                  <span>UPIT JE SAČUVAN</span>
-                  <h2>Hvala — podaci su spremni.</h2>
-                  <p>
-                    Ovo je prototip: upit je sačuvan samo lokalno na vašem
-                    uređaju i nije poslan prodajnom timu.
-                  </p>
-                  <button onClick={() => setQuote(false)}>Zatvori</button>
-                </div>
-              ) : (
-                <>
-                  <span className="eyebrow">PERSONALIZOVANA PONUDA</span>
-                  <h2 id="quote-title">Recite nam šta vam je potrebno.</h2>
-                  <p>
-                    Podaci se u ovoj demo verziji čuvaju samo lokalno. Nema
-                    slanja e-maila bez povezanog backend sistema.
-                  </p>
-                  <form onSubmit={submit}>
-                    <label>
-                      Ime i prezime
-                      <input required name="ime" autoFocus />
-                    </label>
-                    <div className="form-row">
-                      <label>
-                        Telefon
-                        <input required name="telefon" type="tel" />
-                      </label>
-                      <label>
-                        E-mail
-                        <input required name="email" type="email" />
-                      </label>
-                    </div>
-                    <div className="form-row">
-                      <label>
-                        Grad
-                        <input name="grad" defaultValue="Banja Luka" />
-                      </label>
-                      <label>
-                        Površina prostorije
-                        <input
-                          name="povrsina"
-                          value={`${calc.total.toFixed(2)} m²`}
-                          readOnly
-                        />
-                      </label>
-                    </div>
-                    <label>
-                      Odabrani proizvod
-                      <input
-                        name="proizvod"
-                        value={`${selected.name} (${selected.code})`}
-                        readOnly
-                      />
-                    </label>
-                    <label>
-                      Potrebna količina
-                      <input
-                        name="kolicina"
-                        value={`${calc.packages} paketa / ${(calc.packages * selected.packageCoverage).toFixed(2)} m²`}
-                        readOnly
-                      />
-                    </label>
-                    <label>
-                      Poruka
-                      <textarea name="poruka" rows={3} />
-                    </label>
-                    <fieldset>
-                      <legend>Preferirani način kontakta</legend>
-                      {["Telefon", "Viber", "E-mail"].map((x) => (
-                        <label key={x}>
-                          <input
-                            type="radio"
-                            name="kontakt"
-                            value={x}
-                            defaultChecked={x === "Telefon"}
-                          />
-                          {x}
-                        </label>
-                      ))}
-                    </fieldset>
-                    <label className="consent">
-                      <input required type="checkbox" name="privatnost" />
-                      Saglasan/na sam da MT PONOS koristi ove podatke isključivo
-                      radi odgovora na upit.
-                    </label>
-                    <button type="submit">
-                      Sačuvaj demo upit <ArrowRight size={17} />
-                    </button>
-                  </form>
-                </>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

@@ -1,6 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Menu, Phone } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu } from "lucide-react";
+import { categories } from "@/data/catalog";
+import QuoteCta from "./QuoteCta";
+
+/** Padajuci meni za "Proizvodi" — bez JS-a, otvara se na hover i na fokus. */
+export function ProductsNav() {
+  return (
+    <div className="nav-dropdown">
+      <Link href="/proizvodi">
+        Proizvodi <ChevronDown size={13} aria-hidden="true" />
+      </Link>
+      <div className="nav-dropdown-panel">
+        <Link href="/proizvodi">Sva ponuda</Link>
+        {categories.map((c) => (
+          <Link key={c.slug} href={`/proizvodi/${c.slug}`}>
+            {c.title}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 export function Wordmark({ light = false }: { light?: boolean }) {
   return (
     <Link
@@ -9,10 +30,10 @@ export function Wordmark({ light = false }: { light?: boolean }) {
       aria-label="MT PONOS — početna"
     >
       <Image
-        src="/logo-ponos.svg"
+        src={light ? "/logo-ponos-light.svg" : "/logo-ponos.svg"}
         alt="MT PONOS — podne obloge"
         width={300}
-        height={83}
+        height={79}
         priority
       />
     </Link>
@@ -23,25 +44,26 @@ export function Header() {
     <header className="site-header">
       <Wordmark />
       <nav>
-        <Link href="/">Naslovna</Link>
-        <Link href="/proizvodi">Proizvodi</Link>
+        <ProductsNav />
         <Link href="/vizualizator">Vizualizator</Link>
         <Link href="/o-nama">O nama</Link>
         <Link href="/savjeti">Savjeti</Link>
         <Link href="/kontakt">Kontakt</Link>
       </nav>
-      <a className="phone" href="tel:+38751386386">
-        <Phone size={16} /> +387 51 386 386
-      </a>
-      <Link className="header-cta" href="/kontakt#upit">
-        Zatraži ponudu
-      </Link>
+      <QuoteCta className="header-cta header-cta-svg" label="Vidi ponudu">
+        <Image src="/cta-dugme.svg" alt="" width={340} height={104} priority />
+      </QuoteCta>
       <details className="mobile-menu">
         <summary aria-label="Otvori meni">
           <Menu />
         </summary>
         <div>
-          <Link href="/proizvodi">Proizvodi</Link>
+          <Link href="/proizvodi">Sva ponuda</Link>
+          {categories.map((c) => (
+            <Link key={c.slug} href={`/proizvodi/${c.slug}`} className="mobile-sub">
+              {c.title}
+            </Link>
+          ))}
           <Link href="/vizualizator">Vizualizator</Link>
           <Link href="/o-nama">O nama</Link>
           <Link href="/savjeti">Savjeti</Link>
@@ -51,7 +73,7 @@ export function Header() {
     </header>
   );
 }
-export function Footer() {
+function LegacyFooter() {
   return (
     <footer className="site-footer">
       <nav className="footer-primary" aria-label="Navigacija u podnožju">
@@ -79,6 +101,38 @@ export function Footer() {
       <small className="footer-credit">
         Koncept i izrada Studio BLink
       </small>
+    </footer>
+  );
+}
+export function Footer() {
+  return (
+    <footer className="site-footer">
+      <div className="footer-main">
+        <nav className="footer-nav" aria-label="Navigacija u podnožju">
+          <Link href="/proizvodi">Proizvodi</Link>
+          <Link href="/o-nama">O nama</Link>
+          <Link href="/savjeti">Savjeti</Link>
+          <Link href="/vizualizator">Vizualizator</Link>
+          <Link href="/kontakt">Kontakt</Link>
+        </nav>
+        <div className="footer-brand-column">
+          <Wordmark light />
+          <p>MT Ponos d.o.o.<br />Banja Luka, RS</p>
+        </div>
+        <address className="footer-contact-column">
+          <span className="footer-contact-eyebrow">KONTAKT</span>
+          <a className="footer-phone" href="tel:+38751386386">+387 51 386 386</a>
+          <a className="footer-email" href="mailto:info@mtponos.com">info@mtponos.com</a>
+          <div className="footer-hours">
+            <span>Pon–pet: 08:00–19:00</span>
+            <span>Subota: 08:00–16:00</span>
+          </div>
+        </address>
+      </div>
+      <div className="footer-bottom">
+        <small>© 2026 MT PONOS. Sva prava zadržana.</small>
+        <small>Koncept i izrada Studio BLink</small>
+      </div>
     </footer>
   );
 }

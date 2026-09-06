@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
-import { Archivo, Bodoni_Moda, Manrope, Newsreader } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-newsreader",
-});
-const bodoni = Bodoni_Moda({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["italic"],
-  variable: "--font-bodoni",
-});
-const archivo = Archivo({
-  subsets: ["latin"],
-  weight: ["700"],
-  variable: "--font-archivo",
+import QuoteProvider from "@/components/QuoteProvider";
+// Jedini font koji se ucitava. Sve sto je bilo sans ide na Arial (sistemski,
+// nista se ne skida); Lora nosi serif/naglasena mjesta - vidi globals.css.
+const lora = localFont({
+  src: [
+    { path: "../fonts/Lora-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Lora-Italic.woff2", weight: "400", style: "italic" },
+    { path: "../fonts/Lora-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../fonts/Lora-BoldItalic.woff2", weight: "700", style: "italic" },
+  ],
+  display: "swap",
+  variable: "--font-lora",
 });
 export const metadata: Metadata = {
   metadataBase: new URL("https://mt-ponos.vercel.app"),
@@ -25,9 +22,9 @@ export const metadata: Metadata = {
     "Pregledajte laminate, parkete, SPC Vinyl i druge podne obloge. Izračunajte potrebnu količinu i zatražite ponudu MT PONOS u Banjoj Luci.",
   alternates: { canonical: "/" },
   icons: {
-    icon: "/logo-ponos.svg",
-    shortcut: "/logo-ponos.svg",
-    apple: "/logo-ponos.svg",
+    icon: "/logo-ponos-mark.svg",
+    shortcut: "/logo-ponos-mark.svg",
+    apple: "/logo-ponos-mark.svg",
   },
   openGraph: {
     title: "Podne obloge i laminati | MT PONOS Banja Luka",
@@ -45,8 +42,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <body className={`${manrope.variable} ${newsreader.variable} ${bodoni.variable} ${archivo.variable}`}>
-        <SmoothScroll>{children}</SmoothScroll>
+      <body className={lora.variable}>
+        <QuoteProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+        </QuoteProvider>
       </body>
     </html>
   );

@@ -1,0 +1,68 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { ArrowRight, ChevronDown } from "lucide-react";
+
+const qualityImages = {
+  clickLock: "/images/quality/quality-click-lock-wide.webp",
+  authentic: "/images/quality/quality-authentic-decor.webp",
+  precision: "/images/quality/quality-precision-fit.webp",
+  resistance: "/images/quality/quality-resistance-room.webp",
+  maintenance: "/images/quality/quality-easy-maintenance.webp",
+  longLife: "/images/quality/quality-long-life.webp",
+  wear: "/images/quality/quality-wear-layer.webp",
+  core: "/images/quality/quality-stable-core.webp",
+  materials: "/images/quality/quality-selected-materials.webp",
+  interior: "/images/quality/quality-main-interior.webp",
+};
+
+
+const accordionItems = [
+  { title: "Provjereni proizvođači", copy: "U ponudi okupljamo kolekcije proizvođača poznatih po pouzdanoj izradi, stabilnim materijalima i dosljednom kvalitetu završne obrade." },
+  { title: "Otpornost i dugovječnost", copy: "Pouzdane kolekcije za domove i poslovne prostore, odabrane za svakodnevno korištenje i dug vijek trajanja.", stat: "20+", statLabel: "godina iskustva", image: qualityImages.clickLock },
+  { title: "Stručna podrška", copy: "Pomažemo pri izboru dekora, klase otpornosti, debljine i potrebne količine poda za konkretan prostor." },
+];
+
+export function QualityAccordionSection() {
+  const [open, setOpen] = useState(1);
+  return (
+    <section className="quality-section quality-accordion" aria-labelledby="quality-intro-title">
+      <div className="quality-intro-grid">
+        <div className="quality-side-note"><span>1996 — DANAS</span><small>ISKUSTVO U PODNIM OBLOGAMA</small></div>
+        <div className="quality-intro-content">
+          <span className="quality-pill"><i /> VIŠE O KVALITETU</span>
+          <h2 id="quality-intro-title">Kvalitet poda počinje od materijala,<br /><em>završava se osjećajem doma.</em></h2>
+          <p>Pažljivo biramo kolekcije koje spajaju trajnost, preciznu izradu i bezvremenski izgled.</p>
+        </div>
+      </div>
+      <div className="quality-accordion-list">
+            {accordionItems.map((item, index) => {
+              const isOpen = open === index;
+              const id = `quality-panel-${index}`;
+              return <div className={`quality-accordion-item${isOpen ? " is-open" : ""}`} key={item.title}>
+                <button className="quality-accordion-trigger" aria-expanded={isOpen} aria-controls={id} onClick={() => setOpen(isOpen ? -1 : index)}>
+                  <span className="quality-number">0{index + 1}</span><span className="quality-trigger-copy"><strong>{item.title}</strong></span><ChevronDown aria-hidden="true" />
+                </button>
+                <div className="quality-accordion-panel" id={id} role="region" aria-hidden={!isOpen}>
+                  <div className="quality-panel-inner">
+                    {item.image && <Image src={item.image} alt="Detalj preciznog click-lock spoja podnih dasaka" width={620} height={460} />}
+                    <div className="quality-panel-copy">{item.stat && <div className="quality-stat"><b>{item.stat}</b><span>{item.statLabel}</span></div>}<p>{item.copy}</p></div>
+                    {item.image && <Link className="quality-outline-link" href="/proizvodi">Istražite kolekcije <ArrowRight size={16} /></Link>}
+                  </div>
+                </div>
+              </div>;
+            })}
+      </div>
+    </section>
+  );
+}
+
+const features = [[qualityImages.authentic, "Autentični dekori"], [qualityImages.precision, "Precizno uklapanje"], [qualityImages.resistance, "Visoka otpornost"], [qualityImages.maintenance, "Lako održavanje"], [qualityImages.longLife, "Dug vijek trajanja"]] as const;
+export function QualityFeatureStrip() {
+  return <section className="quality-section quality-features" aria-labelledby="quality-features-title"><div className="quality-centered-heading"><span className="quality-pill"><i /> KVALITET U SVAKOM DETALJU</span><h2 id="quality-features-title">Biramo podove koji prostoru daju karakter,<br /><em>a svakodnevici sigurnost i trajnost.</em></h2></div><div className="quality-feature-row">{features.map(([src, title]) => <figure key={title}><div className="quality-feature-image"><Image src={src} alt={title} width={600} height={750} loading="lazy" /></div><figcaption>{title}</figcaption></figure>)}</div></section>;
+}
+
+const standards = [[qualityImages.wear, "Otpornost na habanje", "Detalj površine i ruba laminata"], [qualityImages.core, "Stabilna konstrukcija", "Presjek naslaganih podnih dasaka"], [qualityImages.materials, "Pouzdano porijeklo", "Tri odabrana uzorka poda"]] as const;
+export default function QualityPage() { return <main className="quality-page"><QualityAccordionSection /><QualityFeatureStrip /></main>; }

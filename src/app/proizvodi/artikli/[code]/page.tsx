@@ -2,8 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer, Header } from "@/components/SiteChrome";
-import { catalog, productImage } from "@/data/catalog";
+import { catalog, categories, productImage, pricingFor } from "@/data/catalog";
 import ProductGrid from "@/components/ProductGrid";
+import { Ponuda2Gate } from "@/components/Ponuda2Gate";
+import CalculatorCta from "@/components/CalculatorCta";
+import QuoteCta from "@/components/QuoteCta";
 export function generateStaticParams() {
   return catalog.map((p) => ({ code: p.code }));
 }
@@ -29,6 +32,7 @@ export default async function Page({
   const { code } = await params;
   const p = catalog.find((x) => x.code === decodeURIComponent(code));
   if (!p) notFound();
+  const category = categories.find((c) => c.slug === p.category);
   const related = catalog
     .filter((x) => x.category === p.category && x.code !== p.code)
     .slice(0, 4);
@@ -50,7 +54,7 @@ export default async function Page({
           <div className="product-info">
             <div className="crumb">
               <Link href="/proizvodi">Proizvodi</Link> /{" "}
-              <Link href={`/proizvodi/${p.category}`}>{p.category}</Link>
+              <Link href={`/proizvodi/${p.category}`}>{category?.title ?? p.category}</Link>
             </div>
             <span className="eyebrow">{p.brand}</span>
             <h1>{p.name}</h1>
@@ -77,15 +81,19 @@ export default async function Page({
               stranice.
             </p>
             <div className="product-actions">
-              <Link
-                className="primary"
-                href={`/kontakt?proizvod=${encodeURIComponent(p.name + " " + p.code)}#upit`}
-              >
+              <Ponuda2Gate feature="lista" className="product-gate primary">
+                Dodaj u listu za ponudu
+              </Ponuda2Gate>
+              <Ponuda2Gate feature="uzorak" className="product-gate secondary">
+                Naruči uzorak
+              </Ponuda2Gate>
+              <QuoteCta code={p.code} className="primary">
                 Zatraži ponudu
-              </Link>
+              </QuoteCta>
             </div>
           </div>
         </section>
+        {pricingFor(p).areaBased && <CalculatorCta item={p} />}
         <section className="catalog-section">
           <h2>Slični artikli</h2>
           <ProductGrid items={related} />

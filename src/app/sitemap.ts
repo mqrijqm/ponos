@@ -6,6 +6,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticRoutes.map((route) => ({ url: base + route, lastModified: new Date(), changeFrequency: "monthly" as const, priority: route === "" ? 1 : 0.7 })),
     ...categories.map((category) => ({ url: `${base}/proizvodi/${category.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 })),
-    ...catalog.map((product) => ({ url: `${base}/artikli/${encodeURIComponent(product.code)}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.6 })),
+    ...catalog.map((product) => ({ url: `${base}/proizvodi/artikli/${encodeURIComponent(product.code)}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.6 })),
   ];
 }
