@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import LayerStack from "@/components/layers/LayerStack";
 import ProductGrid from "@/components/ProductGrid";
 import { Footer, Header, PageHero } from "@/components/SiteChrome";
 import { catalog, categories } from "@/data/catalog";
@@ -32,6 +33,12 @@ export default async function Page({
       <Header />
       <main>
         <PageHero kicker={c.kicker} title={c.title} copy={c.desc} />
+        {/*
+          Eksplodirani presjek daske - prva sekcija sadrzaja na /proizvodi/parketi.
+          Stoji odmah iznad teksta o visesloju, jer ga taj tekst opisuje.
+          Sve brojke i sadrzaj markera su u components/layers/layer-config.ts.
+        */}
+        {slug === "parketi" && <LayerStack />}
         {slug === "spc-vinyl-decking" && (
           <section className="flooring-editorial">
             <div className="flooring-editorial-intro">
