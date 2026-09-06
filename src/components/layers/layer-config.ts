@@ -105,8 +105,11 @@ export const LAYERS: LayerDef[] = [
     debljina: 0.02,
     materijal: {
       vrsta: "folija",
-      // jedva primjetan hladan ton, da se folija odvoji od toplog drveta ispod
-      boja: "#e8f0f4",
+      // Malo ispod krem boje stranice. Kod transmisije ova boja mnozi i ono
+      // sto prolazi kroz sloj, a scena jos prolazi kroz tone mapping - pa
+      // neutralno bijela folija izadje svjetlija od stranice i cita kao list
+      // papira. Ovim sjedne na pozadinu i ostaju samo ivice i blag odsjaj.
+      boja: "#ded9d1",
       transmission: 0.9,
       thickness: 0.05,
       roughness: 0.05,

@@ -61,12 +61,14 @@ function useLayerMaterials() {
           attenuationColor: new THREE.Color(def.attenuationColor),
           attenuationDistance: def.attenuationDistance,
           // Odsjaj je ono sto oku kaze "folija", ali mora ostati odsjaj a ne
-          // pokrivac: sa clearcoat 1 i ostrim odsjajem folija preslika cijelo
-          // gornje svjetlo i sakrije drvo ispod sebe.
-          clearcoat: 0.5,
-          clearcoatRoughness: 0.14,
+          // pokrivac. Kod transmisije boja mnozi i ono sto prolazi kroz sloj,
+          // pa tinta ide kroz attenuationColor a `boja` ostaje neutralna -
+          // inace folija posvijetli iznad pozadine i ispadne bijela ploca.
+          specularIntensity: 0.25,
+          clearcoat: 0.15,
+          clearcoatRoughness: 0.18,
           metalness: 0,
-          envMapIntensity: 0.55,
+          envMapIntensity: 0.12,
         });
       }
 
