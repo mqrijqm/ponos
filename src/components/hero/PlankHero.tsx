@@ -3,7 +3,8 @@
 import dynamic from "next/dynamic";
 import { useRef } from "react";
 
-import { HERO_CTA, HERO_LOGO, HERO_SIZE } from "./hero-content";
+import { HERO_COLORS, HERO_CTA, HERO_LOGO, HERO_SIZE } from "./hero-content";
+import HeroMarkers, { type MarkerHandle } from "./HeroMarkers";
 import { SCROLL_PAGES } from "./plank-config";
 import { useInView, useIsMobile, usePrefersReducedMotion } from "./hooks";
 
@@ -56,6 +57,8 @@ function CtaButton() {
 export default function PlankHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const markersRef = useRef<MarkerHandle>(null);
 
   const { inView, everInView } = useInView(sectionRef);
   const reducedMotion = usePrefersReducedMotion();
@@ -73,6 +76,20 @@ export default function PlankHero() {
       style={{ height: `calc(${SCROLL_PAGES + 1} * 100svh)` }}
     >
       <div className="sticky top-0 h-svh w-full overflow-hidden bg-white">
+        {/*
+          Tamna pozadina zavrsne sekcije. Stoji preko bijele i pali se tokom
+          izdvajanja - jeftinije je mijenjati opacity jednog sloja nego racunati
+          prelaz boje svaki frejm.
+        */}
+        <div
+          ref={backdropRef}
+          className="absolute inset-0"
+          style={{
+            background: HERO_COLORS.showcaseBackground,
+            opacity: reducedMotion ? 1 : 0,
+          }}
+        />
+
         {everInView && (
           <PlankScene
             animated={!reducedMotion}
@@ -80,7 +97,14 @@ export default function PlankHero() {
             active={inView}
             sectionRef={sectionRef}
             introRef={introRef}
+            backdropRef={backdropRef}
+            markersRef={markersRef}
           />
+        )}
+
+        {/* FAZA C - linije i tekst preko canvasa, ne u sceni. */}
+        {everInView && (
+          <HeroMarkers ref={markersRef} isMobile={isMobile} animated={!reducedMotion} />
         )}
 
         {/* ---------------------------------------------------------------
