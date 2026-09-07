@@ -10,21 +10,25 @@ import {
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-import { SCROLL } from "./hero-content";
+import { HERO_COLORS, MARKER_REVEAL, SCROLL } from "./hero-content";
+import type { MarkerHandle } from "./HeroMarkers";
 import {
   CAMERA,
+  DECORS,
+  FADE_DEPTH,
+  MARKER_ANCHOR,
   METERS_PER_UNIT,
   MOBILE_PLANK_COUNT,
   PLANK,
   PLANKS,
+  PLANK_TEXTURE,
+  ROUGH_MAP_MEAN,
+  SHOWCASE_PLANKS,
   SCROLL_DAMPING,
   SHADOW_RADIUS,
-  TEXTURE_SETS,
   anyPlankCasts,
   type CameraKeyframe,
   type PlankDef,
-  type TextureSet,
-  type TextureSetName,
   clamp,
   easeOutCubic,
   assemblyProgress,
@@ -35,6 +39,11 @@ import {
   panOffset,
   panProgress,
   plankProgress,
+  liftProgress,
+  markerProgress,
+  showcaseProgress,
+  showcaseSlot,
+  showcaseTransform,
   startPosition,
   texturePaths,
 } from "./plank-config";
@@ -43,17 +52,11 @@ import {
  * Mutabilna kutija za scroll progres - da se React ne renderuje na svaki frame.
  * Dvije faze: `assembly` je sklapanje poda, `pan` je listanje duz redova.
  */
-type Phase = { assembly: number; pan: number };
+type Phase = { assembly: number; pan: number; lift: number; showcase: number };
 type ProgressRef = { current: Phase };
 
-const SET_NAMES = Object.keys(TEXTURE_SETS) as TextureSetName[];
-
-/** Ravan spisak svih 9 fajlova, u obliku koji useTexture ocekuje. */
-const TEXTURE_URLS = Object.fromEntries(
-  SET_NAMES.flatMap((name) =>
-    Object.entries(texturePaths(name)).map(([slot, url]) => [`${name}.${slot}`, url]),
-  ),
-) as Record<string, string>;
+/** Tri fajla, jedan set za sve daske. Boja dolazi iz DECORS, ne iz teksture. */
+const TEXTURE_URLS = texturePaths();
 
 // -------------------------------------------------------------------- teksture
 
@@ -62,34 +65,24 @@ const TEXTURE_URLS = Object.fromEntries(
  *
  * Tekstura pokriva `physicalSize` metara stvarnog poda, a nasa daska je
  * 1.22 x 0.19 m - dakle uzimamo tanku traku iz otiska, ne cijeli otisak.
- * Svaka daska dobija svoj pomak (`uv`) pa se ponavljanje ne primjecuje.
- *
- * Kod rotiranih setova three primjenjuje skalu prije rotacije, pa repeat.x
- * i repeat.y mijenjaju uloge - otud dvije grane.
+ * Svaka daska dobija svoj pomak (`uv`) pa se ponavljanje ne primjecuje: sve
+ * daske dijele jednu teksturu, pa je taj pomak jedino sto sprjecava da se vidi
+ * isti cvor u svakom redu.
  */
-function configureUv(tex: THREE.Texture, set: TextureSet, uv: [number, number]) {
+function configureUv(tex: THREE.Texture, uv: [number, number]) {
   tex.wrapS = THREE.RepeatWrapping;
   tex.wrapT = THREE.RepeatWrapping;
 
-  const along = (PLANK.length * METERS_PER_UNIT) / set.physicalSize;
-  const across = (PLANK.width * METERS_PER_UNIT) / set.physicalSize;
+  const along = (PLANK.length * METERS_PER_UNIT) / PLANK_TEXTURE.physicalSize;
+  const across = (PLANK.width * METERS_PER_UNIT) / PLANK_TEXTURE.physicalSize;
 
-  // centar trake popreko: ili poravnat na sredinu jedne daske iz teksture,
-  // ili slobodan pomak ako je tekstura pregusta da se poravnava
-  const acrossCenter = set.strips
-    ? ((Math.round(uv[1]) % set.strips) + 0.5) / set.strips
-    : uv[1] % 1;
+  // centar trake popreko se hvata na sredinu jedne daske iz teksture, da nasa
+  // daska ne pokupi fugu iz fotografije
+  const acrossCenter = ((Math.round(uv[1]) % PLANK_TEXTURE.strips) + 0.5) / PLANK_TEXTURE.strips;
   const alongStart = uv[0] % 1;
 
-  if (set.rotated) {
-    tex.center.set(0.5, 0.5);
-    tex.rotation = Math.PI / 2;
-    tex.repeat.set(across, along);
-    tex.offset.set(acrossCenter - 0.5, alongStart - 0.5);
-  } else {
-    tex.repeat.set(along, across);
-    tex.offset.set(alongStart, acrossCenter - across / 2);
-  }
+  tex.repeat.set(along, across);
+  tex.offset.set(alongStart, acrossCenter - across / 2);
 }
 
 function usePlankMaterials(defs: PlankDef[]) {
@@ -100,26 +93,35 @@ function usePlankMaterials(defs: PlankDef[]) {
     const anisotropy = Math.min(8, maxAnisotropy);
 
     return defs.map((def) => {
-      const set = TEXTURE_SETS[def.set];
+      const decor = DECORS[def.decor];
       const slots = ["map", "normalMap", "roughnessMap"] as const;
 
       const maps = {} as Record<(typeof slots)[number], THREE.Texture>;
       for (const slot of slots) {
-        const clone = loaded[`${def.set}.${slot}`].clone();
-        // diffuse je boja -> sRGB; normal i roughness su podaci -> linearno
+        const clone = loaded[slot].clone();
+        // mapa boje je boja -> sRGB; normal i roughness su podaci -> linearno
         clone.colorSpace = slot === "map" ? THREE.SRGBColorSpace : THREE.NoColorSpace;
         clone.anisotropy = anisotropy;
-        configureUv(clone, set, def.uv);
+        configureUv(clone, def.uv);
         maps[slot] = clone;
       }
 
       return new THREE.MeshStandardMaterial({
         ...maps,
-        color: set.tint ?? "#ffffff",
-        roughness: 1,
+        // mapa je siva, pa je OVO jedina boja daske
+        color: decor.color,
+        // three mnozi roughness sa mapom, a mapa je tamna (prosjek 0.377) -
+        // zato se dijeli, da stvarna hrapavost padne na zadatu vrijednost
+        roughness: decor.roughness / ROUGH_MAP_MEAN,
         metalness: 0,
+        // transparent od pocetka, ne tek kad daska pocne da nestaje: paljenje
+        // transparentnosti u hodu tjera three da rekompajlira shader, a to je
+        // vidljiv zastoj usred scrolla
+        transparent: true,
         normalScale: new THREE.Vector2(0.85, 0.85),
-        envMapIntensity: 0.6,
+        // nize nego prije: odsjaj okoline se DODAJE na boju, pa na tamnim
+        // dekorima (antracit, orah) najvise i pojede boju - antracit posivi
+        envMapIntensity: 0.35,
       });
     });
   }, [defs, loaded, maxAnisotropy]);
@@ -145,10 +147,11 @@ type PlankProps = {
   index: number;
   count: number;
   geometry: THREE.BufferGeometry;
-  material: THREE.Material;
+  material: THREE.MeshStandardMaterial;
   progressRef: ProgressRef;
   animated: boolean;
   isMobile: boolean;
+  markersRef: React.RefObject<MarkerHandle | null>;
 };
 
 function Plank({
@@ -160,17 +163,26 @@ function Plank({
   progressRef,
   animated,
   isMobile,
+  markersRef,
 }: PlankProps) {
   const ref = useRef<THREE.Mesh>(null);
+  /** Redni broj medju izdvojenim daskama, ili -1 ako ova ostaje u podu. */
+  const slot = showcaseSlot(index);
+
   const start = startPosition(def, isMobile);
   // pri montiranju (i u reduced motion) pod stoji na pocetku listanja
   const rest = finalTransform(index, count, isMobile, panOffset(0, isMobile));
 
-  useFrame(() => {
+  /** Radna tacka za projekciju sidrista - da se ne pravi nova svaki frejm. */
+  const anchor = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame(({ camera, size }) => {
     const mesh = ref.current;
     if (!animated || !mesh) return;
 
-    const { assembly, pan } = progressRef.current;
+    const { assembly, pan, lift, showcase } = progressRef.current;
+
+    // --- sklapanje i listanje: kao i do sada -------------------------------
     const t = plankProgress(assembly, index, count);
     const { position: end } = finalTransform(index, count, isMobile, panOffset(pan, isMobile));
 
@@ -186,9 +198,58 @@ function Plank({
     );
     mesh.scale.setScalar(lerp(def.scale, 1, t));
 
+    // --- FAZA A: izdvajanje ------------------------------------------------
+    const l = easeOutCubic(lift);
+
+    if (slot >= 0) {
+      // Daska koja ostaje: iz reda u zavrsnu pozu. Lebdenje (FAZA B) je vec
+      // ukracunato u ciljnu pozu, pa se ne mijesa u ovu interpolaciju.
+      const target = showcaseTransform(slot, isMobile, showcase);
+      mesh.position.set(
+        lerp(mesh.position.x, target.position[0], l),
+        lerp(mesh.position.y, target.position[1], l),
+        lerp(mesh.position.z, target.position[2], l),
+      );
+      mesh.rotation.set(
+        lerp(mesh.rotation.x, target.rotation[0], l),
+        lerp(mesh.rotation.y, target.rotation[1], l),
+        lerp(mesh.rotation.z, target.rotation[2], l),
+      );
+      material.opacity = 1;
+    } else {
+      // Ostale: nestaju i povlace se dublje, ne gase se naglo. Fade je brzi od
+      // pomjeranja, pa daska ne stigne da se vidi kako "pada".
+      material.opacity = 1 - clamp(l * 1.35);
+      mesh.position.y -= FADE_DEPTH * l;
+    }
+
+    mesh.visible = material.opacity > 0.01;
+
     // Daska koja je jos daleko van kadra i dalje baca sjenku na ravan ispod, a
     // ta sjenka moze pasti unutar kadra. Zato sjenku pali tek kad se priblizi.
-    mesh.castShadow = Math.hypot(mesh.position.x, mesh.position.y) < SHADOW_RADIUS;
+    mesh.castShadow =
+      material.opacity > 0.5 &&
+      (slot >= 0 || Math.hypot(mesh.position.x, mesh.position.y) < SHADOW_RADIUS);
+
+    // --- FAZA C: sidriste pokazivaca u ekranske koordinate -----------------
+    if (slot < 0) return;
+
+    const markers = markersRef.current;
+    if (!markers) return;
+
+    // lokalna tacka na gornjoj povrsini -> svijet -> normalizovane koordinate
+    anchor.set(...MARKER_ANCHOR[slot]);
+    mesh.localToWorld(anchor);
+    anchor.project(camera);
+
+    markers.place(
+      slot,
+      (anchor.x * 0.5 + 0.5) * size.width,
+      (-anchor.y * 0.5 + 0.5) * size.height,
+      markerProgress(showcase, slot),
+      // iza kamere ili van kadra - pokazivac bi visio u praznom
+      anchor.z < 1 && Math.abs(anchor.x) < 0.98 && Math.abs(anchor.y) < 0.98,
+    );
   });
 
   // JSX vrijednosti su KRAJNJE stanje - tako je staticni render (reduced motion)
@@ -206,18 +267,83 @@ function Plank({
   );
 }
 
+/**
+ * Staticni raspored za prefers-reduced-motion: bez ijednog frejma animacije
+ * odmah se crta zavrsnica - dvije daske u zavrsnoj pozi, ostalih nema.
+ */
+function StaticShowcase({
+  geometry,
+  materials,
+  isMobile,
+  markersRef,
+}: {
+  geometry: THREE.BufferGeometry;
+  materials: THREE.MeshStandardMaterial[];
+  isMobile: boolean;
+  markersRef: React.RefObject<MarkerHandle | null>;
+}) {
+  const group = useRef<THREE.Group>(null);
+  const anchor = useMemo(() => new THREE.Vector3(), []);
+
+  // jedan prolaz kroz useFrame: kamera je gotova tek poslije prvog frejma, pa
+  // se sidrista ne mogu projektovati u efektu
+  useFrame(({ camera, size }) => {
+    const meshes = group.current?.children;
+    if (!meshes) return;
+
+    for (let slot = 0; slot < meshes.length; slot++) {
+      anchor.set(...MARKER_ANCHOR[slot]);
+      meshes[slot].localToWorld(anchor);
+      anchor.project(camera);
+      markersRef.current?.place(
+        slot,
+        (anchor.x * 0.5 + 0.5) * size.width,
+        (-anchor.y * 0.5 + 0.5) * size.height,
+        1,
+        true,
+      );
+    }
+  });
+
+  return (
+    <group ref={group}>
+      {SHOWCASE_PLANKS.map((index, slot) => {
+        const pose = showcaseTransform(slot, isMobile, 0);
+        return (
+          <mesh
+            key={index}
+            geometry={geometry}
+            material={materials[slot]}
+            position={pose.position}
+            rotation={pose.rotation}
+            castShadow
+            receiveShadow
+          />
+        );
+      })}
+    </group>
+  );
+}
+
 function Planks({
   count,
   progressRef,
   animated,
   isMobile,
+  markersRef,
 }: {
   count: number;
   progressRef: ProgressRef;
   animated: boolean;
   isMobile: boolean;
+  markersRef: React.RefObject<MarkerHandle | null>;
 }) {
-  const defs = useMemo(() => PLANKS.slice(0, count), [count]);
+  // u reduced motion se crtaju samo dvije daske, pa se ni materijali za
+  // ostale ne prave
+  const defs = useMemo(
+    () => (animated ? PLANKS.slice(0, count) : SHOWCASE_PLANKS.map((i) => PLANKS[i])),
+    [animated, count],
+  );
   const materials = usePlankMaterials(defs);
 
   const geometry = useMemo(
@@ -225,6 +351,17 @@ function Planks({
     [],
   );
   useEffect(() => () => geometry.dispose(), [geometry]);
+
+  if (!animated) {
+    return (
+      <StaticShowcase
+        geometry={geometry}
+        materials={materials}
+        isMobile={isMobile}
+        markersRef={markersRef}
+      />
+    );
+  }
 
   return (
     <group>
@@ -239,6 +376,7 @@ function Planks({
           progressRef={progressRef}
           animated={animated}
           isMobile={isMobile}
+          markersRef={markersRef}
         />
       ))}
     </group>
@@ -323,10 +461,12 @@ function ScrollReader({
   sectionRef,
   progressRef,
   introRef,
+  backdropRef,
 }: {
   sectionRef: React.RefObject<HTMLElement | null>;
   progressRef: ProgressRef;
   introRef: React.RefObject<HTMLElement | null>;
+  backdropRef: React.RefObject<HTMLElement | null>;
 }) {
   const smoothedRef = useRef(0);
 
@@ -345,6 +485,17 @@ function ScrollReader({
 
     progressRef.current.assembly = assemblyProgress(offset);
     progressRef.current.pan = panProgress(offset);
+    progressRef.current.lift = liftProgress(offset);
+    progressRef.current.showcase = showcaseProgress(offset);
+
+    // Tamna pozadina zavrsne sekcije se ne mijesa u boju nego se preklapa
+    // preko bijele - mijenja se samo opacity, jedan broj po frejmu.
+    const backdrop = backdropRef.current;
+    if (backdrop) {
+      // x1.6: pozadina potamni prije nego daske stignu u pozu. Prelaz bijelo ->
+      // tamno ide kroz sivo, a sivo je jedina ruzna tacka - neka traje kratko.
+      backdrop.style.opacity = String(easeOutCubic(clamp(progressRef.current.lift * 1.6)));
+    }
 
     const intro = introRef.current;
     if (!intro) return;
@@ -385,7 +536,12 @@ function ShadowCatcher({
   useFrame(() => {
     const mesh = ref.current;
     if (!mesh) return;
-    mesh.visible = animated ? anyPlankCasts(progressRef.current.assembly, count, isMobile) : true;
+    // gasi se i cim krene izdvajanje: daske su tad u vazduhu, a ravan-hvatac
+    // bi ispod njih ostavio mrlju na tamnoj pozadini
+    mesh.visible = animated
+      ? progressRef.current.lift < 0.02 &&
+        anyPlankCasts(progressRef.current.assembly, count, isMobile)
+      : false;
   });
 
   return (
@@ -403,11 +559,13 @@ function SceneContents({
   progressRef,
   animated,
   isMobile,
+  markersRef,
 }: {
   count: number;
   progressRef: ProgressRef;
   animated: boolean;
   isMobile: boolean;
+  markersRef: React.RefObject<MarkerHandle | null>;
 }) {
   return (
     <>
@@ -418,13 +576,21 @@ function SceneContents({
         count={count}
       />
 
-      {/* toplo svjetlo, uskladjeno sa smedjom pozadinom - bez hladnih highlightova */}
-      <ambientLight intensity={0.55} color="#ffeedd" />
+      {/*
+        NEUTRALNO BIJELO svjetlo, bez toplog tinta. Paleta ima i hladne dekore
+        (antracit, sivi hrast) i tople (svijetli hrast, orah). Cim se na izvor
+        stavi topao tint, hladni dekori odu u prljavo bez.
+
+        ambient je namjerno visok: antracit (#334144) je toliko taman da mu u
+        sjeni nestane zrno i daska postane crna mrlja. Ovo je rucica za to -
+        ako antracit i dalje "propada", podigni ambient prije nego sto diras boju.
+      */}
+      <ambientLight intensity={0.6} color="#ffffff" />
       <directionalLight
         castShadow
         position={[4, 13, 6]}
         intensity={2.1}
-        color="#ffe7c9"
+        color="#ffffff"
         shadow-mapSize={[1024, 1024]}
         shadow-radius={9}
         shadow-blurSamples={16}
@@ -440,11 +606,12 @@ function SceneContents({
 
       {/* refleksije bez skidanja HDRI-ja sa mreze - okolina se crta u sceni */}
       <Environment resolution={128} frames={1}>
-        <color attach="background" args={["#e6d8c4"]} />
+        {/* neutralno sivo, ne bez - okolina se odbija od dasaka i tintuje ih */}
+        <color attach="background" args={["#dedede"]} />
         <Lightformer
           form="rect"
           intensity={3}
-          color="#ffeed6"
+          color="#ffffff"
           position={[0, 6, -5]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={[14, 8, 1]}
@@ -452,7 +619,7 @@ function SceneContents({
         <Lightformer
           form="rect"
           intensity={1.3}
-          color="#ffdfba"
+          color="#ffffff"
           position={[-7, 2, 2]}
           rotation={[0, Math.PI / 2, 0]}
           scale={[9, 6, 1]}
@@ -460,14 +627,20 @@ function SceneContents({
         <Lightformer
           form="rect"
           intensity={0.8}
-          color="#fff6ea"
+          color="#ffffff"
           position={[7, 1.5, 3]}
           rotation={[0, -Math.PI / 2, 0]}
           scale={[9, 5, 1]}
         />
       </Environment>
 
-      <Planks count={count} progressRef={progressRef} animated={animated} isMobile={isMobile} />
+      <Planks
+        count={count}
+        progressRef={progressRef}
+        animated={animated}
+        isMobile={isMobile}
+        markersRef={markersRef}
+      />
 
       <ShadowCatcher
         count={count}
@@ -489,6 +662,10 @@ export type PlankSceneProps = {
   sectionRef: React.RefObject<HTMLElement | null>;
   /** Uvodni blok sa logom i dugmetom - gasi se na scroll. */
   introRef: React.RefObject<HTMLElement | null>;
+  /** Tamna pozadina zavrsne sekcije - pali se tokom izdvajanja. */
+  backdropRef: React.RefObject<HTMLElement | null>;
+  /** Ruckica za pokazivace iznad canvasa (FAZA C). */
+  markersRef: React.RefObject<MarkerHandle | null>;
 };
 
 export default function PlankScene({
@@ -497,18 +674,38 @@ export default function PlankScene({
   active,
   sectionRef,
   introRef,
+  backdropRef,
+  markersRef,
 }: PlankSceneProps) {
   const count = isMobile ? MOBILE_PLANK_COUNT : PLANKS.length;
-  const progressRef = useRef<Phase>({ assembly: animated ? 0 : 1, pan: 0 });
+  const progressRef = useRef<Phase>({
+    assembly: animated ? 0 : 1,
+    pan: 0,
+    lift: animated ? 0 : 1,
+    showcase: 0,
+  });
 
-  const contents = <SceneContents count={count} progressRef={progressRef} animated={animated} isMobile={isMobile} />;
+  const contents = (
+    <SceneContents
+      count={count}
+      progressRef={progressRef}
+      animated={animated}
+      isMobile={isMobile}
+      markersRef={markersRef}
+    />
+  );
 
   return (
     // key: prelazak preko mobilnog praga mijenja fov, broj dasaka i materijale,
     // pa je cistije podici scenu iznova nego mijenjati kameru u hodu
     <Canvas
       key={isMobile ? "mobile" : "desktop"}
-      shadows="variance"
+      /*
+        PCF soft, ne VSM. VSM na velikom radijusu "propusta svjetlo" - sjenka
+        jedne daske preko druge ispadne kao SVJETLIJA mrlja umjesto tamnija, a
+        u zavrsnici dvije daske stoje jedna preko druge pa se to odmah vidi.
+      */
+      shadows="soft"
       dpr={isMobile ? [1, 1.5] : [1, 2]}
       frameloop={!active ? "never" : animated ? "always" : "demand"}
       // alpha + nigdje scene.background: pozadinska slika je CSS ispod canvasa
@@ -516,7 +713,9 @@ export default function PlankScene({
         antialias: true,
         alpha: true,
         toneMapping: THREE.NeutralToneMapping,
-        toneMappingExposure: 1.05,
+        // 0.88, ne 1.05: mapa boje je sad svijetla siva pa je scena na staroj
+        // ekspoziciji izlazila oko 15% svjetlija od zadatih boja iz DECORS
+        toneMappingExposure: 0.88,
       }}
     >
       <Suspense fallback={null}>
@@ -525,6 +724,7 @@ export default function PlankScene({
             sectionRef={sectionRef}
             progressRef={progressRef}
             introRef={introRef}
+            backdropRef={backdropRef}
           />
         )}
         {contents}

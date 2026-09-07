@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "capture:ponuda": "node scripts/capture-ponuda.mjs"
+    "capture:ponuda": "node scripts/capture-ponuda.mjs",
+    "prepare:plank-color": "node scripts/prepare-plank-color.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
