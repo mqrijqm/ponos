@@ -10,7 +10,7 @@ import { track } from "@/lib/analytics";
 import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
 import PlankHero from "./hero/PlankHero";
-import KaindlCarousel from "./KaindlCarousel";
+import LaminatiGridSection from "./LaminatiGridSection";
 
 const heroDetails = [1, 2, 3, 4, 5].map(
   (number) => `/images/hero/detail-${number}.jpg`,
@@ -349,7 +349,7 @@ export default function SitePage() {
             </ul>
           </div>
         </section>
-        <KaindlCarousel />
+        <LaminatiGridSection />
         <QualityPage />
       </main>
       <Footer />
