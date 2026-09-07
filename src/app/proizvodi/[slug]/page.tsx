@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import LayerStack from "@/components/layers/LayerStack";
 import ProductGrid from "@/components/ProductGrid";
+import VideoHeroSection from "@/components/VideoHeroSection";
 import { Footer, Header, PageHero } from "@/components/SiteChrome";
 import { catalog, categories } from "@/data/catalog";
 export function generateStaticParams() {
@@ -28,6 +29,24 @@ export default async function Page({
   const c = categories.find((x) => x.slug === slug);
   if (!c) notFound();
   const items = catalog.filter((x) => x.category === slug);
+
+  /*
+    Zidni paneli su zasad SAMO video. Bez PageHeroa iznad njega i bez kataloga
+    ispod - snimak je prva i jedina stvar na stranici. Kad sadrzaj bude spreman,
+    obrisi ovaj rani return i sekcija ce se uklopiti u obican raspored.
+  */
+  if (slug === "zidni-paneli") {
+    return (
+      <>
+        <Header />
+        <main>
+          <VideoHeroSection />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
       <Header />

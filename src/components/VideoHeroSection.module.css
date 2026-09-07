@@ -1,0 +1,170 @@
+/*
+  Video hero za zidne panele.
+
+  --ratio je odnos stranica snimka. Trenutni snimak je USPRAVAN (720x1280), pa
+  je 9 / 16. Za obican landscape snimak stavi 16 / 9 i podigni --max-h.
+*/
+
+.section {
+  --ratio: 9 / 16;
+  --max-h: 78svh;
+
+  --orange: #e66c2c;
+  --orange-dark: #c85620;
+  --dark: #1a1a1a;
+  --grey: #888888;
+
+  --pad-y: 80px;
+  --pad-x: 40px;
+  --title: 32px;
+  --body: 16px;
+
+  background: #f9f9f9;
+  padding: var(--pad-y) var(--pad-x);
+}
+
+/* ------------------------------------------------------------------- video */
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: calc(var(--max-h) * 9 / 16);
+  margin: 0 auto;
+  aspect-ratio: var(--ratio);
+  overflow: hidden;
+  /* boja dok se snimak ucitava, da kadar ne poskoci iz bijelog */
+  background: #f0f0f0;
+}
+
+.video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -------------------------------------------------------------------- tekst */
+
+.copy {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 40px;
+  text-align: center;
+}
+
+.title {
+  margin: 0 0 12px;
+  font-size: var(--title);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--dark);
+}
+
+.description {
+  margin: 0 auto 30px;
+  max-width: 600px;
+  font-size: var(--body);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--grey);
+}
+
+/* ------------------------------------------------------------------ dugmad */
+
+.actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.button {
+  padding: 12px 32px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  /* obje varijante imaju isti okvir, pa ih obrub ne pomjera jednu u odnosu na drugu */
+  border: 2px solid transparent;
+}
+
+.primary {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #ffffff;
+}
+
+.primary:hover {
+  background: var(--orange-dark);
+  border-color: var(--orange-dark);
+}
+
+.secondary {
+  background: #ffffff;
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.secondary:hover {
+  background: var(--orange);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 768px) {
+  .section {
+    --pad-y: 60px;
+    --pad-x: 30px;
+    --title: 24px;
+    --body: 14px;
+    --max-h: 70svh;
+  }
+
+  .copy {
+    padding-top: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    --pad-y: 40px;
+    --pad-x: 20px;
+    --title: 18px;
+    --body: 12px;
+  }
+
+  /* uzak ekran: snimak ide preko cijele sirine, visina ga vise ne ogranicava */
+  .stage {
+    max-width: none;
+  }
+
+  .copy {
+    padding-top: 24px;
+  }
+
+  /* dugmad jedno ispod drugog, puna sirina */
+  .actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .button {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}
