@@ -9,7 +9,6 @@ import { useQuote } from "./QuoteProvider";
 import { track } from "@/lib/analytics";
 import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
-import PlankHero from "./hero/PlankHero";
 import LaminatiGridSection from "./LaminatiGridSection";
 import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
@@ -186,7 +185,8 @@ export default function SitePage() {
         )}
       </header>
       <main id="top">
-        <PlankHero />
+        {/* Hero animacija (PlankHero) uklonjena — mjesto rezervisano za novu. */}
+        <section className="placeholder-section" aria-hidden="true" data-placeholder="1" />
         {/* Druga sekcija u nizu, jos neodredjena. */}
         <section className="placeholder-section" aria-hidden="true" data-placeholder="2" />
         <span id="naslovna" />

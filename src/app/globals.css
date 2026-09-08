@@ -4055,7 +4055,7 @@ main.quality-page > section.quality-section + section.quality-section {
 /* ═══════════════════════════════════════════════════════════════════
    JEDINSTVENA BOCNA MARGINA
    Sve sekcije i navbar drze isti razmak od ivica ekrana.
-   Izuzeci: PlankHero (.hero-fullbleed) i footer — oni idu preko cijele sirine.
+   Izuzeci: hero (.hero-fullbleed) i footer — oni idu preko cijele sirine.
    Formula ponavlja raniji model .process-section: 7vw dok ekran nije sirok,
    a preko ~1613px se sadrzaj zaustavlja na 1500px i centrira.
    ═══════════════════════════════════════════════════════════════════ */
