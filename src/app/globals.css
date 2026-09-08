@@ -4619,8 +4619,10 @@ footer.site-footer .footer-bottom {
 }
 
 /* ═══ Traka pločica: flex red umjesto apsolutnih grupa ═══
-   Sedam pločica ravnomjerno raspoređenih preko cijele sirine —
-   dvije prazne rupe od ranije su popunjene. */
+   Sedam pločica ravnomjerno raspoređenih preko cijele sirine.
+   Grupe su `display: contents` — postoje samo u markupu, a pločice iz
+   njih ulaze u isti flex red kao i pojedinačne. Tako space-between
+   razmjerava svih sedam jednako, umjesto pet grupa nejednake sirine. */
 .detail-strip {
   display: flex;
   align-items: stretch;
@@ -4635,8 +4637,7 @@ footer.site-footer .footer-bottom {
   height: 100%;
 }
 .detail-group {
-  display: flex;
-  gap: 6px;
+  display: contents;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
