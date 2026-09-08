@@ -161,12 +161,22 @@ export default async function Page({
                 Za aktuelne dekore, cijene i rok isporuke kontaktirajte prodajni
                 tim.
               </p>
+              <p>
+                Ponuda se sastavlja po narudžbi: birate dekor i količinu, a
+                cijenu i rok potvrđujemo prije nego što narudžba ode dalje.
+              </p>
+              <p>
+                Ako još ne znate koliko vam treba, izmjerite dužinu i širinu
+                prostorije i pošaljite dimenzije uz upit — količinu sa rezervom
+                za otpad računamo zajedno.
+              </p>
             </article>
             <article>
               <h2>Višeslojna konstrukcija, prirodan osjećaj.</h2>
               <p>
                 Tarkett parket je 100% drveni pod višeslojne konstrukcije. Gotov
-                je, fabrički lakiran i spreman za korišćenje odmah nakon ugradnje.
+                je, fabrički lakiran i spreman za korišćenje odmah nakon ugradnje
+                — bez brušenja i lakiranja na licu mjesta.
               </p>
               <p>
                 Gornji sloj je pravo drvo, pa svaka daska nosi svoj crtež godova
@@ -177,11 +187,6 @@ export default async function Page({
                 Slojevi ispod postavljeni su unakrsno. Takva konstrukcija drži
                 dasku mirnom kada se vlažnost i temperatura u prostoriji
                 mijenjaju, pa parket dobro podnosi i podno grijanje.
-              </p>
-              <p>
-                Površina dolazi fabrički lakirana, bez brušenja i lakiranja na
-                licu mjesta. Prostor je upotrebljiv odmah nakon ugradnje, a
-                održava se suvim čišćenjem i povremenim vlažnim brisanjem.
               </p>
             </article>
           </section>
