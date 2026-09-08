@@ -4574,12 +4574,50 @@ main > section.editorial-statement {
   color: var(--brand-muted);
 }
 /* ── Uvod sekcije o kvalitetu: isti slog kao izjava o firmi ── */
-.quality-statement {
-  max-width: 1180px;
+/* Slog lijevo, popis 01-03 desno. Sadrzaj vise ne ide jedan ispod drugog, pa
+   se recenica cita dok se popis pregleda. */
+.quality-split {
+  max-width: 1400px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 88px);
+  align-items: start;
+}
+.quality-statement {
   padding: clamp(30px, 6vh, 76px) 0 clamp(24px, 4vh, 48px);
   display: flex;
   flex-direction: column;
+}
+.quality-split .quality-accordion-list {
+  width: 100%;
+  margin-top: clamp(30px, 6vh, 76px);
+}
+/* Otvoreni panel u polovini sirine: slika, tekst i dugme jedno ispod drugog.
+   Trokolonski raspored iz pune sirine ovdje slomi recenicu na po jednu rijec. */
+.quality-split .quality-panel-inner {
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+}
+.quality-split .quality-panel-inner > img {
+  height: auto;
+  aspect-ratio: 1.6;
+}
+.quality-split .quality-panel-copy p {
+  max-width: none;
+}
+.quality-split .quality-outline-link {
+  justify-self: start;
+}
+@media (max-width: 1000px) {
+  .quality-split {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .quality-split .quality-accordion-list {
+    margin-top: 0;
+  }
 }
 .qs-label {
   color: var(--brand-muted);
@@ -4590,7 +4628,7 @@ main > section.editorial-statement {
   text-transform: uppercase;
 }
 .quality-page .quality-statement h2 {
-  max-width: 890px;
+  max-width: 100%;
   margin: clamp(22px, 3.2vh, 40px) 0 0;
   text-align: left;
   text-wrap: pretty;
@@ -4600,8 +4638,8 @@ main > section.editorial-statement {
      firmi i mora ostati serif, kao i tamo. */
   font-family: var(--font-lora), Georgia, serif;
   font-weight: 400;
-  font-size: clamp(1.8rem, 4.4vw, 4.2rem);
-  line-height: 1.1;
+  font-size: clamp(1.7rem, 2.9vw, 3rem);
+  line-height: 1.12;
   letter-spacing: -.02em;
 }
 .quality-page .quality-statement h2 em {
@@ -4886,6 +4924,11 @@ main > section.product-showcase {
   width: 190px;
   margin: 0;
   line-height: 0;
+}
+/* Bez logotipa slika ostaje jedina u podnozju; `space-between` bi je odgurao
+   ulijevo, a mjesto joj je desno — isto kao kod artikla koji logo ima. */
+.showcase-foot > .showcase-room:only-child {
+  margin-left: auto;
 }
 .showcase-room img {
   display: block;

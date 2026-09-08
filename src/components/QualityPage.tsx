@@ -29,6 +29,9 @@ export function QualityAccordionSection() {
   const [open, setOpen] = useState(1);
   return (
     <section className="quality-section quality-accordion" aria-labelledby="quality-intro-title">
+      {/* Slog lijevo, popis desno — dvije kolone koje se na uskom slazu jedna
+          ispod druge. */}
+      <div className="quality-split">
       {/* Isti slog kao izjava o firmi: natpis, serif recenica lijevo, podnozje. */}
       <div className="quality-statement">
         <span className="qs-label">VIŠE O KVALITETU</span>
@@ -62,6 +65,7 @@ export function QualityAccordionSection() {
                 </div>
               </div>;
             })}
+      </div>
       </div>
     </section>
   );

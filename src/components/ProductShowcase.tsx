@@ -47,26 +47,27 @@ export const wickedHarvestOak: ShowcaseProduct = {
   brandLogoAlt: "Krono Original",
 };
 
-export const naturalFloor: ShowcaseProduct = {
+export const miram: ShowcaseProduct = {
   brand: "SPC Vinyl",
-  name: "Natural Floor Collection",
+  name: "Miram",
+  code: "7488",
+  /* Iste stavke i isti redoslijed kao kod Krono artikla. Dimenzije daske i
+     sistem spoja jos nisu poznati, pa na njihovo mjesto idu podaci koji za
+     SPC nose istu tezinu — fuga i vodootpornost. */
   specs: [
     ["Kolekcija", "Natural Floor"],
-    ["Tip proizvoda", "SPC Vinyl"],
+    ["Dekor", "Miram"],
+    ["Tip", "SPC Vinyl"],
+    ["Klasa upotrebe", "AC4 / 34"],
     ["Debljina", "4 mm"],
     ["Fuga", "Mikro V fuga"],
     ["Vodootpornost", "100%"],
-    ["Otpornost", "AC4 / 34"],
-    ["Podno grijanje", "Da"],
-    ["Struktura", "Prirodna drvena tekstura"],
-    ["Lakše postavljanje", "Brza instalacija"],
-    ["Reciklabilnost", "Ekološki prihvatljivo"],
+    ["Struktura površine", "Prirodna drvena tekstura"],
   ],
   texture: "/images/product/natural-floor-texture.webp",
-  textureAlt: "SPC vinyl pod iz Natural Floor kolekcije, prirodna drvena tekstura",
+  textureAlt: "SPC vinyl pod Miram, prirodna drvena tekstura",
   room: "/images/product/natural-floor-detail.webp",
-  roomAlt: "Detalj daske iz Natural Floor kolekcije",
-  wordmark: ["SPC Vinyl", "Natural Floor"],
+  roomAlt: "Detalj daske SPC vinyl poda Miram",
 };
 
 export default function ProductShowcase({

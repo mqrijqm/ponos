@@ -12,7 +12,7 @@ import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
 import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
-import ProductShowcase, { naturalFloor } from "./ProductShowcase";
+import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import ScrollSequenceHero from "./hero/ScrollSequenceHero";
 import HomeHeroReveal from "./HomeHeroReveal";
@@ -339,7 +339,7 @@ export default function SitePage() {
         <ProductShowcase />
         <WpcDeckingSection />
         {/* Isti detalj kao Krono, samo preslikan — tekstura lijevo. */}
-        <ProductShowcase product={naturalFloor} mirrored titleId="showcase-natural-floor" />
+        <ProductShowcase product={miram} mirrored titleId="showcase-miram" />
         <QualityPage />
       </main>
       <Footer />
