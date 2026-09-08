@@ -3280,13 +3280,13 @@ main > section:not(.home-hero) {
 .process-accordion {
   display: grid;
   gap: 12px;
-  min-height: 470px;
+  min-height: 425px;
   transition: grid-template-columns 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .process-card {
   position: relative;
   min-width: 0;
-  min-height: 470px;
+  min-height: 425px;
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

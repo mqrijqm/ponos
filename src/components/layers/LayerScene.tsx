@@ -228,7 +228,7 @@ function Layers({
     }
   }, -1);
 
-  const markerSize = isMobile ? 26 : 34;
+  const markerSize = isMobile ? 29 : 38;
 
   return (
     <group>
