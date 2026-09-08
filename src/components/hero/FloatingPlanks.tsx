@@ -117,7 +117,8 @@ export default function FloatingPlanks({ animated }: { animated: boolean }) {
       // frameloop staje kad nema animacije - nema smisla vrtjeti petlju za
       // sliku koja se ne mijenja
       frameloop={animated ? "always" : "demand"}
-      style={{ position: "absolute", inset: 0 }}
+      // Scena je ukras: ne prima mis, da ne pokrije dugme koje stoji ispod nje.
+      style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
     >
       <Rig />
       <Lights />

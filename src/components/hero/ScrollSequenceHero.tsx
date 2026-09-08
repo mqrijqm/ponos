@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import HeroOverlay, { HERO_OVERLAY_STOPS } from "../HeroOverlay";
 import { useIsMobile, usePrefersReducedMotion } from "./hooks";
 import {
   BACKGROUND,
@@ -44,6 +45,19 @@ export default function ScrollSequenceHero() {
   const isMobile = useIsMobile();
   const [sceneMounted, setSceneMounted] = useState(false);
 
+  /*
+    Napredak za natpise. Nije isto sto i `state.frame`: taj se mijenja na svaki
+    frejm scrolla i zato zivi u refu. Ovdje state smije da se pomjeri samo kad
+    napredak pređe prag na kojem se natpis pojavljuje ili gasi - to je cetiri
+    rendera po cijelom prevrtanju umjesto sto devedeset.
+  */
+  const [overlayProgress, setOverlayProgress] = useState(0);
+  const pushOverlayProgress = (next: number) => {
+    setOverlayProgress((prev) =>
+      HERO_OVERLAY_STOPS.some((stop) => prev > stop !== next > stop) ? next : prev,
+    );
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const section = sectionRef.current;
@@ -74,6 +88,9 @@ export default function ScrollSequenceHero() {
       // dok trazeni frejm jos nije stigao, ostaje posljednji nacrtani
       if (!loaded[index]) return;
       const image = images[index];
+      // Slika bez dimenzija je ona koja nije stigla. Crtanje takve daje NaN
+      // koordinate - platno ostane prazno, a prethodni kadar se izgubi.
+      if (!image?.naturalWidth) return;
 
       const width = canvas.width;
       const height = canvas.height;
@@ -116,11 +133,34 @@ export default function ScrollSequenceHero() {
         const image = new Image();
         image.decoding = "async";
         pending++;
-        image.onload = image.onerror = () => {
+        const settle = () => {
+          if (--pending === 0) loadBatch(until);
+        };
+        image.onload = () => {
           loaded[i] = true;
           // prvi kadar se crta cim stigne, da hero ne stoji prazan
           if (i === 0 || Math.round(state.frame / step) * step === i) draw();
-          if (--pending === 0) loadBatch(until);
+          settle();
+        };
+        /*
+          Greska NIJE ucitan frejm. Ranije su onload i onerror dijelili isti
+          handler, pa je prekinut zahtjev upisivan kao gotov: platno bi dobilo
+          sliku bez dimenzija i hero bi ostao prazan do prvog resizea.
+
+          Prekid nije rijedak - React u razvoju montira efekat dvaput, pa drugi
+          prolaz prekine zahtjeve prvog; korisniku isto uradi slaba veza. Zato
+          jedan ponovni pokusaj, sa razlicitim upitom da ne padne na kesirani
+          neuspjeh. Ako i on padne, frejm ostaje neucitan i sekvenca ga
+          preskace - stoji posljednji kadar koji je stigao.
+        */
+        let retried = false;
+        image.onerror = () => {
+          if (!retried && !cancelled) {
+            retried = true;
+            image.src = `${framePath(i)}?retry=1`;
+            return;
+          }
+          settle();
         };
         image.src = framePath(i);
         images[i] = image;
@@ -178,6 +218,7 @@ export default function ScrollSequenceHero() {
           state.frame = sequence * (FRAME_COUNT - 1);
           draw();
           if (sequence >= HANDOFF.mount) setSceneMounted(true);
+          pushOverlayProgress(sequence);
           applyHandoff(sequence);
         },
       });
@@ -217,23 +258,45 @@ export default function ScrollSequenceHero() {
           {/* Soba ispod zive scene: prvi kadar snimka, bez podignutih dasaka. */}
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${HANDOFF_BACKDROP})` }}
+            style={{ backgroundImage: `url(${HANDOFF_BACKDROP})`, pointerEvents: "none" }}
             aria-hidden="true"
           />
 
+          {/*
+            Ziva scena ide iznad natpisa (natpisi su na 5 i 6): kad na kraju
+            preuzme kadar, daske lete ispred teksta, ne iza njega.
+          */}
           {sceneMounted && (
-            <div ref={sceneRef} className="absolute inset-0" style={{ opacity: 0 }}>
+            <div
+              ref={sceneRef}
+              className="absolute inset-0"
+              style={{ opacity: 0, zIndex: 7, pointerEvents: "none" }}
+            >
               <FloatingPlanks animated={!reducedMotion} />
             </div>
           )}
 
-          {/* Snimak stoji navrh i gasi se tek na kraju scrolla. */}
+          {/*
+            Snimak stoji navrh i gasi se tek na kraju scrolla. Ugasen znaci
+            providan, ne i nepostojeci: bez `pointerEvents: none` platno bi i
+            dalje hvatalo klikove i dugme ispod njega ne bi radilo. Isto vazi za
+            pozadinu i zivu scenu - nijedan od ta tri sloja ne prima mis.
+          */}
           <canvas
             ref={canvasRef}
             data-hero-sequence=""
             className="absolute inset-0 h-full w-full"
+            style={{ pointerEvents: "none" }}
             aria-hidden="true"
           />
+
+          {/* Natpisi preko kadra; sloj ne hvata misa osim na dugmetu. */}
+          {/*
+            Bez animacije stoji posljednji kadar, pa natpisi idu odmah na kraj
+            (1). Racuna se ovdje, a ne setStateom u efektu - taj bi bio jedan
+            render vise ni za sta.
+          */}
+          <HeroOverlay scrollProgress={reducedMotion ? 1 : overlayProgress} />
         </div>
       </div>
     </section>
