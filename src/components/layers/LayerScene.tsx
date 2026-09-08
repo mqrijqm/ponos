@@ -3,6 +3,7 @@
 import { Environment, Html, Lightformer, PerspectiveCamera, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import Image from "next/image";
 import * as THREE from "three";
 
 import {
@@ -173,13 +174,23 @@ function Marker({
           opacity: animated ? 0 : 1,
           width: size,
           height: size,
-          fontSize: size * 0.41,
           pointerEvents: "none",
           userSelect: "none",
         }}
-        className="flex items-center justify-center rounded-full bg-white font-medium text-neutral-900 shadow-[0_1px_6px_rgba(0,0,0,0.10)] ring-1 ring-neutral-300"
       >
-        {index + 1}
+        {/*
+          Krug, prsten i cifra su u samom SVG-u, pa ovdje nema ni pozadine ni
+          rama. unoptimized: SVG je vec vektor, nema sta da se skalira.
+        */}
+        <Image
+          src={`/images/layers/markers/marker-${index + 1}.svg`}
+          alt=""
+          width={size}
+          height={size}
+          unoptimized
+          draggable={false}
+          style={{ display: "block", width: size, height: size }}
+        />
       </div>
     </Html>
   );

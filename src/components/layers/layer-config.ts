@@ -85,7 +85,10 @@ export type LayerDef = {
    * 0.45, 0.40 odozgo nadolje. Pluta je na nuli - ona ostaje na mjestu.
    */
   offsetY: number;
-  /** Tacka na desnoj ivici sloja, u koordinatama samog sloja. Tu stoji marker. */
+  /**
+   * Tacka na ivici sloja gdje stoji marker, u koordinatama samog sloja.
+   * X se smjenjuje: 1, 3 i 5 lijevo (negativan), 2 i 4 desno.
+   */
   anchor: [number, number, number];
   /** Ima li pero i utor. Bez toga je sloj obican kvadar. */
   profil: boolean;
@@ -121,7 +124,7 @@ export const LAYERS: LayerDef[] = [
       attenuationDistance: 0.5,
     },
     offsetY: 1.9,
-    anchor: [2.35, 0.06, 0],
+    anchor: [-2.35, 0.06, 0],
     profil: false,
   },
   {
@@ -157,7 +160,7 @@ export const LAYERS: LayerDef[] = [
       normalScale: 0.9,
     },
     offsetY: 0.85,
-    anchor: [2.35, 0.14, 0],
+    anchor: [-2.35, 0.14, 0],
     profil: true,
   },
   {
@@ -188,7 +191,7 @@ export const LAYERS: LayerDef[] = [
       boja: "#c79c72",
     },
     offsetY: 0,
-    anchor: [2.35, 0.08, 0],
+    anchor: [-2.35, 0.08, 0],
     profil: false,
   },
 ];
@@ -423,10 +426,11 @@ export function markerOpacity(offset: number, index: number) {
 
 /**
  * Najveci X koji mora stati u kadar: nije ivica daske (2) nego marker uz nju.
- * Bez ovoga se na uskom ekranu brojevi odsijeku van kadra.
+ * Bez ovoga se na uskom ekranu brojevi odsijeku van kadra. Apsolutna
+ * vrijednost jer markeri stoje i lijevo i desno od daske.
  */
 export const CONTENT_HALF_WIDTH =
-  Math.max(PLANK_SIZE.width / 2, ...LAYERS.map((layer) => layer.anchor[0])) + 0.2;
+  Math.max(PLANK_SIZE.width / 2, ...LAYERS.map((layer) => Math.abs(layer.anchor[0]))) + 0.2;
 
 /**
  * Rastojanje kamere na kojem cijela daska sjedne u kadar.
