@@ -133,14 +133,27 @@ export function Footer() {
     </footer>
   );
 }
+/**
+ * Zaglavlje stranice proizvoda, u slogu izjave sa naslovne: natpis, serif
+ * recenica lijevo, podnozje sa crtom i strelicom. Beige podloga ostaje samo
+ * ovdje — sadrzaj ispod je bijel, pa se vrh stranice jasno odvaja.
+ */
 export function PageHero({
   kicker,
   title,
   copy,
+  lead,
+  foot,
+  href = "#katalog",
 }: {
   kicker: string;
   title: string;
   copy: string;
+  /** Duzi uvodni tekst kad ga stranica ima; inace se koristi `copy`. */
+  lead?: React.ReactNode;
+  /** Natpis uz crtu u dnu. */
+  foot?: string;
+  href?: string;
 }) {
   return (
     <section className="page-hero">
@@ -149,9 +162,22 @@ export function PageHero({
         <ArrowRight size={13} />
         {title}
       </div>
-      <span className="eyebrow">{kicker}</span>
-      <h1>{title}</h1>
-      <p>{copy}</p>
+
+      <div className="page-hero-inner">
+        <span className="ph-label">{kicker}</span>
+        <h1>{title}</h1>
+        <p className="ph-lead">{lead ?? copy}</p>
+
+        <div className="ph-foot">
+          <span className="ph-kicker">
+            <i aria-hidden="true" />
+            {foot ?? "MT PONOS · BANJA LUKA"}
+          </span>
+          <Link className="ph-arrow" href={href} aria-label="Pogledaj ponudu">
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </div>
     </section>
   );
 }

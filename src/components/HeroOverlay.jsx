@@ -84,7 +84,7 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
         // ne prolaze kroz slova. 82px je fiksni navbar.
         justifyContent: "flex-start",
         gap: "clamp(14px, 1.8vw, 22px)",
-        padding: "calc(82px + clamp(16px, 3vh, 40px)) 24px 0",
+        padding: "calc(82px + clamp(46px, 8.5vh, 108px)) 24px 0",
         textAlign: "center",
         pointerEvents: "none",
       }}

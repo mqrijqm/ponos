@@ -2,6 +2,7 @@
 :root {
   /* Brend paleta */
   --brand-brown: #6b4e2d;        /* glavni naslovi i navigacija */
+  --brand-bark: #463c35;         /* tamna kafena iz logotipa — podnozje */
   --brand-brown-dark: #503920;   /* hover na punim smedjim povrsinama */
   --brand-deep: var(--brand-brown);  /* dugmici, akcenti, brojevi — puna smedja povrsina */
   --brand-wood: #d4a574;         /* akcent (tacke, hover) — NE za linije */
@@ -557,7 +558,8 @@ footer.site-footer {
   min-height: 0;
   padding: 80px 48px 48px;
   display: block;
-  background: var(--brand-deep);
+  /* Ista tamna kafena koju nosi logotip (#463c35), ne svijetlija smedja. */
+  background: var(--brand-bark);
   color: var(--cream);
 }
 .footer-main {
@@ -1314,7 +1316,7 @@ footer.site-footer .footer-bottom { display: flex; }
   padding-top: 20px;
 }
 footer {
-  background: var(--brand-deep);
+  background: var(--brand-bark);
   color: var(--cream);
   padding: 65px 7vw 24px;
   display: grid;
@@ -1616,31 +1618,125 @@ footer > div:not(.brand) {
 .site-header .mobile-menu {
   display: none;
 }
+/* Vrh stranice proizvoda: beige podloga, sadrzaj ispod bijel. */
 .page-hero {
-  padding: 58px 8vw 62px;
+  padding: 58px 8vw clamp(52px, 7vh, 96px);
   min-height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-bottom: 1px solid var(--l);
-  background: linear-gradient(90deg, var(--c) 0 72%, var(--brand-line) 72%);
+  border-bottom: 1px solid var(--brand-line);
+  background: var(--brand-line);
 }
 .page-hero .crumb {
-  margin-bottom: 65px;
+  margin-bottom: clamp(48px, 8vh, 96px);
+}
+.page-hero-inner {
+  width: 100%;
+  max-width: 1180px;
+  display: flex;
+  flex-direction: column;
+}
+.ph-label {
+  color: var(--brand-muted);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
 }
 .page-hero h1 {
-  font-size: clamp(26px, 3.2vw, 45px);
-  line-height: 0.94;
-  letter-spacing: -0.06em;
-  font-weight: 500;
-  max-width: 1000px;
-  margin: 18px 0 25px;
+  max-width: 890px;
+  margin: clamp(20px, 3vh, 36px) 0 0;
+  color: var(--ink);
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(1.8rem, 4.2vw, 3.9rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  text-wrap: pretty;
 }
-.page-hero > p {
-  max-width: 690px;
-  color: var(--m);
-  line-height: 1.75;
+.page-hero .ph-lead {
+  max-width: 62ch;
+  margin: clamp(18px, 2.6vh, 28px) 0 0;
+  color: var(--text-soft);
+  line-height: 1.65;
 }
+.ph-foot {
+  margin-top: clamp(30px, 5vh, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.ph-kicker {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--brand-muted);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.ph-kicker i {
+  display: block;
+  width: clamp(48px, 7vw, 104px);
+  height: 1px;
+  background: currentColor;
+}
+.ph-arrow {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--brand-muted);
+  border-radius: 50%;
+  color: var(--brand-brown);
+  font-size: 18px;
+  text-decoration: none;
+  transition: background-color 220ms ease, color 220ms ease, transform 220ms ease;
+}
+.ph-arrow:hover {
+  background: var(--brand-brown);
+  color: var(--cream);
+  transform: translateX(3px);
+}
+@media (max-width: 600px) {
+  .ph-arrow { width: 46px; height: 46px; }
+  .ph-kicker { font-size: 9px; letter-spacing: .16em; }
+}
+/* Galerija dekora panela: mirna mreza kvadrata, bez okvira i natpisa. */
+.panel-gallery {
+  grid-column: 1 / -1;
+  margin-top: clamp(36px, 5vw, 72px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(10px, 1.2vw, 18px);
+}
+.panel-gallery figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--cream-tint);
+}
+.panel-gallery img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+.panel-gallery figure:hover img {
+  transform: scale(1.03);
+}
+@media (max-width: 900px) {
+  .panel-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
 .category-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2739,7 +2835,7 @@ header:has(.brand-image) {
 footer.site-footer {
   min-height: min(620px, 68vh);
   padding: clamp(40px, 5vw, 70px) 4vw 28px;
-  background: var(--brand-deep);
+  background: var(--brand-bark);
   color: var(--cream);
   display: grid;
   grid-template-columns: 1fr minmax(260px, 1.2fr) 1fr;

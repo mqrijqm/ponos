@@ -54,27 +54,45 @@ export default function VideoHero() {
       tom slucaju ostaje poster i natpisi se ne pojavljuju sami, pa se pusta
       jos jednom kad se stranica vrati u prvi plan.
     */
-    let pusten = false;
-    const pusti = () => {
-      if (pusten) return;
+    let trazen = false;   // gost je skrolovao
+    let pusten = false;   // snimak stvarno ide
+
+    const probaj = () => {
+      if (!trazen || pusten) return;
       pusten = true;
-      window.removeEventListener("scroll", pusti);
       video.play().catch(() => {
         pusten = false;
       });
     };
 
+    /*
+      Scroll samo zabiljezi zelju; pustanje ide cim snimak ima dovoljno
+      podataka. Bez toga bi `play()` na praznom baferu cekao da se napuni i
+      kadar bi krenuo sa zakasnjenjem od pola sekunde ili vise.
+    */
+    const pusti = () => {
+      trazen = true;
+      window.removeEventListener("scroll", pusti);
+      if (video.readyState >= 3) probaj();
+    };
+
     const naVidljivost = () => {
-      if (!document.hidden && !pusten) pusti();
+      if (!document.hidden) probaj();
     };
 
     window.addEventListener("scroll", pusti, { passive: true, once: true });
     document.addEventListener("visibilitychange", naVidljivost);
+    video.addEventListener("canplay", probaj);
+    video.addEventListener("canplaythrough", probaj);
     video.addEventListener("timeupdate", napreduj);
+    /* Skidanje krece odmah, da snimak doceka prvi scroll vec napunjen. */
+    video.load();
 
     return () => {
       window.removeEventListener("scroll", pusti);
       document.removeEventListener("visibilitychange", naVidljivost);
+      video.removeEventListener("canplay", probaj);
+      video.removeEventListener("canplaythrough", probaj);
       video.removeEventListener("timeupdate", napreduj);
     };
   }, [reducedMotion]);
