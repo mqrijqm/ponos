@@ -285,6 +285,8 @@ header nav {
 }
 .home-hero {
   position: relative;
+  /* Puna visina: sekcija se pinuje dok se sastavlja (HomeHeroReveal). */
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -4517,8 +4519,8 @@ a.cta-dot {
 main > section.editorial-statement {
   height: 260svh;
   padding: 0;
-  background: #e7dcc8;
-  color: #7a6142;
+  background: var(--cream);
+  color: var(--ink);
 }
 .es-pin {
   position: sticky;
@@ -4531,17 +4533,34 @@ main > section.editorial-statement {
   justify-content: center;
   padding: clamp(60px, 10vh, 140px) clamp(24px, 5vw, 88px);
 }
+/* Slog je lijevo poravnat i drzi se jedne kolone: natpis, recenica, podnozje. */
+.es-inner {
+  width: 100%;
+  max-width: 1180px;
+  display: flex;
+  flex-direction: column;
+}
+.es-label {
+  color: var(--brand-muted);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
 /* Globalno pravilo za `p` nosi !important, pa ga ovdje moramo nadjacati. */
 .editorial-statement .es-text {
+  /* Uza kolona od okvira: recenica se lomi u vise kratkih redova, pa se cita
+     kao slog a ne kao jedan dugi red preko ekrana. Strelica ostaje uz ivicu. */
   width: 100%;
-  max-width: 1600px;
-  margin: 0;
-  text-align: center;
-  text-wrap: balance;
+  max-width: 890px;
+  margin: clamp(22px, 3.2vh, 40px) 0 0;
+  text-align: left;
+  text-wrap: pretty;
   font-family: var(--font-newsreader), serif;
   font-weight: 400;
-  font-size: clamp(1.9rem, 5.2vw, 5.4rem) !important;
-  line-height: 1.16;
+  font-size: clamp(1.8rem, 4.4vw, 4.2rem) !important;
+  line-height: 1.1;
   letter-spacing: -.02em;
 }
 .es-word {
@@ -4551,9 +4570,50 @@ main > section.editorial-statement {
 .es-word-accent {
   font-style: italic;
 }
-
 .editorial-statement .es-word-accent {
+  color: var(--brand-muted);
+}
+/* Podnozje: crta i natpis lijevo, strelica desno. */
+.es-foot {
+  margin-top: clamp(34px, 6vh, 76px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.es-kicker {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--brand-muted);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .2em;
+}
+.es-kicker i {
+  display: block;
+  width: clamp(48px, 7vw, 104px);
+  height: 1px;
+  background: currentColor;
+}
+.es-arrow {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--brand-muted);
+  border-radius: 50%;
+  color: var(--brand-brown);
+  font-size: 18px;
+  text-decoration: none;
+  transition: background-color 220ms ease, color 220ms ease, transform 220ms ease;
+}
+.es-arrow:hover {
+  background: var(--brand-brown);
   color: var(--cream);
+  transform: translateX(3px);
 }
 
 @media (max-width: 767px) {
@@ -4565,7 +4625,15 @@ main > section.editorial-statement {
   }
   .editorial-statement .es-text {
     font-size: clamp(1.55rem, 7.4vw, 2.6rem) !important;
-    line-height: 1.22;
+    line-height: 1.18;
+  }
+  .es-arrow {
+    width: 46px;
+    height: 46px;
+  }
+  .es-kicker {
+    font-size: 9px;
+    letter-spacing: .16em;
   }
 }
 

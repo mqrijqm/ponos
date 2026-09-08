@@ -6,8 +6,8 @@
  * dugmeta za pauzu ni cekanja da se video "odlijepi" od scrolla.
  */
 
-/** Koliko frejmova ima u public/frames (f_001.webp ... f_168.webp). */
-export const FRAME_COUNT = 168;
+/** Koliko frejmova ima u public/frames (f_001.webp ... f_180.webp). */
+export const FRAME_COUNT = 180;
 
 /** Putanja jednog frejma. Brojevi su dopunjeni nulama na tri mjesta. */
 export function framePath(index: number) {
@@ -17,8 +17,8 @@ export function framePath(index: number) {
 /**
  * Visina sekcije u procentima ekrana - glavna rucica za TRAJANJE.
  *
- * 350 znaci da se cijela sekvenca odvrti kroz tri i po ekrana scrolla: 168
- * frejmova na oko 3150px scrolla je ~19px po frejmu, sto je dovoljno gusto da
+ * 350 znaci da se cijela sekvenca odvrti kroz tri i po ekrana scrolla: 180
+ * frejmova na oko 3150px scrolla je ~17px po frejmu, sto je dovoljno gusto da
  * pokret izgleda neprekidno, a nije toliko sporo da se cini zaglavljeno.
  */
 export const SCROLL_LENGTH_VH = 350;

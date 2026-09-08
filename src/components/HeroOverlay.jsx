@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
+import QuoteCta from "./QuoteCta";
 import { usePrefersReducedMotion } from "./hero/hooks";
 
 /**
@@ -30,21 +31,15 @@ const CTA_AT = 0.88;
 export const HERO_OVERLAY_STOPS = [TITLE_AT, CTA_AT];
 
 const COPY = {
-  // Ostatak sajta je na ijekavici ("Pogledaj Katalog", "Kontaktiraj Nas"),
-  // pa je i ovo "Otkrij", ne "Otkryj".
   title: "Prostor počinje ovdje",
-  cta: "Otkrij više",
-  href: "/proizvodi/laminati",
+  cta: "Vidi ponudu",
 };
 
-const BRAND = "#8b7e6e";       // ista boja kao --brand-muted u globals.css
-const BRAND_HOVER = "#6d6251"; // tamnija, za hover
+const BRAND = "#8b7e6e"; // ista boja kao --brand-muted u globals.css
 
 export default function HeroOverlay({ scrollProgress = 0 }) {
   const titleRef = useRef(null);
   const ctaWrapRef = useRef(null); // nosi pojavljivanje (opacity + y)
-  const buttonRef = useRef(null);  // nosi hover (podizanje za 2px)
-  const [hovered, setHovered] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
 
   /* Pamti sta je vec prikazano, da isti prelaz ne krene dvaput. */
@@ -74,20 +69,6 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
     toggle(ctaWrapRef.current, "cta", scrollProgress > CTA_AT, 28);
   }, [scrollProgress, reducedMotion]);
 
-  /* Hover je na samom dugmetu, odvojen od pojavljivanja: da se dvije
-     animacije ne otimaju oko iste `y` vrijednosti. */
-  useEffect(() => {
-    const button = buttonRef.current;
-    if (!button) return;
-    gsap.to(button, {
-      backgroundColor: hovered ? BRAND_HOVER : BRAND,
-      y: hovered && !reducedMotion ? -2 : 0,
-      duration: 0.25,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
-  }, [hovered, reducedMotion]);
-
   return (
     /*
       Sloj pokriva cijeli kadar, ali ne hvata misa - `pointerEvents: none` pusta
@@ -101,9 +82,11 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        gap: "clamp(20px, 3vw, 38px)",
-        padding: "0 24px",
+        // Natpisi stoje u gornjoj trecini kadra, ne po sredini: tamo im
+        // daske ne prolaze kroz slova. 82px je fiksni navbar.
+        justifyContent: "flex-start",
+        gap: "clamp(18px, 2.4vw, 30px)",
+        padding: "calc(82px + clamp(48px, 11vh, 130px)) 24px 0",
         textAlign: "center",
         pointerEvents: "none",
       }}
@@ -131,35 +114,16 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
 
       <div
         ref={ctaWrapRef}
-        style={{ zIndex: 6, opacity: 0, transform: "translateY(28px)" }}
+        style={{ zIndex: 6, opacity: 0, transform: "translateY(28px)", pointerEvents: "auto" }}
       >
-        <a
-          ref={buttonRef}
-          href={COPY.href}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          onFocus={() => setHovered(true)}
-          onBlur={() => setHovered(false)}
-          style={{
-            display: "inline-block",
-            padding: "13px 44px",
-            background: BRAND,
-            color: "#fff",
-            border: "none",
-            borderRadius: 999,
-            fontFamily: "var(--font-manrope), Arial, Helvetica, sans-serif",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            textDecoration: "none",
-            cursor: "pointer",
-            pointerEvents: "auto",
-            willChange: "transform",
-          }}
-        >
-          {COPY.cta}
-        </a>
+        {/*
+          Isto dugme kao u navbaru: ista komponenta i ista `.cta-dot` klasa,
+          pa i isti modal za ponudu. Ovdje se samo vraca `pointerEvents`,
+          koji sloj iznad gasi.
+        */}
+        <QuoteCta className="cta-dot" label="Zatraži ponudu">
+          <i /> {COPY.cta}
+        </QuoteCta>
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { naturalFloor } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import ScrollSequenceHero from "./hero/ScrollSequenceHero";
+import HomeHeroReveal from "./HomeHeroReveal";
 
 /* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
    .jpg fotografije, ostalo su kvadratni .webp krupni planovi. */
@@ -201,7 +202,7 @@ export default function SitePage() {
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />
-        <section className="home-hero">
+        <HomeHeroReveal>
           <div className="home-hero-top">
             <div className="home-hero-copy">
               <strong>NA JEDNOM MJESTU</strong>
@@ -227,7 +228,7 @@ export default function SitePage() {
               <b>PROSTORA</b>
             </h1>
           </div>
-        </section>
+        </HomeHeroReveal>
         <EditorialStatement />
         <section className="how process-section">
           <div className="how-heading">

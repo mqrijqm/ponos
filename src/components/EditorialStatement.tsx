@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useTransform, useReducedMotion, MotionValue } from "framer-motion";
 
@@ -10,7 +11,11 @@ import { motion, useMotionValue, useTransform, useReducedMotion, MotionValue } f
  * Raspon svake rijeci se preklapa sa susjednim (FAKTOR), pa nema
  * stepenastog utiska. Uz prefers-reduced-motion tekst je odmah pun.
  */
-const PRIJE = "MT PONOS iz Banje Luke specijalizovan je za veleprodaju i maloprodaju,";
+/* "MT PONOS iz Banje Luke" je izasao iz recenice i stoji kao natpis iznad —
+   recenica pocinje od onoga sto firma radi. */
+const LABEL = "MT PONOS · BANJA LUKA";
+const KICKER = "PODOVI KOJI STVARAJU DOM";
+const PRIJE = "Specijalizovan je za veleprodaju i maloprodaju,";
 const ISTAKNUTO = "dostavu i ugradnju";
 const POSLIJE = "laminata, parketa, vinila i deckinga.";
 
@@ -97,18 +102,32 @@ export default function EditorialStatement() {
   return (
     <section ref={ref} className="editorial-statement is-fullbleed" aria-label="O kompaniji">
       <div className="es-pin">
-        <p className="es-text">
-          {rijeci.map((r, i) => (
-            <Rijec
-              key={`${r.tekst}-${i}`}
-              rijec={r}
-              progress={scrollYProgress}
-              pocetak={i * korak}
-              kraj={Math.min(KRAJ_OTKRIVANJA, i * korak + korak * FAKTOR)}
-              mirno={mirno}
-            />
-          ))}
-        </p>
+        <div className="es-inner">
+          <span className="es-label">{LABEL}</span>
+
+          <p className="es-text">
+            {rijeci.map((r, i) => (
+              <Rijec
+                key={`${r.tekst}-${i}`}
+                rijec={r}
+                progress={scrollYProgress}
+                pocetak={i * korak}
+                kraj={Math.min(KRAJ_OTKRIVANJA, i * korak + korak * FAKTOR)}
+                mirno={mirno}
+              />
+            ))}
+          </p>
+
+          <div className="es-foot">
+            <span className="es-kicker">
+              <i aria-hidden="true" />
+              {KICKER}
+            </span>
+            <Link className="es-arrow" href="/proizvodi" aria-label="Pogledaj proizvode">
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
