@@ -170,8 +170,8 @@ export default function Page() {
             dimenzije prostora za informativni proračun i ponudu.
           </p>
           <div>
-            <Link className="primary" href="/kontakt#upit">
-              Zatraži ponudu
+            <Link className="cta-dot" href="/kontakt#upit">
+              <i /> Zatraži ponudu
             </Link>
             <Link href="/proizvodi">
               Istraži asortiman <ArrowRight size={16} />

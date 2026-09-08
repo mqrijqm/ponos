@@ -22,9 +22,9 @@ export const metadata: Metadata = {
     "Pregledajte laminate, parkete, SPC Vinyl i druge podne obloge. Izračunajte potrebnu količinu i zatražite ponudu MT PONOS u Banjoj Luci.",
   alternates: { canonical: "/" },
   icons: {
-    icon: "/logo-ponos-mark.svg",
-    shortcut: "/logo-ponos-mark.svg",
-    apple: "/logo-ponos-mark.svg",
+    icon: "/icon-ponos.png",
+    shortcut: "/icon-ponos.png",
+    apple: "/apple-icon-ponos.png",
   },
   openGraph: {
     title: "Podne obloge i laminati | MT PONOS Banja Luka",

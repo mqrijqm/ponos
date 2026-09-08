@@ -72,7 +72,7 @@ export default function PlankHero() {
     */
     <section
       ref={sectionRef}
-      className="relative w-full"
+      className="hero-fullbleed relative w-full"
       style={{ height: `calc(${SCROLL_PAGES + 1} * 100svh)` }}
     >
       <div className="sticky top-0 h-svh w-full overflow-hidden bg-white">

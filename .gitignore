@@ -48,3 +48,6 @@ CLAUDE.md
 
 .vercel
 .env*
+
+# playwright mcp artefakti
+/.playwright-mcp/

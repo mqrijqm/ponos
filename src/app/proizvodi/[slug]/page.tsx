@@ -166,8 +166,8 @@ export default async function Page({
               Za aktuelne dekore, cijene i rok isporuke kontaktirajte prodajni
               tim.
             </p>
-            <a className="primary" href="/kontakt#upit">
-              Zatraži ponudu
+            <a className="cta-dot" href="/kontakt#upit">
+              <i /> Zatraži ponudu
             </a>
           </section>
         )}

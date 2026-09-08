@@ -59,10 +59,5 @@ export function QualityAccordionSection() {
   );
 }
 
-const features = [[qualityImages.authentic, "Autentični dekori"], [qualityImages.precision, "Precizno uklapanje"], [qualityImages.resistance, "Visoka otpornost"], [qualityImages.maintenance, "Lako održavanje"], [qualityImages.longLife, "Dug vijek trajanja"]] as const;
-export function QualityFeatureStrip() {
-  return <section className="quality-section quality-features" aria-labelledby="quality-features-title"><div className="quality-centered-heading"><span className="quality-pill"><i /> KVALITET U SVAKOM DETALJU</span><h2 id="quality-features-title">Biramo podove koji prostoru daju karakter,<br /><em>a svakodnevici sigurnost i trajnost.</em></h2></div><div className="quality-feature-row">{features.map(([src, title]) => <figure key={title}><div className="quality-feature-image"><Image src={src} alt={title} width={600} height={750} loading="lazy" /></div><figcaption>{title}</figcaption></figure>)}</div></section>;
-}
-
 const standards = [[qualityImages.wear, "Otpornost na habanje", "Detalj površine i ruba laminata"], [qualityImages.core, "Stabilna konstrukcija", "Presjek naslaganih podnih dasaka"], [qualityImages.materials, "Pouzdano porijeklo", "Tri odabrana uzorka poda"]] as const;
-export default function QualityPage() { return <main className="quality-page"><QualityAccordionSection /><QualityFeatureStrip /></main>; }
+export default function QualityPage() { return <main className="quality-page"><QualityAccordionSection /></main>; }

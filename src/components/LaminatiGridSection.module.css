@@ -27,9 +27,10 @@
 }
 
 .inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--pad-x);
+  /* Bocnu marginu daje globalni --page-gutter na samoj sekciji. */
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* ------------------------------------------------------------------ naslov */

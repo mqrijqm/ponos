@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronDown, Menu } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, ShoppingBasket } from "lucide-react";
 import { categories } from "@/data/catalog";
 import QuoteCta from "./QuoteCta";
 
@@ -50,9 +50,12 @@ export function Header() {
         <Link href="/savjeti">Savjeti</Link>
         <Link href="/kontakt">Kontakt</Link>
       </nav>
-      <QuoteCta className="header-cta header-cta-svg" label="Vidi ponudu">
-        <Image src="/cta-dugme.svg" alt="" width={340} height={104} priority />
+      <QuoteCta className="header-cta cta-dot">
+        <i /> Vidi ponudu
       </QuoteCta>
+      <span className="nav-basket" aria-label="Korpica">
+        <ShoppingBasket size={20} strokeWidth={1.6} />
+      </span>
       <details className="mobile-menu">
         <summary aria-label="Otvori meni">
           <Menu />

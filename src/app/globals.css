@@ -276,21 +276,19 @@ header nav {
   transition-delay: 0s;
 }
 .home-hero {
-  height: 100svh;
   position: relative;
-  display: grid;
-  grid-template-rows: 56% 44%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   background: var(--hero-cream);
   color: var(--hero-text);
 }
-.home-hero-interior {
+.home-hero-top {
   position: relative;
-  overflow: hidden;
-}
-.home-hero-interior > img {
-  object-fit: cover;
-  object-position: center bottom;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 6svh 40px 9svh;
 }
 .home-hero-logo {
   position: absolute;
@@ -309,12 +307,9 @@ header nav {
   object-position: left top;
 }
 .home-hero-copy {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  top: 4svh;
-  left: 50%;
   width: min(380px, 36vw);
-  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -367,17 +362,18 @@ header nav {
 .home-hero-panel {
   position: relative;
   min-width: 0;
+  flex: 0 0 auto;
   overflow: hidden;
   background: var(--hero-cream);
   display: flex;
   flex-direction: column;
-  padding-top: calc(44svh * 0.06);
-  padding-bottom: calc(44svh * 0.11);
+  padding-top: 2.6svh;
+  padding-bottom: 4.8svh;
 }
 .detail-strip {
   position: relative;
-  flex: 0 0 37%;
-  height: 37%;
+  flex: 0 0 auto;
+  height: 16svh;
 }
 .detail-group,
 .detail-single {
@@ -399,7 +395,7 @@ header nav {
 .detail-tile {
   width: auto;
   height: 100%;
-  aspect-ratio: 6 / 5;
+  aspect-ratio: 1 / 1;
 }
 .detail-tile {
   position: relative;
@@ -422,7 +418,7 @@ header nav {
   z-index: 2;
   flex: 1 1 auto;
   align-self: flex-start;
-  margin: calc(44svh * 0.09) 0 0 3.7%;
+  margin: 4svh 0 0 3.7%;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -436,10 +432,9 @@ header nav {
 }
 .home-hero-title span {
   color: var(--brand-brown);
-  font-family: var(--font-bodoni), serif;
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.05em;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 .home-hero-title b {
   color: var(--brand-beige);
@@ -466,8 +461,10 @@ header nav {
     width: 165px;
     height: auto;
   }
+  .home-hero-top {
+    padding: 7svh 24px 7svh;
+  }
   .home-hero-copy {
-    top: 76px;
     width: min(300px, 78vw);
   }
   .home-hero-copy strong,
@@ -497,7 +494,8 @@ header nav {
   .detail-strip {
     position: relative;
     inset: auto;
-    flex: 0 0 37%;
+    flex: 0 0 auto;
+    height: 13svh;
     display: flex;
     align-items: flex-start;
     gap: 6px;
@@ -516,14 +514,15 @@ header nav {
     flex: 0 0 auto;
     width: auto;
     height: 100%;
-    aspect-ratio: 6 / 5;
+    aspect-ratio: 1 / 1;
     scroll-snap-align: start;
   }
+  /* Razmak od ivice sada daje --page-gutter na sekciji. */
   .detail-group-left .detail-tile:first-child {
-    margin-left: 24px;
+    margin-left: 0;
   }
   .detail-group-right .detail-tile:last-child {
-    margin-right: 24px;
+    margin-right: 0;
   }
   .home-hero-title {
     position: relative;
@@ -534,7 +533,7 @@ header nav {
     align-items: flex-start;
     gap: 0;
     width: 88%;
-    margin: calc(44svh * 0.09) 0 0 6%;
+    margin: 4svh 0 0 6%;
     font-size: min(13vw, 6.4svh);
     line-height: 0.78;
   }
@@ -3236,8 +3235,8 @@ p, li, label, input, select, textarea, small, figcaption, blockquote,
 
 /* Give sections and their content room to breathe across the site. */
 main > section:not(.home-hero) {
-  padding-top: clamp(34px, 3vw, 52px);
-  padding-bottom: clamp(34px, 3vw, 52px);
+  padding-top: clamp(72px, 7vw, 130px);
+  padding-bottom: clamp(72px, 7vw, 130px);
 }
 .calculator-section > div:first-child {
   display: flex;
@@ -3255,8 +3254,8 @@ main > section:not(.home-hero) {
 .contact-actions { margin-top: 20px; }
 @media (max-width: 767px) {
   main > section:not(.home-hero) {
-    padding-top: 34px;
-    padding-bottom: 34px;
+    padding-top: 72px;
+    padding-bottom: 72px;
   }
   .calculator-section > div:first-child { gap: 18px; }
   .calculator-section > div:first-child > h2 { margin-top: 10px; }
@@ -3310,7 +3309,7 @@ main > section:not(.home-hero) {
   transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .process-card-media img { object-fit: cover; }
-.process-card:nth-child(1) .process-card-media img { object-position: center center; }
+.process-card:nth-child(1) .process-card-media img { object-position: 68% center; }
 .process-card:nth-child(2) .process-card-media img { object-position: center center; }
 .process-card:nth-child(3) .process-card-media img { object-position: center center; }
 .process-card.is-active .process-card-media { opacity: 1; }
@@ -3319,32 +3318,33 @@ main > section:not(.home-hero) {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 18px;
+  justify-content: flex-start;
+  gap: 14px;
   padding: 42px clamp(22px, 3vw, 58px);
 }
 .process-card-copy b {
   color: var(--brand-navy);
-  margin: 0 0 10px;
+  margin: 0 0 6px;
   font-family: var(--font-newsreader), serif;
-  font-size: clamp(1.9rem, 3vw, 3rem);
+  font-size: clamp(2.6rem, 4.4vw, 4.6rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: -.04em;
 }
 .process-card-copy strong {
-  max-width: 16ch;
-  margin: 0 0 18px;
+  max-width: 18ch;
+  margin: 0;
   color: var(--brand-navy);
   font-family: var(--font-newsreader), serif;
-  font-size: clamp(.95rem, 1.2vw, 1.25rem);
+  font-size: clamp(1.75rem, 2.9vw, 3.1rem);
   font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: normal;
+  line-height: 1.05;
+  letter-spacing: -.01em;
 }
 .process-card-description {
+  margin-top: auto;
   max-width: 34ch;
-  color: var(--brand-muted);
+  color: var(--brand-navy);
   font-size: 16px;
   line-height: 1.6;
   opacity: 0;
@@ -3357,12 +3357,13 @@ main > section:not(.home-hero) {
   right: 26px;
   bottom: 26px;
   line-height: 1;
-  width: 32px;
-  height: 32px;
+  width: 22px;
+  height: 22px;
 }
 .process-card-indicator img { display: block; width: 100%; height: 100%; object-fit: contain; opacity: .42; }
 .process-card:not(.is-active) .process-card-copy { grid-column: 1 / -1; padding: 34px 28px; }
-.process-card:not(.is-active) .process-card-copy strong { max-width: 11ch; }
+.process-card:not(.is-active) .process-card-copy b { font-size: clamp(2.1rem, 2.7vw, 2.8rem); }
+.process-card:not(.is-active) .process-card-copy strong { max-width: 10ch; font-size: clamp(1.3rem, 1.8vw, 1.85rem); }
 .process-card:not(.is-active) .process-card-description { display: none; }
 @media (max-width: 900px) {
   .process-section { padding: 54px 6vw 58px; }
@@ -3381,11 +3382,12 @@ main > section:not(.home-hero) {
     gap: 16px;
     padding: 18px 22px;
   }
-  .process-card-copy b { margin-bottom: 0; font-size: clamp(3rem, 14vw, 3.5rem); line-height: .95; }
-  .process-card-copy strong, .process-card:not(.is-active) .process-card-copy strong { max-width: none; }
+  .process-card-copy b,
+  .process-card:not(.is-active) .process-card-copy b { margin-bottom: 0; font-size: clamp(3.2rem, 15vw, 4rem); line-height: .95; }
+  .process-card-copy strong, .process-card:not(.is-active) .process-card-copy strong { max-width: none; font-size: clamp(1.35rem, 5.6vw, 1.9rem); }
   .process-card-copy strong { margin-bottom: 0; }
-  .process-card-description { grid-column: 1 / -1; padding-bottom: 4px; }
-  .process-card-indicator { position: static; width: 28px; height: 28px; }
+  .process-card-description { grid-column: 1 / -1; margin-top: 0; padding-bottom: 4px; }
+  .process-card-indicator { position: static; width: 22px; height: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .process-accordion, .process-card, .process-card-media, .process-card-description { transition-duration: .01ms !important; }
@@ -3989,5 +3991,258 @@ main.quality-page > section.quality-section + section.quality-section {
   .quality-accordion-trigger {
     grid-template-columns: 46px 1fr 20px;
     padding: 30px 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CTA za ponudu — jedan stil na cijelom sajtu.
+   Tanak smedji okvir, tacka, razmaknuta verzalna slova.
+   ═══════════════════════════════════════════════════════════════════ */
+.cta-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border: 1px solid var(--brand-brown);
+  border-radius: 0;
+  background: none;
+  color: var(--brand-brown);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+.cta-dot i {
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.cta-dot:hover {
+  background: var(--brand-brown);
+  color: var(--hero-cream);
+}
+/* Nadjacava .header-cta (navy popuna) i .primary. */
+.header-cta.cta-dot,
+.primary.cta-dot,
+.calculator > button.cta-dot {
+  background: none;
+  border: 1px solid var(--brand-brown);
+  color: var(--brand-brown);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .22em;
+  padding: 13px 20px;
+}
+.header-cta.cta-dot:hover,
+.primary.cta-dot:hover,
+.calculator > button.cta-dot:hover {
+  background: var(--brand-brown);
+  border-color: var(--brand-brown);
+  color: var(--hero-cream);
+}
+.calculator > button.cta-dot { width: 100%; }
+@media (max-width: 600px) {
+  .cta-dot { padding: 12px 16px; gap: 10px; font-size: 10px; letter-spacing: .18em; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   JEDINSTVENA BOCNA MARGINA
+   Sve sekcije i navbar drze isti razmak od ivica ekrana.
+   Izuzeci: PlankHero (.hero-fullbleed) i footer — oni idu preko cijele sirine.
+   Formula ponavlja raniji model .process-section: 7vw dok ekran nije sirok,
+   a preko ~1613px se sadrzaj zaustavlja na 1500px i centrira.
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --page-gutter: max(7vw, (100vw - 1500px) / 2);
+}
+@media (max-width: 767px) {
+  :root {
+    --page-gutter: 24px;
+  }
+}
+main > section:not(.hero-fullbleed):not(.placeholder-section) {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+header.site-header,
+header.home-sticky-header {
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+/* Unutrasnji centrirani omotaci bi razbili poravnanje sa ostalim sekcijama. */
+section.trust > .trust-inner {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+/* PONOS PROSTORA je sada uvucen, pa procentualni pomaci unutar njega ispadaju. */
+.home-hero-top {
+  padding-left: 0;
+  padding-right: 0;
+}
+.home-hero-basket {
+  right: 0;
+}
+.detail-group-left {
+  left: 0;
+}
+.detail-group-right {
+  right: 0;
+}
+.detail-single {
+  left: 50%;
+}
+.home-hero-title {
+  width: 100%;
+  margin-left: 0;
+}
+/* Mark u cosku kartice — maleni. */
+.process-card-indicator {
+  width: 18px;
+  height: 18px;
+}
+.process-card-indicator img {
+  opacity: 1;
+}
+/* Kad je CTA link, a ne dugme. */
+a.cta-dot {
+  text-decoration: none;
+}
+
+/* ═══ Korpica u navbaru (bila je u sekciji PONOS PROSTORA) ═══ */
+.nav-basket {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--brand-brown);
+  background: #e8e1d7;
+  border-radius: 50%;
+}
+@media (max-width: 780px) {
+  .nav-basket {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* ═══ Vise vazduha unutar sekcije PONOS PROSTORA ═══ */
+.home-hero-top {
+  padding-top: 14svh;
+  padding-bottom: 16svh;
+}
+.home-hero-panel {
+  padding-top: 0;
+  padding-bottom: 12svh;
+}
+.home-hero-copy p {
+  margin-top: 22px;
+}
+.home-hero-title {
+  margin-top: 7svh;
+}
+@media (max-width: 767px) {
+  .home-hero-top {
+    padding-top: 12svh;
+    padding-bottom: 12svh;
+  }
+  .home-hero-panel {
+    padding-bottom: 10svh;
+  }
+  .home-hero-title {
+    margin-top: 6svh;
+  }
+}
+
+/* ═══ Navbar na uskim ekranima ═══
+   Novo CTA dugme je sire od starog SVG-a, pa uz korpicu vise ne staje.
+   Ispod 520px CTA se sklanja, ostaju logo, korpica i hamburger. */
+@media (max-width: 780px) {
+  header {
+    gap: 14px;
+  }
+}
+@media (max-width: 519px) {
+  .header-cta.cta-dot {
+    display: none;
+  }
+}
+
+/* ═══ Kalkulator je centriran, u jednoj koloni ═══ */
+.calculator-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 52px;
+  text-align: center;
+}
+.calculator-section > div:first-child {
+  align-items: center;
+  max-width: 620px;
+}
+.calculator-section > div > p {
+  margin-left: auto;
+  margin-right: auto;
+}
+.calculator {
+  margin: 0 auto;
+  /* Polja i oznake unutar kartice ostaju lijevo poravnata. */
+  text-align: left;
+}
+
+/* ═══ KAKO FUNKCIONISE — tekst je smedj, ne plav ═══ */
+.process-card-copy b,
+.process-card-copy strong,
+.process-card-description {
+  color: var(--brand-brown);
+}
+
+/* ═══ VISE O KVALITETU — naslov i tekst centrirani, kao sekcije iznad ═══ */
+.quality-accordion .quality-intro-grid {
+  display: block;
+  position: relative;
+  text-align: center;
+}
+.quality-accordion .quality-side-note {
+  position: absolute;
+  top: 0;
+  right: 0;
+  align-items: flex-end;
+  text-align: right;
+}
+.quality-accordion .quality-intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.quality-accordion .quality-intro-content h1,
+.quality-accordion .quality-intro-content h2,
+.quality-accordion .quality-intro-content > p {
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 900px) {
+  /* Na uskom ekranu meta oznaka ne moze u cosak — ide iznad, centrirano. */
+  .quality-accordion .quality-side-note {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .quality-accordion .quality-side-note small {
+    grid-column: auto;
   }
 }

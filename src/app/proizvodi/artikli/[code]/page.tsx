@@ -87,8 +87,8 @@ export default async function Page({
               <Ponuda2Gate feature="uzorak" className="product-gate secondary">
                 Naruči uzorak
               </Ponuda2Gate>
-              <QuoteCta code={p.code} className="primary">
-                Zatraži ponudu
+              <QuoteCta code={p.code} className="cta-dot">
+                <i /> Zatraži ponudu
               </QuoteCta>
             </div>
           </div>

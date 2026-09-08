@@ -36,26 +36,23 @@ const processSteps: ProcessStep[] = [
     number: "1.",
     title: "Izmjerite prostor",
     description: "Izmjerite dužinu i širinu prostorije za informativni proračun.",
-    image: "/images/process/step-01-measure.png",
-    alt: "Osoba mjeri prostoriju sa drvenim podom",
+    image: "/images/process/step-01-measure.webp",
+    alt: "Metar razvučen preko laminata u svijetlom dnevnom boravku",
   },
   {
     number: "2.",
     title: "Uporedite artikle",
     description: "Pregledajte dekore, kolekcije i tehničke karakteristike.",
+    image: "/images/process/step-02-compare.webp",
+    alt: "Tri daske u različitim dekorima poređane jedna preko druge",
   },
   {
     number: "3.",
     title: "Zatražite ponudu",
     description: "Pošaljite izabrani proizvod i potrebnu količinu našem prodajnom timu.",
+    image: "/images/process/step-03-quote.webp",
+    alt: "Sto u salonu podova sa uzorcima, blokom i tabletom",
   },
-];
-
-const trustPoints = [
-  "Više od 20 godina iskustva",
-  "Veleprodaja i maloprodaja",
-  "Proizvodi dostupni na lageru",
-  "Stručno savjetovanje pri izboru",
 ];
 
 function HeroDetail({ slot, className = "" }: { slot: number; className?: string }) {
@@ -156,12 +153,14 @@ export default function SitePage() {
           ))}
         </nav>
         <button
-          className="header-cta header-cta-svg"
-          aria-label="Vidi ponudu"
+          className="header-cta cta-dot"
           onClick={() => openQuote()}
         >
-          <Image src="/cta-dugme.svg" alt="" width={340} height={104} priority />
+          <i /> Vidi ponudu
         </button>
+        <span className="nav-basket" aria-label="Korpica">
+          <ShoppingBasket size={20} strokeWidth={1.6} />
+        </span>
         <button
           className="menu"
           aria-label="Otvori meni"
@@ -204,21 +203,11 @@ export default function SitePage() {
         <span id="o-nama" />
         <span id="savjeti" />
         <section ref={heroRef} className="home-hero">
-          <div className="home-hero-interior">
-            <Image
-              src="/images/hero/hero-interior.jpg"
-              alt="Savremeni svijetli dnevni boravak sa prirodnim drvenim podom"
-              fill
-              priority
-              sizes="100vw"
-            />
+          <div className="home-hero-top">
             <div className="home-hero-copy">
               <strong>KOLEKCIJA PODOVA</strong>
               <p>Materijali birani za dugotrajne, skladne i tople prostore.</p>
             </div>
-            <span className="home-hero-basket" aria-label="Korpica">
-              <ShoppingBasket size={22} strokeWidth={1.6} />
-            </span>
           </div>
           <div className="home-hero-panel">
             <div className="detail-strip">
@@ -237,26 +226,6 @@ export default function SitePage() {
               <b>PROSTORA</b>
             </h1>
           </div>
-        </section>
-        <section id="kalkulator" className="calculator-section">
-          <div>
-            <span className="eyebrow">PRECIZNIJI UPIT</span>
-            <h2>Koliko poda vam je potrebno?</h2>
-            <p>
-              Unesite dimenzije prostorije. Računamo rezervu, broj cijelih
-              paketa i informativnu vrijednost materijala za trenutno odabrani
-              pod.
-            </p>
-          </div>
-          <Calculator
-            item={calcItem}
-            showPicker
-            onItemChange={setCalcItem}
-            onRequestQuote={(result) => {
-              track("calculator_completed");
-              openQuote(calcItem, result);
-            }}
-          />
         </section>
         <section className="how process-section">
           <div className="how-heading">
@@ -299,13 +268,33 @@ export default function SitePage() {
                     <strong>{step.title}</strong>
                     <span className="process-card-description">{step.description}</span>
                     <span className="process-card-indicator" aria-hidden="true">
-                      <Image src="/logo-ponos-mark.svg" alt="" width={32} height={32} />
+                      <Image src="/images/process/card-corner-mark.png" alt="" width={96} height={96} />
                     </span>
                   </span>
                 </motion.button>
               );
             })}
           </div>
+        </section>
+        <section id="kalkulator" className="calculator-section">
+          <div>
+            <span className="eyebrow">PRECIZNIJI UPIT</span>
+            <h2>Koliko poda vam je potrebno?</h2>
+            <p>
+              Unesite dimenzije prostorije. Računamo rezervu, broj cijelih
+              paketa i informativnu vrijednost materijala za trenutno odabrani
+              pod.
+            </p>
+          </div>
+          <Calculator
+            item={calcItem}
+            showPicker
+            onItemChange={setCalcItem}
+            onRequestQuote={(result) => {
+              track("calculator_completed");
+              openQuote(calcItem, result);
+            }}
+          />
         </section>
         <section className="how legacy-how">
           <div>
@@ -335,22 +324,8 @@ export default function SitePage() {
             </article>
           ))}
         </section>
-        <section className="trust">
-          <div className="trust-inner">
-            <span className="eyebrow">ZAŠTO MT PONOS</span>
-            <h2>Podovi se biraju za godine koje dolaze.</h2>
-            <ul className="trust-list">
-              {trustPoints.map((point, index) => (
-                <li key={point}>
-                  <span>{`0${index + 1}`}</span>
-                  <p>{point}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-        <LaminatiGridSection />
         <QualityPage />
+        <LaminatiGridSection />
       </main>
       <Footer />
     </>

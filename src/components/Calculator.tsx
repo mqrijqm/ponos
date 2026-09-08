@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   CatalogItem,
@@ -178,8 +177,8 @@ export default function Calculator({
         Proračun je informativnog karaktera. Konačnu količinu i cijenu potrebno
         je potvrditi prije narudžbe.
       </p>
-      <button onClick={() => onRequestQuote(result)}>
-        Zatraži ponudu sa proračunom <ArrowRight size={17} />
+      <button className="cta-dot" onClick={() => onRequestQuote(result)}>
+        <i /> Zatraži ponudu sa proračunom
       </button>
     </div>
   );
