@@ -41,7 +41,9 @@ export default function SmoothScroll({
     <ReactLenis
       root
       ref={lenisRef as never}
-      options={{ autoRaf: false, lerp: 0.1 }}
+      // anchors: klik na link sa # (logo -> #top, kartica -> #kalkulator)
+      // klizi umjesto da skoci
+      options={{ autoRaf: false, lerp: 0.1, anchors: true }}
     >
       {children}
     </ReactLenis>

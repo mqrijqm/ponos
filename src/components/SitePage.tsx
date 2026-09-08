@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,6 +18,9 @@ import BasketMenu from "./BasketMenu";
 
 /* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
    .jpg fotografije, ostalo su kvadratni .webp krupni planovi. */
+/* Kartica koja vodi na drugu stranicu mora biti next/link, a ne <a>. */
+const MotionLink = motion.create(Link);
+
 const heroDetails = [
   ...[1, 2, 3, 4, 5].map((n) => `/images/hero/detail-${n}.jpg`),
   ...[6, 7, 8, 9, 10, 11, 12, 13].map((n) => `/images/hero/detail-${n}.webp`),
@@ -43,6 +47,12 @@ type ProcessStep = {
   description: string;
   image?: string;
   alt?: string;
+  /**
+   * Gdje kartica vodi. `href` je obican link (kalkulator ispod, stranica
+   * ponude), a korak 3 nema odrediste — otvara isti panel kao dugme
+   * "Vidi ponudu" u navbaru.
+   */
+  href?: string;
 };
 
 const processSteps: ProcessStep[] = [
@@ -52,6 +62,7 @@ const processSteps: ProcessStep[] = [
     description: "Izmjerite dužinu i širinu prostorije za informativni proračun.",
     image: "/images/process/step-01-measure.webp",
     alt: "Metar razvučen preko laminata u svijetlom dnevnom boravku",
+    href: "#kalkulator",
   },
   {
     number: "2.",
@@ -59,6 +70,7 @@ const processSteps: ProcessStep[] = [
     description: "Pregledajte dekore, kolekcije i tehničke karakteristike.",
     image: "/images/process/step-02-compare.webp",
     alt: "Tri daske u različitim dekorima poređane jedna preko druge",
+    href: "/proizvodi",
   },
   {
     number: "3.",
@@ -234,17 +246,26 @@ export default function SitePage() {
           >
             {processSteps.map((step, index) => {
               const isActive = index === activeProcessStep;
+              // Kartica se otvara na hover i fokus; klik je vodi dalje.
+              const shared = {
+                className: `process-card${isActive ? " is-active" : ""}`,
+                "aria-expanded": isActive,
+                onFocus: () => setActiveProcessStep(index),
+                onMouseEnter: () => setActiveProcessStep(index),
+                transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+              };
+              // Sidro na istoj stranici ostaje obican <a> — Lenis ga hvata i
+              // klizi do njega; prelazak na drugu stranicu ide kroz next/link.
+              const Card = !step.href
+                ? motion.button
+                : step.href.startsWith("#")
+                  ? motion.a
+                  : MotionLink;
+              const target = step.href
+                ? { href: step.href }
+                : { type: "button" as const, onClick: () => openQuote() };
               return (
-                <motion.button
-                  key={step.number}
-                  type="button"
-                  className={`process-card${isActive ? " is-active" : ""}`}
-                  aria-expanded={isActive}
-                  onClick={() => setActiveProcessStep(index)}
-                  onFocus={() => setActiveProcessStep(index)}
-                  onMouseEnter={() => setActiveProcessStep(index)}
-                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                >
+                <Card key={step.number} {...shared} {...target}>
                   {step.image && (
                     <span className="process-card-media">
                       <Image
@@ -264,7 +285,7 @@ export default function SitePage() {
                       <Image src="/images/process/card-corner-mark.png" alt="" width={96} height={96} />
                     </span>
                   </span>
-                </motion.button>
+                </Card>
               );
             })}
           </div>

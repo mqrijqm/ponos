@@ -4936,43 +4936,53 @@ main > section.product-showcase {
   width: 100%;
 }
 
-/* ═══ Krono sekcija staje u jedan ekran ═══
-   Razmaci su stegnuti da se cijela sekcija vidi od vrha do dna
-   bez listanja, uz 82px koje odnosi fiksni navbar. */
+/* ═══ Krono sekcija je niza od ekrana ═══
+   Sekcija vise ne zauzima punu visinu ekrana. Gornji padding i dalje
+   drzi 88px fiksnog navbara: sekcija nije visoka kao ekran, ali korisnik
+   se moze zaustaviti tacno na njenom vrhu i tada brend ne smije zavrsiti
+   ispod navbara. Ostatak visine skida se stezanjem sadrzaja — desna
+   tekstura je celija istog grida, pa se skracuje zajedno sa njim. */
 main > section.product-showcase {
-  min-height: 100svh;
+  min-height: 76svh;
 }
 .showcase-panel {
-  padding-top: calc(82px + clamp(20px, 3vh, 40px));
-  padding-bottom: clamp(24px, 3vh, 40px);
-  gap: clamp(20px, 3vh, 36px);
+  padding-top: calc(88px + clamp(12px, 1.6vh, 22px));
+  padding-bottom: clamp(20px, 2.6vh, 34px);
+  gap: clamp(16px, 2.2vh, 28px);
 }
 .product-showcase h2 {
   font-size: clamp(1.75rem, 2.5vw, 2.6rem);
 }
 .showcase-description {
-  margin-top: 18px;
+  margin-top: 14px;
   font-size: 14px;
   line-height: 1.6;
 }
 .showcase-rule {
-  margin-top: clamp(18px, 2.4vh, 30px);
+  margin-top: clamp(14px, 2vh, 24px);
 }
 .showcase-specs {
-  margin-top: clamp(16px, 2.2vh, 26px);
-  gap: clamp(6px, .9vh, 10px);
+  margin-top: clamp(12px, 1.8vh, 20px);
+  gap: clamp(5px, .7vh, 9px);
 }
 .showcase-room {
-  width: clamp(130px, 13vh, 168px);
+  width: clamp(112px, 11vh, 142px);
 }
 .showcase-brand-logo {
-  width: clamp(96px, 9vh, 118px);
+  width: clamp(88px, 8vh, 106px);
 }
 .showcase-room-corner {
   top: -14px;
   left: -14px;
   width: 44px;
   height: 44px;
+}
+@media (max-width: 900px) {
+  /* Uspravni raspored: tekstura je iznad teksta, navbar mu ne smeta,
+     pa gornji padding ne treba da racuna njegovu visinu. */
+  .showcase-panel {
+    padding-top: clamp(36px, 6vw, 56px);
+  }
 }
 
 /* ═══ WPC: mini naslov iznad, CTA ispod, vise zraka odozgo ═══ */
