@@ -1,21 +1,28 @@
 import Image from "next/image";
 
 /**
- * Detalj jednog artikla: tekst lijevo, tekstura preko cijele desne
- * polovine. Sve dolazi iz jednog objekta, pa ista sekcija radi za
- * bilo koji proizvod — dovoljno je proslijediti drugi `product`.
+ * Detalj jednog artikla: tekst na jednoj polovini, tekstura preko cijele
+ * druge. Sve dolazi iz jednog objekta, pa ista sekcija radi za bilo koji
+ * proizvod — dovoljno je proslijediti drugi `product`. Sa `mirrored` strane
+ * zamjene mjesta, da dva uzastopna detalja ne izgledaju kao isti kadar.
  */
 export type ShowcaseProduct = {
   brand: string;
   name: string;
-  code: string;
+  /** Sifra artikla. Izostavljena kad je proizvod serija, a ne jedan dekor. */
+  code?: string;
+  /** Opis iznad specifikacija. Krono ga nema, novije serije ga imaju. */
+  description?: string;
   specs: [string, string][];
   texture: string;
   textureAlt: string;
   room: string;
   roomAlt: string;
-  brandLogo: string;
-  brandLogoAlt: string;
+  /** Logo robne marke. Serije bez logotipa umjesto njega nose `wordmark`. */
+  brandLogo?: string;
+  brandLogoAlt?: string;
+  /** Dva reda teksta u dnu, kad marka nema logotip. */
+  wordmark?: [string, string];
 };
 
 export const wickedHarvestOak: ShowcaseProduct = {
@@ -40,18 +47,51 @@ export const wickedHarvestOak: ShowcaseProduct = {
   brandLogoAlt: "Krono Original",
 };
 
+export const naturalFloor: ShowcaseProduct = {
+  brand: "SPC Vinyl",
+  name: "Natural Floor Collection",
+  description:
+    "Natural Floor kolekcija inspirisana je prirodnim ljepotama šume. Prigušene boje i struktura drveta osiguravaju sklad i jedinstvenu atmosferu. Ekološki prihvatljiv i 100% reciklibilan, ovaj pod je idealan za podno grijanje i provodi toplinu bez promjene svojih parametara. Inovativna jezgra sa 80% prirodnih komponenti pruža vrhunsku otpornost na udarce i oštećenja sa stabilnim dimenzijama.",
+  specs: [
+    ["Kolekcija", "Natural Floor"],
+    ["Tip proizvoda", "SPC Vinyl"],
+    ["Debljina", "4 mm"],
+    ["Fuga", "Mikro V fuga"],
+    ["Vodootpornost", "100%"],
+    ["Otpornost", "AC4 / 34"],
+    ["Podno grijanje", "Da"],
+    ["Struktura", "Prirodna drvena tekstura"],
+    ["Lakše postavljanje", "Brza instalacija"],
+    ["Reciklabilnost", "Ekološki prihvatljivo"],
+  ],
+  texture: "/images/product/natural-floor-texture.webp",
+  textureAlt: "SPC vinyl pod iz Natural Floor kolekcije, prirodna drvena tekstura",
+  room: "/images/product/natural-floor-detail.webp",
+  roomAlt: "Detalj daske iz Natural Floor kolekcije",
+  wordmark: ["SPC Vinyl", "Natural Floor"],
+};
+
 export default function ProductShowcase({
   product = wickedHarvestOak,
+  mirrored = false,
+  titleId = "showcase-title",
 }: {
   product?: ShowcaseProduct;
+  mirrored?: boolean;
+  /** Svaki detalj na stranici mora imati svoj id — inace se naslovi sudaraju. */
+  titleId?: string;
 }) {
   return (
-    <section className="product-showcase is-fullbleed" aria-labelledby="showcase-title">
+    <section
+      className={`product-showcase is-fullbleed${mirrored ? " is-mirrored" : ""}`}
+      aria-labelledby={titleId}
+    >
       <div className="showcase-panel">
         <div className="showcase-copy">
           <span className="showcase-brand">{product.brand}</span>
-          <h2 id="showcase-title">{product.name}</h2>
-          <p className="showcase-code">Šifra proizvoda: {product.code}</p>
+          <h2 id={titleId}>{product.name}</h2>
+          {product.code && <p className="showcase-code">Šifra proizvoda: {product.code}</p>}
+          {product.description && <p className="showcase-description">{product.description}</p>}
 
           <hr className="showcase-rule" />
 
@@ -66,13 +106,22 @@ export default function ProductShowcase({
         </div>
 
         <div className="showcase-foot">
-          <Image
-            className="showcase-brand-logo"
-            src={product.brandLogo}
-            alt={product.brandLogoAlt}
-            width={420}
-            height={168}
-          />
+          {product.brandLogo ? (
+            <Image
+              className="showcase-brand-logo"
+              src={product.brandLogo}
+              alt={product.brandLogoAlt ?? product.brand}
+              width={420}
+              height={168}
+            />
+          ) : (
+            product.wordmark && (
+              <p className="showcase-wordmark">
+                <span>{product.wordmark[0]}</span>
+                <b>{product.wordmark[1]}</b>
+              </p>
+            )
+          )}
           {/* Ugaona linija stoji izvan slike, gore lijevo. */}
           <figure className="showcase-room">
             <span className="showcase-room-corner" aria-hidden="true" />

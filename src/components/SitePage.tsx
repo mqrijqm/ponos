@@ -10,10 +10,9 @@ import { useQuote } from "./QuoteProvider";
 import { track } from "@/lib/analytics";
 import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
-import LaminatiGridSection from "./LaminatiGridSection";
 import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
-import ProductShowcase from "./ProductShowcase";
+import ProductShowcase, { naturalFloor } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import ScrollSequenceHero from "./hero/ScrollSequenceHero";
 
@@ -338,8 +337,9 @@ export default function SitePage() {
         </section>
         <ProductShowcase />
         <WpcDeckingSection />
+        {/* Isti detalj kao Krono, samo preslikan — tekstura lijevo. */}
+        <ProductShowcase product={naturalFloor} mirrored titleId="showcase-natural-floor" />
         <QualityPage />
-        <LaminatiGridSection />
       </main>
       <Footer />
     </>
