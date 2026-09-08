@@ -29,7 +29,10 @@ export default function LayerStack() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full"
+      // is-fullbleed: scena i markeri idu preko cijele sirine ekrana, bez
+      // bocne margine koju sekcijama inace daje --page-gutter — inace se
+      // natpis krajnjeg desnog markera odsijeca na toj ivici.
+      className="is-fullbleed relative w-full"
       style={{ height: `${SCROLL_LENGTH_VH}vh`, background: BACKGROUND }}
     >
       {/* boja je OVDJE, u CSS-u - scena se crta sa alfa kanalom preko toga */}

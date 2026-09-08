@@ -18,7 +18,9 @@ import {
   fitDistance,
   layerY,
   lerp,
-  markerOpacity,
+  markerStage,
+  MARKER_COLOR,
+  MARKER_ROW,
   separateProgress,
 } from "./layer-config";
 
@@ -133,11 +135,15 @@ function useLayerMaterials() {
 // ------------------------------------------------------------------- markeri
 
 /**
- * Numerisani krug uz desnu ivicu sloja.
+ * Marker jednog sloja: red "SLOJ N — linija — krug".
  *
- * Svaki marker sam gasi i pali svoju prozirnost, umjesto da to radi jedna
- * petlja nad nizom refova - tako nema mutiranja tudjeg refa i React compiler
- * je miran. Pet useFrame poziva po frejmu je nista.
+ * Krug stoji uz ivicu daske, a linija i tekst se granaju od njega na spolja:
+ * kod lijevih markera ulijevo, kod desnih udesno. Pale se redom — prvo krug,
+ * pa linija od njega ka tekstu, pa tekst; brojevi tih koraka su u
+ * `MARKER_STEPS` i `MARKER_ROW` u layer-config.ts.
+ *
+ * Svaki marker sam vodi svoju animaciju, umjesto da to radi jedna petlja nad
+ * nizom refova - tako nema mutiranja tudjeg refa i React compiler je miran.
  *
  * useFrame MORA biti ovdje, iznad <Html>: Html svoju djecu prebacuje u obicni
  * DOM izvan R3F stabla, pa unutra nema ni scene ni render petlje.
@@ -146,51 +152,121 @@ function Marker({
   index,
   anchor,
   size,
+  label,
+  withLabel,
   progressRef,
   animated,
 }: {
   index: number;
   anchor: [number, number, number];
   size: number;
+  label: string;
+  /** na uskom ekranu nema mjesta za liniju i tekst — ostaje samo krug */
+  withLabel: boolean;
   progressRef: ProgressRef;
   animated: boolean;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLSpanElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
+
+  // negativan X znaci da marker stoji lijevo od daske
+  const isLeft = anchor[0] < 0;
+  const lineLength = size * MARKER_ROW.line;
+  const lineThickness = Math.max(1, Math.round((lineLength * 3) / 556));
 
   useFrame(() => {
-    const el = ref.current;
-    if (!el || !animated) return;
-    const opacity = markerOpacity(progressRef.current, index);
-    el.style.opacity = String(opacity);
-    el.style.transform = `translate3d(0, ${(1 - opacity) * 6}px, 0)`;
+    if (!animated) return;
+    const stage = markerStage(progressRef.current, index);
+
+    const circle = circleRef.current;
+    if (circle) {
+      circle.style.opacity = String(stage.circle);
+      circle.style.transform = `translate3d(0, ${(1 - stage.circle) * 6}px, 0)`;
+    }
+    const line = lineRef.current;
+    if (line) {
+      line.style.opacity = stage.line > 0 ? "1" : "0";
+      line.style.transform = `scaleX(${stage.line})`;
+    }
+    const text = labelRef.current;
+    if (text) {
+      text.style.opacity = String(stage.label);
+      const drift = (1 - stage.label) * 10;
+      text.style.transform = `translate3d(${isLeft ? drift : -drift}px, 0, 0)`;
+    }
   });
 
   return (
     <Html position={anchor} center occlude={false} zIndexRange={[20, 0]}>
       <div
-        ref={ref}
-        // pocinje ugaseno kad ima animacije; iznad je useFrame koji ga pali
         style={{
-          opacity: animated ? 0 : 1,
-          width: size,
-          height: size,
+          display: "flex",
+          alignItems: "center",
+          // red je centriran na sidru, a krug mora biti tacno na njemu:
+          // pomjeri red za pola njegove sirine, pa nazad za pola kruga
+          flexDirection: isLeft ? "row" : "row-reverse",
+          transform: `translateX(calc(${isLeft ? "-50% + " : "50% - "}${size / 2}px))`,
           pointerEvents: "none",
           userSelect: "none",
+          whiteSpace: "nowrap",
         }}
       >
-        {/*
-          Krug, prsten i cifra su u samom SVG-u, pa ovdje nema ni pozadine ni
-          rama. unoptimized: SVG je vec vektor, nema sta da se skalira.
-        */}
-        <Image
-          src={`/images/layers/markers/marker-${index + 1}.svg`}
-          alt=""
-          width={size}
-          height={size}
-          unoptimized
-          draggable={false}
-          style={{ display: "block", width: size, height: size }}
-        />
+        {withLabel && (
+          <>
+            <span
+              ref={labelRef}
+              style={{
+                opacity: animated ? 0 : 1,
+                marginInlineEnd: size * MARKER_ROW.gapToLabel,
+                color: MARKER_COLOR,
+                fontSize: Math.round(size * 0.3),
+                fontWeight: 700,
+                letterSpacing: ".12em",
+              }}
+            >
+              {label}
+            </span>
+            {/*
+              Linija se izvlaci od kruga ka tekstu, pa je ishodiste skaliranja
+              na strani kruga. preserveAspectRatio SVG-a je podrazumijevan, pa
+              se poteg debljine 3 sam svede na ovu duzinu.
+            */}
+            <span
+              ref={lineRef}
+              style={{
+                display: "block",
+                opacity: animated ? 0 : 1,
+                width: lineLength,
+                height: lineThickness,
+                marginInlineEnd: size * MARKER_ROW.gapToLine,
+                transform: animated ? "scaleX(0)" : "scaleX(1)",
+                transformOrigin: isLeft ? "right center" : "left center",
+                backgroundImage: "url(/images/layers/markers/marker-line.svg)",
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+          </>
+        )}
+        <div
+          ref={circleRef}
+          style={{ opacity: animated ? 0 : 1, flex: "0 0 auto" }}
+        >
+          {/*
+            Krug, prsten i cifra su u samom SVG-u, pa ovdje nema ni pozadine ni
+            rama. unoptimized: SVG je vec vektor, nema sta da se skalira.
+          */}
+          <Image
+            src={`/images/layers/markers/marker-${index + 1}.svg`}
+            alt=""
+            width={size}
+            height={size}
+            unoptimized
+            draggable={false}
+            style={{ display: "block", width: size, height: size }}
+          />
+        </div>
       </div>
     </Html>
   );
@@ -254,6 +330,8 @@ function Layers({
             index={i}
             anchor={layer.anchor}
             size={markerSize}
+            label={layer.oznaka}
+            withLabel={!isMobile}
             progressRef={progressRef}
             animated={animated}
           />

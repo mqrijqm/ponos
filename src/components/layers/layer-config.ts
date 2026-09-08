@@ -72,6 +72,8 @@ export type LayerDef = {
   id: LayerId;
   /** za anotaciju; marker za sada pokazuje samo broj */
   naziv: string;
+  /** TEKST UZ MARKER — ovo se ispisuje lijevo/desno od kruga */
+  oznaka: string;
   /** OVDJE SE DOPISUJE TEKST ANOTACIJE - prazno znaci da marker ostaje samo broj */
   opis: string;
   /** debljina po Y, u jedinicama scene */
@@ -104,6 +106,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "overlay",
     naziv: "Overlay",
+    oznaka: "SLOJ 1",
     opis: "",
     debljina: 0.02,
     materijal: {
@@ -130,6 +133,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "dekor",
     naziv: "Dekor",
+    oznaka: "SLOJ 2",
     opis: "",
     debljina: 0.04,
     materijal: {
@@ -148,6 +152,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "hdf",
     naziv: "HDF jezgro",
+    oznaka: "SLOJ 3",
     opis: "",
     debljina: 0.18,
     materijal: {
@@ -166,6 +171,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "balans",
     naziv: "Balans sloj",
+    oznaka: "SLOJ 4",
     opis: "",
     debljina: 0.03,
     materijal: { vrsta: "ravna", boja: "#D9C4B4", roughness: 0.9 },
@@ -176,6 +182,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "pluta",
     naziv: "Pluta",
+    oznaka: "SLOJ 5",
     opis: "",
     debljina: 0.06,
     materijal: {
@@ -364,12 +371,12 @@ export type CameraKeyframe = {
  */
 export const CAMERA: Record<"desktop" | "mobile", { from: CameraKeyframe; to: CameraKeyframe }> = {
   desktop: {
-    from: { elevation: 5, azimuth: 0, fov: 30, targetY: 0, framing: 0.94 },
-    to: { elevation: 23, azimuth: 28, fov: 30, targetY: 0.95, framing: 0.84 },
+    from: { elevation: 5, azimuth: 0, fov: 30, targetY: 0, framing: 1.06 },
+    to: { elevation: 23, azimuth: 28, fov: 30, targetY: 0.95, framing: 0.98 },
   },
   mobile: {
-    from: { elevation: 6, azimuth: 0, fov: 36, targetY: 0, framing: 0.88 },
-    to: { elevation: 21, azimuth: 26, fov: 36, targetY: 0.95, framing: 0.8 },
+    from: { elevation: 6, azimuth: 0, fov: 36, targetY: 0, framing: 1 },
+    to: { elevation: 21, azimuth: 26, fov: 36, targetY: 0.95, framing: 0.92 },
   },
 };
 
@@ -390,8 +397,34 @@ export const SEPARATE_END = 0.85;
 /** Ukupno kasnjenje izmedju prvog i posljednjeg sloja, kao udio faze razdvajanja. */
 export const STAGGER_SPREAD = 0.35;
 
-/** Markeri se pale tek kad su slojevi razdvojeni. */
-export const MARKERS = { start: SEPARATE_END, end: 1, stagger: 0.5 };
+/**
+ * Termin za sve markere, kao raspon progresa.
+ *
+ * Pet markera se pali JEDAN PO JEDAN unutar ovog raspona, pa mu treba sirine:
+ * pocinje jos u zavrsnici razdvajanja (SEPARATE_END je 0.85) i zavrsava malo
+ * prije kraja, da posljednji natpis ne stigne tek na zadnjem pikselu scrolla.
+ */
+export const MARKERS = { start: 0.7, end: 0.99 };
+
+/**
+ * MARKER SE PALI U TRI KORAKA: krug, pa linija od njega ka tekstu, pa tekst.
+ * Brojevi su udjeli jednog markerovog termina (0-1): `duration` je koliko
+ * traje jedan korak, a `lineAt` / `labelAt` kad koji pocinje. Preklop je
+ * namjeran — linija krene dok se krug jos smiruje.
+ */
+export const MARKER_STEPS = { duration: 0.38, lineAt: 0.3, labelAt: 0.6 };
+
+/**
+ * Duzina linije i razmaci, kao UDIO PRECNIKA KRUGA — preuzeto iz dostavljenog
+ * 1.svg (krug 152, linija 556, razmak 108 jedinica).
+ */
+export const MARKER_ROW = { line: 3.66, gapToLine: 0.71, gapToLabel: 0.5 };
+
+/** Boja teksta uz marker — ista bakarna kao prsten i linija u SVG-ovima. */
+export const MARKER_COLOR = "#A77342";
+
+/** Ispod ove sirine ekrana marker ostaje samo krug: nema mjesta za natpis. */
+export const MARKER_LABEL_MIN_WIDTH = 900;
 
 export const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 
@@ -416,12 +449,23 @@ export function layerY(index: number, progress: number) {
   return stackedY(index) + LAYERS[index].offsetY * layerProgress(progress, index);
 }
 
-/** Prozirnost markera - pale se poslije razdvajanja, jedan po jedan odozgo. */
-export function markerOpacity(offset: number, index: number) {
+/**
+ * Stanje jednog markera: koliko je vidljiv krug, koliko je izvucena linija i
+ * koliko je vidljiv tekst, sve 0-1.
+ *
+ * Markeri se vise ne preklapaju — svaki dobije svoj termin, pa drugi krece tek
+ * kad je prvi ispisan do kraja. Redom odozgo nadolje.
+ */
+export function markerStage(offset: number, index: number) {
   const span = MARKERS.end - MARKERS.start;
-  const start = MARKERS.start + (index / (LAYERS.length - 1)) * span * MARKERS.stagger;
-  const duration = span * (1 - MARKERS.stagger);
-  return easeOutCubic(clamp((offset - start) / duration));
+  const slot = span / LAYERS.length;
+  const t = clamp((offset - (MARKERS.start + index * slot)) / slot);
+  const step = (from: number) => easeOutCubic(clamp((t - from) / MARKER_STEPS.duration));
+  return {
+    circle: step(0),
+    line: step(MARKER_STEPS.lineAt),
+    label: step(MARKER_STEPS.labelAt),
+  };
 }
 
 /**
