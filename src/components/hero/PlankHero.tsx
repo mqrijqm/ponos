@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useRef } from "react";
 
-import { HERO_COLORS, HERO_CTA, HERO_LOGO, HERO_SIZE } from "./hero-content";
+import { HERO_COLORS, HERO_SIZE } from "./hero-content";
 import HeroMarkers, { type MarkerHandle } from "./HeroMarkers";
 import { SCROLL_PAGES } from "./plank-config";
 import { useInView, useIsMobile, usePrefersReducedMotion } from "./hooks";
@@ -14,45 +14,8 @@ import { useInView, useIsMobile, usePrefersReducedMotion } from "./hooks";
  */
 const PlankScene = dynamic(() => import("./PlankScene"), { ssr: false });
 
-/** Boja u logo SVG-u je zapecena; filter je pretvara u cisto bijelo. */
-const WHITE_OUT = "[filter:brightness(0)_invert(1)]";
-
 const CENTERED =
   "pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-6";
-
-function Logo({ white }: { white?: boolean }) {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={HERO_LOGO.src}
-      alt={HERO_LOGO.alt}
-      width={HERO_LOGO.width}
-      height={HERO_LOGO.height}
-      fetchPriority="high"
-      style={{ width: HERO_SIZE.logoWidth }}
-      className={`h-auto max-w-full ${white ? WHITE_OUT : ""}`}
-    />
-  );
-}
-
-function CtaButton() {
-  return (
-    <a
-      href={HERO_CTA.href}
-      className="pointer-events-auto block transition-transform duration-200 hover:scale-[1.03]"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={HERO_CTA.src}
-        alt={HERO_CTA.alt}
-        width={HERO_CTA.width}
-        height={HERO_CTA.height}
-        style={{ width: HERO_SIZE.ctaWidth }}
-        className="h-auto max-w-full"
-      />
-    </a>
-  );
-}
 
 export default function PlankHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -113,18 +76,14 @@ export default function PlankHero() {
             pointer-events-none je namjerno: klik prolazi kroz blok, samo
             dugme ga hvata.
 
-            Kad je animacija iskljucena, ovaj isti blok stoji preko gotovog
-            poda, pa logo ide u bijelo da se vidi preko drveta. Dugme je vec
-            bijela pilula, njemu ne treba nista.
+            Blok je sada prazan — logo i CTA su skinuti sa ucitavanja.
+            Ostaje jer PlankScene animira bas ovaj element.
         ---------------------------------------------------------------- */}
         <div
           ref={introRef}
           className={`${CENTERED} will-change-[opacity,transform]`}
           style={{ gap: HERO_SIZE.gap }}
-        >
-          <Logo white={reducedMotion} />
-          <CtaButton />
-        </div>
+        />
       </div>
     </section>
   );

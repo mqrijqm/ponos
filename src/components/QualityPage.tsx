@@ -30,7 +30,7 @@ export function QualityAccordionSection() {
   return (
     <section className="quality-section quality-accordion" aria-labelledby="quality-intro-title">
       <div className="quality-intro-grid">
-        <div className="quality-side-note"><span>1996 — DANAS</span><small>ISKUSTVO U PODNIM OBLOGAMA</small></div>
+        <div className="quality-side-note"><span>2000 — DANAS</span><small>ISKUSTVO U PODNIM OBLOGAMA</small></div>
         <div className="quality-intro-content">
           <span className="quality-pill"><i /> VIŠE O KVALITETU</span>
           <h2 id="quality-intro-title">Kvalitet poda počinje od materijala,<br /><em>završava se osjećajem doma.</em></h2>

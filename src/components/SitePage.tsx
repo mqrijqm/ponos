@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Menu, ShoppingBasket, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CatalogItem, categories } from "@/data/catalog";
 import Calculator, { calculableItems } from "./Calculator";
@@ -11,16 +11,31 @@ import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
 import PlankHero from "./hero/PlankHero";
 import LaminatiGridSection from "./LaminatiGridSection";
+import WpcDeckingSection from "./WpcDeckingSection";
+import EditorialStatement from "./EditorialStatement";
+import ProductShowcase from "./ProductShowcase";
+import BasketMenu from "./BasketMenu";
 
-const heroDetails = [1, 2, 3, 4, 5].map(
-  (number) => `/images/hero/detail-${number}.jpg`,
-);
+/* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
+   .jpg fotografije, ostalo su kvadratni .webp krupni planovi. */
+const heroDetails = [
+  ...[1, 2, 3, 4, 5].map((n) => `/images/hero/detail-${n}.jpg`),
+  ...[6, 7, 8, 9, 10, 11, 12, 13].map((n) => `/images/hero/detail-${n}.webp`),
+];
 const heroDetailAlts = [
   "Krupni plan teksture prirodnog hrasta",
   "Detalj spoja laminatnih panela",
   "Profil višeslojne podne obloge",
   "Mat završna obrada drvenog poda",
   "Uzorci podnih obloga u različitim nijansama drveta",
+  "Krupni plan svijetlog hrastovog dekora",
+  "Struktura drveta sa naglašenim godovima",
+  "Topla smeđa nijansa podne obloge",
+  "Fina tekstura mat završne obrade",
+  "Detalj čvora u hrastovom dekoru",
+  "Svijetli dekor sa mekim prelazima",
+  "Krupni plan uzdužne strukture drveta",
+  "Zasićena smeđa tekstura podne daske",
 ];
 
 type ProcessStep = {
@@ -100,32 +115,12 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
 
 export default function SitePage() {
   const [menu, setMenu] = useState(false);
-  const [headerVisible, setHeaderVisible] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
-  const heroRef = useRef<HTMLElement>(null);
   const [calcItem, setCalcItem] = useState<CatalogItem>(calculableItems[0]);
   const { openQuote } = useQuote();
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const proslo = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-        setHeaderVisible(proslo);
-        if (!proslo) setMenu(false);
-      },
-      { threshold: 0, rootMargin: "-80px 0px 0px 0px" },
-    );
-    observer.observe(hero);
-    return () => observer.disconnect();
-  }, []);
   return (
     <>
-      <header
-        className={`home-sticky-header${headerVisible ? " is-visible" : ""}`}
-        aria-hidden={!headerVisible}
-        inert={!headerVisible ? true : undefined}
-      >
+      <header className="home-sticky-header is-visible">
         <a
           className="brand brand-image"
           href="#top"
@@ -144,7 +139,6 @@ export default function SitePage() {
           {[
             ["Vizualizator", "/vizualizator"],
             ["O nama", "/o-nama"],
-            ["Savjeti", "/savjeti"],
             ["Kontakt", "/kontakt"],
           ].map(([label, href]) => (
             <a key={label} href={href}>
@@ -158,9 +152,7 @@ export default function SitePage() {
         >
           <i /> Vidi ponudu
         </button>
-        <span className="nav-basket" aria-label="Korpica">
-          <ShoppingBasket size={20} strokeWidth={1.6} />
-        </span>
+        <BasketMenu />
         <button
           className="menu"
           aria-label="Otvori meni"
@@ -184,7 +176,6 @@ export default function SitePage() {
             {[
               ["Vizualizator", "/vizualizator"],
               ["O nama", "/o-nama"],
-              ["Savjeti", "/savjeti"],
               ["Kontakt", "/kontakt"],
             ].map(([label, href]) => (
               <a onClick={() => setMenu(false)} key={label} href={href}>
@@ -201,24 +192,25 @@ export default function SitePage() {
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />
-        <span id="savjeti" />
-        <section ref={heroRef} className="home-hero">
+        <section className="home-hero">
           <div className="home-hero-top">
             <div className="home-hero-copy">
-              <strong>KOLEKCIJA PODOVA</strong>
-              <p>Materijali birani za dugotrajne, skladne i tople prostore.</p>
+              <strong>NA JEDNOM MJESTU</strong>
+              <p>Laminat, podne obloge, parket, vinil podovi &amp; zidni paneli.</p>
             </div>
           </div>
           <div className="home-hero-panel">
             <div className="detail-strip">
-              <div className="detail-group detail-group-left">
+              <div className="detail-group">
                 <HeroDetail slot={0} />
                 <HeroDetail slot={1} />
               </div>
-              <HeroDetail slot={2} className="detail-single" />
-              <div className="detail-group detail-group-right">
-                <HeroDetail slot={3} />
-                <HeroDetail slot={4} />
+              <HeroDetail slot={2} />
+              <HeroDetail slot={3} />
+              <HeroDetail slot={4} />
+              <div className="detail-group">
+                <HeroDetail slot={5} />
+                <HeroDetail slot={6} />
               </div>
             </div>
             <h1 className="home-hero-title">
@@ -227,6 +219,7 @@ export default function SitePage() {
             </h1>
           </div>
         </section>
+        <EditorialStatement />
         <section className="how process-section">
           <div className="how-heading">
             <span className="eyebrow">KAKO FUNKCIONIŠE</span>
@@ -279,7 +272,7 @@ export default function SitePage() {
         <section id="kalkulator" className="calculator-section">
           <div>
             <span className="eyebrow">PRECIZNIJI UPIT</span>
-            <h2>Koliko poda vam je potrebno?</h2>
+            <h2>Izračunajte potrebnu količinu.</h2>
             <p>
               Unesite dimenzije prostorije. Računamo rezervu, broj cijelih
               paketa i informativnu vrijednost materijala za trenutno odabrani
@@ -324,6 +317,8 @@ export default function SitePage() {
             </article>
           ))}
         </section>
+        <ProductShowcase />
+        <WpcDeckingSection />
         <QualityPage />
         <LaminatiGridSection />
       </main>

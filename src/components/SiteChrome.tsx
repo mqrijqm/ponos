@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronDown, Menu, ShoppingBasket } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu } from "lucide-react";
 import { categories } from "@/data/catalog";
 import QuoteCta from "./QuoteCta";
+import BasketMenu from "./BasketMenu";
 
 /** Padajuci meni za "Proizvodi" — bez JS-a, otvara se na hover i na fokus. */
 export function ProductsNav() {
@@ -47,15 +48,12 @@ export function Header() {
         <ProductsNav />
         <Link href="/vizualizator">Vizualizator</Link>
         <Link href="/o-nama">O nama</Link>
-        <Link href="/savjeti">Savjeti</Link>
         <Link href="/kontakt">Kontakt</Link>
       </nav>
       <QuoteCta className="header-cta cta-dot">
         <i /> Vidi ponudu
       </QuoteCta>
-      <span className="nav-basket" aria-label="Korpica">
-        <ShoppingBasket size={20} strokeWidth={1.6} />
-      </span>
+      <BasketMenu />
       <details className="mobile-menu">
         <summary aria-label="Otvori meni">
           <Menu />
@@ -69,7 +67,6 @@ export function Header() {
           ))}
           <Link href="/vizualizator">Vizualizator</Link>
           <Link href="/o-nama">O nama</Link>
-          <Link href="/savjeti">Savjeti</Link>
           <Link href="/kontakt">Kontakt</Link>
         </div>
       </details>
@@ -82,7 +79,6 @@ function LegacyFooter() {
       <nav className="footer-primary" aria-label="Navigacija u podnožju">
         <Link href="/proizvodi">Proizvodi</Link>
         <Link href="/o-nama">O nama</Link>
-        <Link href="/savjeti">Savjeti</Link>
       </nav>
       <div className="footer-mark">
         <Wordmark light />
@@ -114,7 +110,6 @@ export function Footer() {
         <nav className="footer-nav" aria-label="Navigacija u podnožju">
           <Link href="/proizvodi">Proizvodi</Link>
           <Link href="/o-nama">O nama</Link>
-          <Link href="/savjeti">Savjeti</Link>
           <Link href="/vizualizator">Vizualizator</Link>
           <Link href="/kontakt">Kontakt</Link>
         </nav>

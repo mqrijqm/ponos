@@ -4067,7 +4067,7 @@ main.quality-page > section.quality-section + section.quality-section {
     --page-gutter: 24px;
   }
 }
-main > section:not(.hero-fullbleed):not(.placeholder-section) {
+main > section:not(.hero-fullbleed):not(.placeholder-section):not(.is-fullbleed) {
   max-width: none;
   margin-left: 0;
   margin-right: 0;
@@ -4245,4 +4245,735 @@ a.cta-dot {
   .quality-accordion .quality-side-note small {
     grid-column: auto;
   }
+}
+
+/* Godina osnivanja je 2000 — oznaka je podebljana. */
+.quality-accordion .quality-side-note > span {
+  color: var(--brand-brown);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WPC DECKING
+   Dvije kolone na beige podlozi. Bijela kartica je fiksne velicine i
+   ne mijenja se pri promjeni boje — mijenja se samo slika panela,
+   ime varijante i --wpc-accent.
+   ═══════════════════════════════════════════════════════════════════ */
+.wpc-section {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(56px, 7vw, 130px);
+  align-items: center;
+  color: var(--brand-brown);
+}
+
+/* ——— lijeva kolona: bijela kartica ——— */
+.wpc-card {
+  flex: 0 0 auto;
+  width: 400px;
+  padding: 22px 22px 30px;
+  background: #fff;
+  /* panel viri iznad gornje ivice, pa se kartica ne smije sjeci */
+  overflow: visible;
+}
+.wpc-card-media {
+  position: relative;
+  height: 430px;
+  background: #eceae6;
+}
+/* tanak bijeli inset okvir */
+.wpc-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  z-index: 2;
+  border: 1px solid #fff;
+  pointer-events: none;
+}
+.wpc-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  /* sirina je sira nego sto slika treba — visina je ta koja veze,
+     pa contain skalira po visini i panel viri 96px iznad kartice */
+  width: 84%;
+  height: calc(100% + 96px);
+  transform: translateX(-50%);
+}
+.wpc-panel img {
+  object-fit: contain;
+  object-position: center bottom;
+}
+.wpc-card-caption {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--wpc-accent);
+  transition: color 320ms ease;
+}
+.wpc-card-caption small {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.wpc-card-caption strong {
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(1.6rem, 2.2vw, 2.3rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -.01em;
+}
+
+/* ——— desna kolona ——— */
+.wpc-copy {
+  min-width: 0;
+}
+.wpc-copy h2 {
+  margin: 0;
+  color: var(--brand-brown);
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(2rem, 3.4vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+}
+.wpc-lead {
+  margin: 16px 0 0;
+  color: var(--brand-muted);
+  font-size: clamp(1.05rem, 1.5vw, 1.4rem);
+  line-height: 1.4;
+}
+
+.wpc-swatches {
+  margin-top: clamp(44px, 5vw, 72px);
+  display: flex;
+  gap: clamp(26px, 3.2vw, 46px);
+}
+.wpc-swatch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 68px;
+  height: 68px;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+}
+.wpc-swatch img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+/* prsten je veci od kruga, sa vidljivim razmakom */
+.wpc-swatch-ring {
+  position: absolute;
+  inset: -11px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.wpc-swatch:focus-visible {
+  outline: 2px solid var(--w);
+  outline-offset: 14px;
+}
+
+.wpc-section-detail {
+  margin-top: clamp(52px, 6vw, 86px);
+  display: flex;
+  align-items: center;
+  gap: clamp(28px, 3.5vw, 56px);
+}
+.wpc-section-svg {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 360px;
+  height: auto;
+}
+.wpc-profile rect {
+  fill: var(--wpc-accent);
+  transition: fill 320ms ease;
+}
+.wpc-dim line {
+  stroke: var(--brand-muted);
+  stroke-width: .8;
+}
+.wpc-dim text {
+  fill: var(--brand-muted);
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: .04em;
+}
+/* okomita crta koja dijeli crtez od specifikacija */
+.wpc-specs {
+  flex: 0 0 auto;
+  margin: 0;
+  padding-left: clamp(28px, 3.5vw, 56px);
+  border-left: 1px solid var(--brand-line);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.wpc-specs div {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.wpc-specs dt {
+  color: var(--brand-muted);
+  font-size: 13px;
+}
+.wpc-specs dd {
+  margin: 0;
+  color: var(--brand-brown);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  /* kartica ide prva, kolone se slazu */
+  .wpc-section {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: clamp(52px, 9vw, 84px);
+  }
+  .wpc-copy {
+    width: 100%;
+  }
+  .wpc-section-detail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 34px;
+  }
+  .wpc-section-svg {
+    max-width: 100%;
+    width: 100%;
+  }
+  .wpc-specs {
+    padding-left: 0;
+    padding-top: 28px;
+    border-left: 0;
+    border-top: 1px solid var(--brand-line);
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .wpc-card {
+    width: 100%;
+    max-width: 340px;
+    padding: 16px 16px 24px;
+  }
+  .wpc-card-media {
+    height: 340px;
+  }
+  .wpc-panel {
+    height: calc(100% + 54px);
+  }
+  .wpc-swatch {
+    width: 56px;
+    height: 56px;
+  }
+  .wpc-swatches {
+    gap: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wpc-card-caption,
+  .wpc-profile rect {
+    transition: none;
+  }
+}
+/* Nabrajanje je duze od ranijeg teksta, treba mu malo vise sirine. */
+.home-hero-copy p {
+  max-width: 340px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   EDITORIAL TRAKA
+   Ide preko cijele sirine (.is-fullbleed je izuzet iz --page-gutter).
+   Sav prazan prostor je namjeran — tekst je jedini element.
+   ═══════════════════════════════════════════════════════════════════ */
+/* Selektor mora biti jaci od globalnog `main > section` paddinga. */
+/* Visina sekcije je razdaljina scrolla tokom koje sadrzaj stoji pinovan.
+   Padding mora biti 0 — inace bi razbio racunicu sticky sloja. */
+main > section.editorial-statement {
+  height: 260svh;
+  padding: 0;
+  background: #e7dcc8;
+  color: #7a6142;
+}
+.es-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  /* flex, ne grid — u gridu `justify-items: center` pusti pasus na
+     max-content sirinu i tekst pobjegne u jedan dugi red */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(60px, 10vh, 140px) clamp(24px, 5vw, 88px);
+}
+/* Globalno pravilo za `p` nosi !important, pa ga ovdje moramo nadjacati. */
+.editorial-statement .es-text {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+  font-family: var(--font-newsreader), serif;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 5.2vw, 5.4rem) !important;
+  line-height: 1.16;
+  letter-spacing: -.02em;
+}
+.es-word {
+  display: inline;
+  transition: opacity 120ms linear;
+}
+.es-word-accent {
+  font-style: italic;
+}
+
+.editorial-statement .es-word-accent {
+  color: #fdf8ee;
+}
+
+@media (max-width: 767px) {
+  main > section.editorial-statement {
+    height: 240svh;
+  }
+  .es-pin {
+    padding: clamp(60px, 10vh, 120px) 24px;
+  }
+  .editorial-statement .es-text {
+    font-size: clamp(1.55rem, 7.4vw, 2.6rem) !important;
+    line-height: 1.22;
+  }
+}
+
+/* ═══ Kalkulator: bez unutrasnjih vodoravnih linija ═══
+   Ostaju samo podvlake ispod input polja. */
+.calc-product,
+.calc-results,
+.calculator > p {
+  border-top: 0;
+}
+
+/* ═══ WPC: manja kartica, panel preko okvira ═══ */
+.wpc-card {
+  width: 330px;
+  padding: 18px 18px 26px;
+}
+.wpc-card-media {
+  height: 352px;
+}
+.wpc-panel {
+  /* iznad bijelog inset okvira — okvir ga vise ne sijece */
+  z-index: 3;
+  height: calc(100% + 78px);
+}
+.wpc-card-caption {
+  margin-top: 22px;
+  gap: 8px;
+}
+.wpc-card-caption strong {
+  font-size: clamp(1.4rem, 1.9vw, 1.95rem);
+}
+@media (max-width: 480px) {
+  .wpc-card {
+    width: 100%;
+    max-width: 300px;
+  }
+  .wpc-card-media {
+    height: 310px;
+  }
+  .wpc-panel {
+    height: calc(100% + 60px);
+  }
+}
+
+/* ═══ Footer: topli off-white prelazi u cisto bijelo ═══ */
+footer.site-footer,
+footer.site-footer .footer-nav,
+footer.site-footer .footer-phone,
+footer.site-footer .footer-email {
+  color: #ffffff;
+}
+footer.site-footer .footer-brand-column p,
+footer.site-footer .footer-hours {
+  color: rgba(255, 255, 255, .62);
+}
+footer.site-footer .footer-contact-eyebrow,
+footer.site-footer .footer-bottom,
+footer.site-footer .footer-credit,
+footer.site-footer .footer-copyright {
+  color: rgba(255, 255, 255, .55);
+}
+footer.site-footer .footer-bottom {
+  border-top-color: rgba(255, 255, 255, .18);
+}
+
+/* ═══ Traka pločica: flex red umjesto apsolutnih grupa ═══
+   Sedam pločica ravnomjerno raspoređenih preko cijele sirine —
+   dvije prazne rupe od ranije su popunjene. */
+.detail-strip {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+}
+.detail-group,
+.detail-single {
+  position: static;
+  transform: none;
+  left: auto;
+  right: auto;
+  height: 100%;
+}
+.detail-group {
+  display: flex;
+  gap: 6px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DETALJ ARTIKLA
+   Tacna polovina/polovina preko cijele visine ekrana. Tekst lijevo
+   drzi istu bocnu marginu kao ostale sekcije (--page-gutter), desna
+   polovina je tekstura bez paddinga.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.product-showcase {
+  min-height: 100svh;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #fbfaf7;
+  color: var(--hero-text);
+}
+.showcase-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  /* 82px je visina fiksnog navbara — sekcija je puna visina ekrana,
+     pa bez toga gornji red teksta zavrsi ispod njega. */
+  padding: calc(82px + clamp(40px, 6vh, 84px)) clamp(32px, 4vw, 72px) clamp(40px, 5vh, 64px) var(--page-gutter);
+}
+.showcase-brand {
+  display: block;
+  color: var(--brand-muted);
+  font-size: 15px;
+  letter-spacing: .01em;
+}
+.product-showcase h2 {
+  margin: 10px 0 0;
+  color: var(--hero-text);
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(2rem, 3.1vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+}
+.showcase-code {
+  margin: 12px 0 0;
+  color: var(--brand-muted);
+}
+.showcase-description {
+  max-width: 46ch;
+  margin: 26px 0 0;
+  color: var(--m);
+  line-height: 1.65;
+}
+.showcase-rule {
+  max-width: 46ch;
+  margin: clamp(28px, 4vh, 46px) 0 0;
+  border: 0;
+  border-top: 1px solid var(--brand-line);
+}
+.showcase-specs {
+  margin: clamp(24px, 3.4vh, 38px) 0 0;
+  display: grid;
+  gap: 11px;
+}
+.showcase-specs div {
+  display: grid;
+  grid-template-columns: minmax(0, 190px) 1fr;
+  gap: 16px;
+  align-items: baseline;
+}
+.showcase-specs dt {
+  color: var(--brand-muted);
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.showcase-specs dd {
+  margin: 0;
+  color: var(--hero-text);
+  font-size: 14px;
+}
+.showcase-foot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+.showcase-brand-logo {
+  width: 132px;
+  height: auto;
+}
+.showcase-room {
+  position: relative;
+  flex: 0 0 auto;
+  width: 190px;
+  margin: 0;
+  line-height: 0;
+}
+.showcase-room img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+/* L-linija u gornjem lijevom uglu, izvan slike */
+.showcase-room-corner {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  width: 56px;
+  height: 56px;
+  border-top: 1px solid var(--brand-wood);
+  border-left: 1px solid var(--brand-wood);
+  pointer-events: none;
+}
+.showcase-media {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+.showcase-media > img:first-child {
+  object-fit: cover;
+}
+.showcase-media-logo {
+  position: absolute;
+  z-index: 2;
+  top: calc(82px + clamp(20px, 3vh, 40px));
+  right: clamp(24px, 3vw, 56px);
+  width: clamp(120px, 11vw, 176px);
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  /* Slika ide gore, tekst ispod. */
+  main > section.product-showcase {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+  .showcase-media {
+    order: -1;
+    height: 46svh;
+  }
+  .showcase-panel {
+    gap: 44px;
+    padding: 56px var(--page-gutter);
+  }
+  .showcase-media-logo {
+    top: calc(68px + 20px);
+  }
+  .showcase-specs div {
+    grid-template-columns: minmax(0, 160px) 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .showcase-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+  }
+  .showcase-specs div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* ═══ Korpa u navbaru: tanak okvir, bez popune ═══ */
+.nav-basket {
+  padding: 0;
+  color: var(--brand-brown);
+  background: none;
+  border: 1px solid var(--brand-brown);
+  transition: background-color 220ms ease, color 220ms ease;
+}
+.nav-basket:hover {
+  background: var(--brand-brown);
+  color: var(--hero-cream);
+}
+.nav-basket:focus-visible {
+  outline: 2px solid var(--w);
+  outline-offset: 4px;
+}
+
+/* ═══ Panel korpe (klizi s lijeve strane) ═══ */
+.basket-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(59, 42, 33, .32);
+}
+.basket-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 81;
+  width: min(400px, 88vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--hero-cream);
+  color: var(--hero-text);
+  box-shadow: 0 0 60px rgba(59, 42, 33, .18);
+}
+.basket-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 28px 22px;
+  border-bottom: 1px solid var(--brand-line);
+}
+.basket-head .eyebrow {
+  color: var(--brand-brown);
+  letter-spacing: .22em;
+}
+.basket-close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--brand-brown);
+  background: none;
+  border: 0;
+}
+.basket-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+}
+.basket-list li + li {
+  border-top: 1px solid var(--brand-line);
+}
+.basket-list button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 28px;
+  text-align: left;
+  background: none;
+  border: 0;
+  transition: background-color 200ms ease;
+}
+.basket-list button:hover {
+  background: rgba(59, 42, 33, .04);
+}
+.basket-list img {
+  flex: 0 0 auto;
+  width: 62px;
+  height: 62px;
+  object-fit: cover;
+}
+.basket-list span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.basket-list small {
+  color: var(--brand-muted);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.basket-list strong {
+  color: var(--brand-brown);
+  font-family: var(--font-newsreader), serif;
+  font-size: 17px;
+  font-weight: 400;
+}
+.basket-list em {
+  color: var(--brand-muted);
+  font-style: normal;
+}
+.basket-foot {
+  flex: 0 0 auto;
+  padding: 22px 28px 28px;
+  border-top: 1px solid var(--brand-line);
+}
+.basket-foot .cta-dot {
+  width: 100%;
+}
+
+/* ═══ Krono sekcija staje u jedan ekran ═══
+   Razmaci su stegnuti da se cijela sekcija vidi od vrha do dna
+   bez listanja, uz 82px koje odnosi fiksni navbar. */
+main > section.product-showcase {
+  min-height: 100svh;
+}
+.showcase-panel {
+  padding-top: calc(82px + clamp(20px, 3vh, 40px));
+  padding-bottom: clamp(24px, 3vh, 40px);
+  gap: clamp(20px, 3vh, 36px);
+}
+.product-showcase h2 {
+  font-size: clamp(1.75rem, 2.5vw, 2.6rem);
+}
+.showcase-description {
+  margin-top: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.showcase-rule {
+  margin-top: clamp(18px, 2.4vh, 30px);
+}
+.showcase-specs {
+  margin-top: clamp(16px, 2.2vh, 26px);
+  gap: clamp(6px, .9vh, 10px);
+}
+.showcase-room {
+  width: clamp(130px, 13vh, 168px);
+}
+.showcase-brand-logo {
+  width: clamp(96px, 9vh, 118px);
+}
+.showcase-room-corner {
+  top: -14px;
+  left: -14px;
+  width: 44px;
+  height: 44px;
+}
+
+/* ═══ WPC: mini naslov iznad, CTA ispod, vise zraka odozgo ═══ */
+main > section.wpc-section {
+  /* sekcija iznad je puna visina ekrana — treba joj vazduha da odahne */
+  padding-top: clamp(120px, 14vw, 240px);
+}
+.wpc-copy .wpc-lead {
+  display: block;
+  margin: 0 0 18px;
+  color: var(--brand-muted);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.wpc-cta {
+  margin-top: clamp(24px, 3vw, 36px);
 }
