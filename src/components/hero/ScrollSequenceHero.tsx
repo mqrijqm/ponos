@@ -13,6 +13,7 @@ import {
   MOBILE_FRAME_STEP,
   PRELOAD_BATCH,
   SCROLL_LENGTH_VH,
+  SEQUENCE_SPAN,
   framePath,
 } from "./sequence-config";
 
@@ -74,12 +75,30 @@ export default function ScrollSequenceHero() {
 
     /** Crta trenutni frejm preko cijelog kadra, po principu "cover". */
     const draw = () => {
-      const index = Math.min(
+      const trazeni = Math.min(
         FRAME_COUNT - 1,
         Math.max(0, Math.round(state.frame / step) * step),
       );
-      // dok trazeni frejm jos nije stigao, ostaje posljednji nacrtani
-      if (!loaded[index]) return;
+      /*
+        Kad trazeni kadar jos nije stigao, crta se najblizi koji jeste — prvo
+        unazad, pa unaprijed. Ranije se crtanje jednostavno preskakalo, pa je
+        na sporoj vezi kadar stajao zamrznut dok se scroll kretao, a onda
+        odjednom skocio naprijed kad slika stigne: izgleda kao da se snimak
+        prekinuo pa nastavio. Ovako se sekvenca krece i kad kasni — samo grublje.
+      */
+      let index = trazeni;
+      if (!loaded[index]) {
+        let nazad = trazeni;
+        while (nazad >= 0 && !loaded[nazad]) nazad -= step;
+        let naprijed = trazeni;
+        while (naprijed < FRAME_COUNT && !loaded[naprijed]) naprijed += step;
+        const imaNazad = nazad >= 0;
+        const imaNaprijed = naprijed < FRAME_COUNT;
+        if (!imaNazad && !imaNaprijed) return;
+        if (!imaNaprijed) index = nazad;
+        else if (!imaNazad) index = naprijed;
+        else index = trazeni - nazad <= naprijed - trazeni ? nazad : naprijed;
+      }
       const image = images[index];
       // Slika bez dimenzija je ona koja nije stigla. Crtanje takve daje NaN
       // koordinate - platno ostane prazno, a prethodni kadar se izgubi.
@@ -191,8 +210,8 @@ export default function ScrollSequenceHero() {
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          // snimak se odvrti kroz cijeli pin i stane na posljednjem kadru
-          const sequence = self.progress;
+          // snimak se odvrti u prvom dijelu pina, pa stoji na posljednjem kadru
+          const sequence = gsap.utils.clamp(0, 1, self.progress / SEQUENCE_SPAN);
           state.frame = sequence * (FRAME_COUNT - 1);
           draw();
           pushOverlayProgress(sequence);

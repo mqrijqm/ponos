@@ -23,6 +23,16 @@ export function framePath(index: number) {
  */
 export const SCROLL_LENGTH_VH = 350;
 
+/**
+ * Koliki dio pina odvrti snimak. Ostatak je mirovanje na posljednjem kadru.
+ *
+ * Bez te rezerve snimak stane tacno kad i pin, pa kadar krene da odlazi u
+ * istom trenutku u kojem je stao — izgleda kao da se prekinuo i propustio
+ * stranicu ispod sebe. Ovih ~8% pina je trenutak da posljednji kadar odstoji
+ * prije nego sto se otkaci.
+ */
+export const SEQUENCE_SPAN = 0.92;
+
 /*
   Odnos stranica kadra (16:9) i ponasanje na uspravnom prozoru zive u CSS-u,
   u .hero-stage-frame — tamo ih media query moze mijenjati bez re-rendera.
