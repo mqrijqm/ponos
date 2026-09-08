@@ -29,12 +29,20 @@ export function QualityAccordionSection() {
   const [open, setOpen] = useState(1);
   return (
     <section className="quality-section quality-accordion" aria-labelledby="quality-intro-title">
-      <div className="quality-intro-grid">
-        <div className="quality-side-note"><span>2000 — DANAS</span><small>ISKUSTVO U PODNIM OBLOGAMA</small></div>
-        <div className="quality-intro-content">
-          <span className="quality-pill"><i /> VIŠE O KVALITETU</span>
-          <h2 id="quality-intro-title">Kvalitet poda počinje od materijala,<br /><em>završava se osjećajem doma.</em></h2>
-          <p>Pažljivo biramo kolekcije koje spajaju trajnost, preciznu izradu i bezvremenski izgled.</p>
+      {/* Isti slog kao izjava o firmi: natpis, serif recenica lijevo, podnozje. */}
+      <div className="quality-statement">
+        <span className="qs-label">VIŠE O KVALITETU</span>
+        <h2 id="quality-intro-title">
+          Kvalitet poda počinje od materijala, <em>završava se osjećajem doma.</em>
+        </h2>
+        <p className="qs-lede">
+          Pažljivo biramo kolekcije koje spajaju trajnost, preciznu izradu i bezvremenski izgled.
+        </p>
+        <div className="qs-foot">
+          <span className="qs-kicker">
+            <i aria-hidden="true" />
+            2000 — DANAS · ISKUSTVO U PODNIM OBLOGAMA
+          </span>
         </div>
       </div>
       <div className="quality-accordion-list">

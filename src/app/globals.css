@@ -4573,6 +4573,77 @@ main > section.editorial-statement {
 .editorial-statement .es-word-accent {
   color: var(--brand-muted);
 }
+/* ── Uvod sekcije o kvalitetu: isti slog kao izjava o firmi ── */
+.quality-statement {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(30px, 6vh, 76px) 0 clamp(24px, 4vh, 48px);
+  display: flex;
+  flex-direction: column;
+}
+.qs-label {
+  color: var(--brand-muted);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+.quality-page .quality-statement h2 {
+  max-width: 890px;
+  margin: clamp(22px, 3.2vh, 40px) 0 0;
+  text-align: left;
+  text-wrap: pretty;
+  color: var(--ink);
+  /* Namjerno --font-lora, ne --font-newsreader: .quality-page tu varijablu
+     pretvara u Arial za cijelu sekciju. Ovaj slog je preuzet od izjave o
+     firmi i mora ostati serif, kao i tamo. */
+  font-family: var(--font-lora), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 4.4vw, 4.2rem);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+.quality-page .quality-statement h2 em {
+  color: var(--brand-muted);
+  font-style: italic;
+}
+.quality-page .quality-statement .qs-lede {
+  max-width: 52ch;
+  margin: clamp(20px, 2.6vh, 30px) 0 0;
+  color: var(--text-soft);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: var(--type-body);
+  line-height: 1.55;
+}
+.qs-foot {
+  margin-top: clamp(30px, 5vh, 64px);
+  display: flex;
+  align-items: center;
+}
+.qs-kicker {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--brand-muted);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .2em;
+}
+.qs-kicker i {
+  display: block;
+  width: clamp(48px, 7vw, 104px);
+  height: 1px;
+  background: currentColor;
+}
+@media (max-width: 600px) {
+  .qs-kicker {
+    font-size: 9px;
+    letter-spacing: .14em;
+  }
+}
+
 /* Podnozje: crta i natpis lijevo, strelica desno. */
 .es-foot {
   margin-top: clamp(34px, 6vh, 76px);

@@ -91,6 +91,20 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
         pointerEvents: "none",
       }}
     >
+      <div
+        ref={ctaWrapRef}
+        style={{ zIndex: 6, opacity: 0, transform: "translateY(28px)", pointerEvents: "auto" }}
+      >
+        {/*
+          Isto dugme kao u navbaru: ista komponenta i ista `.cta-dot` klasa,
+          pa i isti modal za ponudu. Ovdje se samo vraca `pointerEvents`,
+          koji sloj iznad gasi.
+        */}
+        <QuoteCta className="cta-dot" label="Zatraži ponudu">
+          <i /> {COPY.cta}
+        </QuoteCta>
+      </div>
+
       <h1
         ref={titleRef}
         style={{
@@ -111,20 +125,6 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
       >
         {COPY.title}
       </h1>
-
-      <div
-        ref={ctaWrapRef}
-        style={{ zIndex: 6, opacity: 0, transform: "translateY(28px)", pointerEvents: "auto" }}
-      >
-        {/*
-          Isto dugme kao u navbaru: ista komponenta i ista `.cta-dot` klasa,
-          pa i isti modal za ponudu. Ovdje se samo vraca `pointerEvents`,
-          koji sloj iznad gasi.
-        */}
-        <QuoteCta className="cta-dot" label="Zatraži ponudu">
-          <i /> {COPY.cta}
-        </QuoteCta>
-      </div>
     </div>
   );
 }

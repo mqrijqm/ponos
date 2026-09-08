@@ -50,8 +50,6 @@ export const wickedHarvestOak: ShowcaseProduct = {
 export const naturalFloor: ShowcaseProduct = {
   brand: "SPC Vinyl",
   name: "Natural Floor Collection",
-  description:
-    "Natural Floor kolekcija inspirisana je prirodnim ljepotama šume. Prigušene boje i struktura drveta osiguravaju sklad i jedinstvenu atmosferu. Ekološki prihvatljiv i 100% reciklibilan, ovaj pod je idealan za podno grijanje i provodi toplinu bez promjene svojih parametara. Inovativna jezgra sa 80% prirodnih komponenti pruža vrhunsku otpornost na udarce i oštećenja sa stabilnim dimenzijama.",
   specs: [
     ["Kolekcija", "Natural Floor"],
     ["Tip proizvoda", "SPC Vinyl"],

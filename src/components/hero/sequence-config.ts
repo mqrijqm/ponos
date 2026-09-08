@@ -54,5 +54,5 @@ export const BACKGROUND = "#f5f3ee";
 export const MOBILE_FRAME_STEP = 2;
 
 /** Koliko frejmova ide u jednom naletu ucitavanja. */
-export const PRELOAD_BATCH = 12;
+export const PRELOAD_BATCH = 20;
 

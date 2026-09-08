@@ -149,10 +149,26 @@ export default function ScrollSequenceHero() {
           if (--pending === 0) loadBatch(until);
         };
         image.onload = () => {
-          loaded[i] = true;
-          // prvi kadar se crta cim stigne, da hero ne stoji prazan
-          if (i === 0 || Math.round(state.frame / step) * step === i) draw();
-          settle();
+          /*
+            Dekodiranje ide unaprijed, ne u trenutku crtanja. `drawImage` na jos
+            nedekodovanu sliku dekoduje je odmah, u istom frejmu — na 1440px to
+            je posao koji se vidi kao trzaj usred scrolla. Sa `decode()` slika
+            ceka spremna, a kadar se oglasava tek tada.
+
+            Ako `decode()` padne (stara implementacija, prekinuta slika), kadar
+            se svejedno prijavljuje: bolje grublje crtanje nego preskocen frejm.
+          */
+          const oglasi = () => {
+            loaded[i] = true;
+            // prvi kadar se crta cim stigne, da hero ne stoji prazan
+            if (i === 0 || Math.round(state.frame / step) * step === i) draw();
+            settle();
+          };
+          if (typeof image.decode === "function") {
+            image.decode().then(oglasi, oglasi);
+          } else {
+            oglasi();
+          }
         };
         /*
           Greska NIJE ucitan frejm. Ranije su onload i onerror dijelili isti
