@@ -13,7 +13,7 @@ export function ProductsNav() {
         Proizvodi <ChevronDown size={13} aria-hidden="true" />
       </Link>
       <div className="nav-dropdown-panel">
-        <Link href="/proizvodi">Sva ponuda</Link>
+        {/* Bez "Sva ponuda" — sam naslov "Proizvodi" vec vodi tamo. */}
         {categories.map((c) => (
           <Link key={c.slug} href={`/proizvodi/${c.slug}`}>
             {c.title}
@@ -59,7 +59,6 @@ export function Header() {
           <Menu />
         </summary>
         <div>
-          <Link href="/proizvodi">Sva ponuda</Link>
           {categories.map((c) => (
             <Link key={c.slug} href={`/proizvodi/${c.slug}`} className="mobile-sub">
               {c.title}

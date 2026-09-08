@@ -14,7 +14,7 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
-import ScrollSequenceHero from "./hero/ScrollSequenceHero";
+import VideoHero from "./hero/VideoHero";
 import HomeHeroReveal from "./HomeHeroReveal";
 
 /* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
@@ -174,7 +174,6 @@ export default function SitePage() {
         </button>
         {menu && (
           <div className="mobile-nav">
-            <a onClick={() => setMenu(false)} href="/proizvodi">Sva ponuda</a>
             {categories.map((c) => (
               <a
                 key={c.slug}
@@ -198,7 +197,7 @@ export default function SitePage() {
         )}
       </header>
       <main id="top">
-        <ScrollSequenceHero />
+        <VideoHero />
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />

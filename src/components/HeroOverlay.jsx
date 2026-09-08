@@ -10,14 +10,12 @@ import { usePrefersReducedMotion } from "./hero/hooks";
  * Natpisi preko heroja: naslov ulazi na sredini sekvence, dugme tek pred kraj -
  * kad su daske vec u vazduhu i ima smisla ponuditi sljedeci korak.
  *
- * Komponenta ne slusa scroll sama. Napredak joj daje roditelj (ScrollSequenceHero)
- * koji ga ionako racuna za sekvencu; dvije komponente koje mjere isti scroll
- * uvijek se raziđu za koji frejm.
+ * Komponenta ne mjeri nista sama. Napredak joj daje roditelj (VideoHero), koji
+ * ga cita iz samog snimka — tako natpisi prate kadar, a ne scroll.
  *
- * VAZNO za roditelja: `scrollProgress` se NE smije slati na svaki frejm scrolla.
- * Hero namjerno drzi napredak u refu, a ne u stateu - state bi znacio novi
- * render na svaki kadar prevrtanja. Zato roditelj mijenja state samo kad napredak
- * pređe jedan od pragova ispod. Vidi HERO_OVERLAY_STOPS.
+ * VAZNO za roditelja: `scrollProgress` se NE smije slati na svaku promjenu.
+ * Roditelj ga mijenja samo kad pređe jedan od pragova ispod, inace bi svaki
+ * otkucaj snimka bio novi render. Vidi HERO_OVERLAY_STOPS.
  */
 
 /** Napredak sekvence (0-1) na kojem se svaki element pojavljuje. */
@@ -82,11 +80,11 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        // Natpisi stoje u gornjoj trecini kadra, ne po sredini: tamo im
-        // daske ne prolaze kroz slova. 82px je fiksni navbar.
+        // Natpisi stoje visoko u kadru, odmah ispod navbara: tamo im daske
+        // ne prolaze kroz slova. 82px je fiksni navbar.
         justifyContent: "flex-start",
-        gap: "clamp(18px, 2.4vw, 30px)",
-        padding: "calc(82px + clamp(48px, 11vh, 130px)) 24px 0",
+        gap: "clamp(14px, 1.8vw, 22px)",
+        padding: "calc(82px + clamp(16px, 3vh, 40px)) 24px 0",
         textAlign: "center",
         pointerEvents: "none",
       }}
