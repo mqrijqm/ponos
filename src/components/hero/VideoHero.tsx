@@ -8,18 +8,25 @@ import { usePrefersReducedMotion } from "./hooks";
 /**
  * HERO: snimak sobe u kojoj se hrastove daske podizu ka kameri.
  *
- * Snimak se pusta, ne prevrce. Ranije je stajao razlozen na frejmove koje je
- * scroll birao kadar po kadar — to je znacilo da tecnost slike zavisi od toga
- * kako neko skroluje, i pet megabajta slika koje sve moraju stici prije nego
- * sto pokret postane gladak. Ovako dekodira video kartica, a fajl je tri puta
- * manji.
+ * Snimak se pusta, ne prevrce, i tok je ovakav:
  *
- * Kretanje pocinje na prvi scroll, ne na ucitavanje: gost koji tek stize prvo
- * vidi mirnu sobu, a snimak krece kad pokaze da gleda. Poslije toga scroll vise
- * nije potreban — snimak ide do kraja sam.
+ *   mirno     → prvi scroll pusta snimak i zakljucava stranicu
+ *   naprijed  → stranica stoji dok snimak ne dođe do kraja
+ *   gotovo    → scroll je opet slobodan, kadar stoji na posljednjem frejmu
+ *   nazad     → scroll navise sa vrha stranice vrti snimak unatrag
+ *
+ * Zakljucavanje ide preko `ponos:scroll-lock`, istog dogadaja kojim se sluzi i
+ * StatsScroll — Lenis ga hvata i stane, pa nema dva mehanizma za istu stvar.
+ *
+ * Unatrag se ne vrti preko `playbackRate`: negativna brzina nije podrzana.
+ * Umjesto toga se `currentTime` pomjera unazad, onoliko koliko tocak da.
  */
 
-/** Napredak snimka (0-1) na kojem natpisi ulaze — isto sto i prije. */
+/** Koliko sekundi snimka odmota jedna jedinica scrolla pri vrtnji unatrag. */
+const NAZAD_PO_JEDINICI = 0.0022;
+
+type Stanje = "mirno" | "naprijed" | "gotovo" | "nazad";
+
 export default function VideoHero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -35,9 +42,46 @@ export default function VideoHero() {
     const video = videoRef.current;
     if (!video) return;
 
-    /* Bez animacije snimak stoji na prvom kadru; natpise u tom slucaju rjesava
-       render ispod, pa ovdje nema sta da se prijavi. */
+    /* Bez animacije snimak stoji na prvom kadru; natpise rjesava render ispod. */
     if (reducedMotion) return;
+
+    let stanje: Stanje = "mirno";
+    let trazen = false;
+
+    /*
+      Brava mora drzati i ono sto Lenis ne vidi. `ponos:scroll-lock` zaustavi
+      Lenis, ali tocak, dodir, razmaknica i strelice i dalje pomjeraju stranicu
+      — pa se ti dogadaji odbijaju dok snimak traje. `passive: false` je uslov
+      da se `preventDefault` uopste primi.
+    */
+    const TIPKE_SCROLLA = new Set([
+      " ", "PageDown", "PageUp", "End", "Home", "ArrowDown", "ArrowUp",
+    ]);
+    const odbij = (e: Event) => e.preventDefault();
+    const odbijTipku = (e: KeyboardEvent) => {
+      const meta = e.target as HTMLElement | null;
+      /* U polju za unos razmaknica je slovo, ne scroll. */
+      if (meta && /^(INPUT|TEXTAREA|SELECT)$/.test(meta.tagName)) return;
+      if (TIPKE_SCROLLA.has(e.key)) e.preventDefault();
+    };
+
+    let zakljucano = false;
+    const zakljucaj = () => {
+      if (zakljucano) return;
+      zakljucano = true;
+      window.dispatchEvent(new Event("ponos:scroll-lock"));
+      window.addEventListener("wheel", odbij, { passive: false });
+      window.addEventListener("touchmove", odbij, { passive: false });
+      window.addEventListener("keydown", odbijTipku, { passive: false });
+    };
+    const otkljucaj = () => {
+      if (!zakljucano) return;
+      zakljucano = false;
+      window.dispatchEvent(new Event("ponos:scroll-unlock"));
+      window.removeEventListener("wheel", odbij);
+      window.removeEventListener("touchmove", odbij);
+      window.removeEventListener("keydown", odbijTipku);
+    };
 
     const napreduj = () => {
       const trajanje = video.duration;
@@ -48,51 +92,109 @@ export default function VideoHero() {
       );
     };
 
-    /*
-      Prvi scroll pusta snimak i vise se ne slusa. `play()` vraca obecanje koje
-      zna da bude odbijeno (kartica u pozadini, stroga pravila autoplaya) — u
-      tom slucaju ostaje poster i natpisi se ne pojavljuju sami, pa se pusta
-      jos jednom kad se stranica vrati u prvi plan.
-    */
-    let trazen = false;   // gost je skrolovao
-    let pusten = false;   // snimak stvarno ide
+    /* ── naprijed: prvi scroll pusta i zakljucava ─────────────── */
 
     const probaj = () => {
-      if (!trazen || pusten) return;
-      pusten = true;
+      if (!trazen || stanje !== "mirno" || video.readyState < 3) return;
+      stanje = "naprijed";
+      zakljucaj();
       video.play().catch(() => {
-        pusten = false;
+        /* Odbijeno pustanje ne smije ostaviti stranicu zakljucanom. */
+        stanje = "mirno";
+        otkljucaj();
       });
     };
 
     /*
-      Scroll samo zabiljezi zelju; pustanje ide cim snimak ima dovoljno
-      podataka. Bez toga bi `play()` na praznom baferu cekao da se napuni i
-      kadar bi krenuo sa zakasnjenjem od pola sekunde ili vise.
+      Okidac je sam pokret tocka, a ne `scroll` koji stize poslije njega: da se
+      ceka scroll, stranica bi vec bila odmakla stotinjak piksela prije nego sto
+      brava stigne, pa bi kadar odskocio.
     */
     const pusti = () => {
       trazen = true;
-      window.removeEventListener("scroll", pusti);
-      if (video.readyState >= 3) probaj();
+      probaj();
+    };
+    const pustiNaTocak = (e: WheelEvent) => {
+      if (e.deltaY > 0) pusti();
+    };
+    const pustiNaDodir = () => pusti();
+
+    const naKraj = () => {
+      stanje = "gotovo";
+      otkljucaj();
+    };
+
+    /*
+      Sigurnosna kocnica: ako se snimak iz bilo kog razloga ne zavrsi (izgubljen
+      `ended`, greska u dekodiranju), stranica se otkljucava sama nesto poslije
+      njegovog trajanja. Bolje raniji scroll nego zarobljen gost.
+    */
+    let kocnica: ReturnType<typeof setTimeout> | undefined;
+    const naPlay = () => {
+      clearTimeout(kocnica);
+      const ostalo = (video.duration || 8) - video.currentTime;
+      kocnica = setTimeout(() => {
+        if (stanje === "naprijed") naKraj();
+      }, (ostalo + 1.5) * 1000);
+    };
+
+    /* ── nazad: scroll navise sa vrha vrti snimak unatrag ─────── */
+
+    const naTocak = (e: WheelEvent) => {
+      if (e.deltaY >= 0) {
+        if (stanje === "nazad") stanje = "gotovo";
+        return;
+      }
+      /* Samo sa vrha stranice i samo kad je snimak vec odgledan. */
+      if (window.scrollY > 4) return;
+      if (stanje !== "gotovo" && stanje !== "nazad") return;
+
+      if (stanje === "gotovo") {
+        stanje = "nazad";
+        video.pause();
+      }
+
+      const novo = video.currentTime + e.deltaY * NAZAD_PO_JEDINICI;
+      if (novo <= 0) {
+        video.currentTime = 0;
+        stanje = "mirno";
+        trazen = false; // sljedeci scroll nadolje pusta snimak iznova
+      } else {
+        video.currentTime = novo;
+      }
+      napreduj();
     };
 
     const naVidljivost = () => {
       if (!document.hidden) probaj();
     };
 
-    window.addEventListener("scroll", pusti, { passive: true, once: true });
+    window.addEventListener("scroll", pusti, { passive: true });
+    window.addEventListener("wheel", pustiNaTocak, { passive: true });
+    window.addEventListener("touchmove", pustiNaDodir, { passive: true });
+    window.addEventListener("wheel", naTocak, { passive: true });
     document.addEventListener("visibilitychange", naVidljivost);
     video.addEventListener("canplay", probaj);
     video.addEventListener("canplaythrough", probaj);
+    video.addEventListener("play", naPlay);
+    video.addEventListener("ended", naKraj);
     video.addEventListener("timeupdate", napreduj);
     /* Skidanje krece odmah, da snimak doceka prvi scroll vec napunjen. */
     video.load();
 
     return () => {
+      clearTimeout(kocnica);
+      /* Demontiranje nikad ne smije ostaviti stranicu zakljucanom. */
+      otkljucaj();
       window.removeEventListener("scroll", pusti);
+      window.removeEventListener("wheel", pustiNaTocak);
+      window.removeEventListener("touchmove", pustiNaDodir);
+      window.removeEventListener("wheel", naTocak);
       document.removeEventListener("visibilitychange", naVidljivost);
       video.removeEventListener("canplay", probaj);
       video.removeEventListener("canplaythrough", probaj);
+      video.removeEventListener("play", naPlay);
+      video.removeEventListener("ended", naKraj);
       video.removeEventListener("timeupdate", napreduj);
     };
   }, [reducedMotion]);

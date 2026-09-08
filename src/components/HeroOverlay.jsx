@@ -83,7 +83,10 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
         // Natpisi stoje visoko u kadru, odmah ispod navbara: tamo im daske
         // ne prolaze kroz slova. 82px je fiksni navbar.
         justifyContent: "flex-start",
-        gap: "clamp(14px, 1.8vw, 22px)",
+        /* Razmak nosi naslov nize od dugmeta: u zavrsnom kadru tako pada ispod
+           daske koja prolazi kroz sredinu, umjesto preko nje. Dugme ostaje na
+           svom mjestu. */
+        gap: "clamp(62px, 15vh, 150px)",
         padding: "calc(82px + clamp(46px, 8.5vh, 108px)) 24px 0",
         textAlign: "center",
         pointerEvents: "none",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import PoruciCursor from "@/components/PoruciCursor";
 import QuoteProvider from "@/components/QuoteProvider";
 // Jedini font koji se ucitava. Sve sto je bilo sans ide na Arial (sistemski,
 // nista se ne skida); Lora nosi serif/naglasena mjesta - vidi globals.css.
@@ -49,6 +50,7 @@ export default function RootLayout({
       <body className={lora.variable}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
+          <PoruciCursor />
         </QuoteProvider>
       </body>
     </html>

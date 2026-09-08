@@ -1708,6 +1708,51 @@ footer > div:not(.brand) {
   .ph-arrow { width: 46px; height: 46px; }
   .ph-kicker { font-size: 9px; letter-spacing: .16em; }
 }
+/* ── "Poruči" znak umjesto kursora nad slikama artikala ── */
+.poruci-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: 96px;
+  height: 96px;
+  background: url("/poruci.svg") center / contain no-repeat;
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+  /* Sam znak ne smije hvatati misa, inace bi stalno bio "cilj" ispod pokazivaca
+     i treptao. Prelaz je samo na vidljivosti i uvecanju, ne na poziciji —
+     pozicija mora pratiti misa bez kasnjenja. */
+  pointer-events: none;
+  will-change: transform;
+  transition: opacity 180ms ease, scale 260ms cubic-bezier(.2, .8, .2, 1);
+  scale: 0.7;
+}
+.poruci-cursor.is-vidljiv {
+  opacity: 1;
+  scale: 1;
+}
+/* Pravi kursor se sklanja samo tamo gdje znak preuzima. */
+.showcase-media,
+.showcase-room,
+.wpc-card-media,
+.catalog-image,
+.panel-gallery figure,
+.detail-tile {
+  cursor: none;
+}
+@media (hover: none), (pointer: coarse) {
+  .poruci-cursor { display: none; }
+  .showcase-media,
+  .showcase-room,
+  .wpc-card-media,
+  .catalog-image,
+  .panel-gallery figure,
+  .detail-tile { cursor: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .poruci-cursor { transition: opacity 120ms linear; }
+}
+
 /* Galerija dekora panela: mirna mreza kvadrata, bez okvira i natpisa. */
 .panel-gallery {
   grid-column: 1 / -1;
