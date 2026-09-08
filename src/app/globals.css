@@ -4601,8 +4601,13 @@ main > section.editorial-statement {
   align-items: start;
 }
 .quality-split .quality-panel-inner > img {
+  /* Manja slika: ne preko cijele kolone, i plica od kvadrata — u popisu je
+     ilustracija uz tekst, ne glavni kadar. */
+  width: min(100%, 420px);
   height: auto;
-  aspect-ratio: 1.6;
+  aspect-ratio: 2.3;
+  object-fit: cover;
+  border-radius: 14px;
 }
 .quality-split .quality-panel-copy p {
   max-width: none;
