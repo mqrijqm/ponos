@@ -106,7 +106,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "overlay",
     naziv: "Overlay",
-    oznaka: "SLOJ 1",
+    oznaka: "Sjajni/mat lak",
     opis: "",
     debljina: 0.02,
     materijal: {
@@ -133,7 +133,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "dekor",
     naziv: "Dekor",
-    oznaka: "SLOJ 2",
+    oznaka: "Tvrdo prirodno drvo",
     opis: "",
     debljina: 0.04,
     materijal: {
@@ -152,7 +152,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "hdf",
     naziv: "HDF jezgro",
-    oznaka: "SLOJ 3",
+    oznaka: "Stabilizacijske letvice",
     opis: "",
     debljina: 0.18,
     materijal: {
@@ -171,7 +171,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "balans",
     naziv: "Balans sloj",
-    oznaka: "SLOJ 4",
+    oznaka: "Balansirajući sloj",
     opis: "",
     debljina: 0.03,
     materijal: { vrsta: "ravna", boja: "#D9C4B4", roughness: 0.9 },
@@ -182,7 +182,7 @@ export const LAYERS: LayerDef[] = [
   {
     id: "pluta",
     naziv: "Pluta",
-    oznaka: "SLOJ 5",
+    oznaka: "Osnovna ploča",
     opis: "",
     debljina: 0.06,
     materijal: {
@@ -415,10 +415,12 @@ export const MARKERS = { start: 0.7, end: 0.99 };
 export const MARKER_STEPS = { duration: 0.38, lineAt: 0.3, labelAt: 0.6 };
 
 /**
- * Duzina linije i razmaci, kao UDIO PRECNIKA KRUGA — preuzeto iz dostavljenog
- * 1.svg (krug 152, linija 556, razmak 108 jedinica).
+ * Duzina linije i razmaci, kao UDIO PRECNIKA KRUGA. Odnosi su iz dostavljenog
+ * 1.svg (krug 152, linija 556, razmak 108 jedinica), ali je linija skracena sa
+ * 3.66 na 2.6: puni natpisi su siri od nekadasnjeg "SLOJ N", pa je red sa
+ * originalnom linijom curio preko desne ivice ekrana.
  */
-export const MARKER_ROW = { line: 3.66, gapToLine: 0.71, gapToLabel: 0.5 };
+export const MARKER_ROW = { line: 2.6, gapToLine: 0.71, gapToLabel: 0.5 };
 
 /** Boja teksta uz marker — ista bakarna kao prsten i linija u SVG-ovima. */
 export const MARKER_COLOR = "#A77342";
