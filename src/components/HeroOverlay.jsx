@@ -6,8 +6,8 @@ import gsap from "gsap";
 import { usePrefersReducedMotion } from "./hero/hooks";
 
 /**
- * Natpisi preko heroja: naslov se pojavi na pocetku sekvence, dugme tek na
- * kraju - kad daske vec stoje u sobi i ima smisla ponuditi sljedeci korak.
+ * Natpisi preko heroja: naslov ulazi na sredini sekvence, dugme tek pred kraj -
+ * kad su daske vec u vazduhu i ima smisla ponuditi sljedeci korak.
  *
  * Komponenta ne slusa scroll sama. Napredak joj daje roditelj (ScrollSequenceHero)
  * koji ga ionako racuna za sekvencu; dvije komponente koje mjere isti scroll
@@ -15,12 +15,12 @@ import { usePrefersReducedMotion } from "./hero/hooks";
  *
  * VAZNO za roditelja: `scrollProgress` se NE smije slati na svaki frejm scrolla.
  * Hero namjerno drzi napredak u refu, a ne u stateu - state bi znacio novi
- * render 190 puta po prevrtanju. Zato roditelj mijenja state samo kad napredak
+ * render na svaki kadar prevrtanja. Zato roditelj mijenja state samo kad napredak
  * pređe jedan od pragova ispod. Vidi HERO_OVERLAY_STOPS.
  */
 
 /** Napredak sekvence (0-1) na kojem se svaki element pojavljuje. */
-const TITLE_AT = 0.08;
+const TITLE_AT = 0.42;
 const CTA_AT = 0.88;
 
 /**
@@ -113,14 +113,15 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
         style={{
           zIndex: 5,
           margin: 0,
-          // 64px je gornja granica; na uskom ekranu bi fiksnih 64px prelomilo
-          // naslov u tri reda preko cijele sobe
-          fontSize: "clamp(2rem, 5.4vw, 64px)",
-          fontWeight: 700,
-          lineHeight: 1.1,
-          letterSpacing: "-0.01em",
+          // Sitan razmaknut sans: naslov nosi kadar, ne velicina slova.
+          // Na uskom ekranu ide na 12px da razmak ne pokida rijeci.
+          fontSize: "clamp(12px, 1.15vw, 17px)",
+          fontWeight: 600,
+          lineHeight: 1.4,
+          letterSpacing: "0.22em",
+          textTransform: "uppercase",
           color: BRAND,
-          fontFamily: "var(--font-comfortaa), system-ui, sans-serif",
+          fontFamily: "var(--font-manrope), Arial, Helvetica, sans-serif",
           opacity: 0,
           transform: "translateY(18px)",
         }}
@@ -146,8 +147,8 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
             color: "#fff",
             border: "none",
             borderRadius: 999,
-            fontFamily: "var(--font-comfortaa), system-ui, sans-serif",
-            fontSize: 13,
+            fontFamily: "var(--font-manrope), Arial, Helvetica, sans-serif",
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",

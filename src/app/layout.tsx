@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import QuoteProvider from "@/components/QuoteProvider";
@@ -16,15 +15,6 @@ const lora = localFont({
   display: "swap",
   variable: "--font-lora",
 });
-// Comfortaa nosi samo natpise u heroju (naslov i dugme), zato ide u varijablu
-// a ne na <body> - ostatak stranice ostaje na Arialu i Lori.
-const comfortaa = Comfortaa({
-  subsets: ["latin-ext"],
-  weight: ["400", "700"],
-  display: "swap",
-  variable: "--font-comfortaa",
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://mt-ponos.vercel.app"),
   title: "Podne obloge i laminati | MT PONOS Banja Luka",
@@ -52,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <body className={`${lora.variable} ${comfortaa.variable}`}>
+      <body className={lora.variable}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
         </QuoteProvider>

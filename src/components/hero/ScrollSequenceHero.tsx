@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,19 +9,14 @@ import { useIsMobile, usePrefersReducedMotion } from "./hooks";
 import {
   BACKGROUND,
   FRAME_COUNT,
-  HANDOFF,
-  HANDOFF_BACKDROP,
+  POSTER_FRAME,
   MOBILE_FRAME_STEP,
   PRELOAD_BATCH,
   SCROLL_LENGTH_VH,
-  SEQUENCE_SPAN,
   framePath,
 } from "./sequence-config";
 
 gsap.registerPlugin(ScrollTrigger);
-
-/** Ziva scena se ucitava tek na klijentu i tek kad joj se priblizi red. */
-const FloatingPlanks = dynamic(() => import("./FloatingPlanks"), { ssr: false });
 
 /**
  * HERO: snimak razlozen na frejmove, koji scroll pretace kadar po kadar.
@@ -31,19 +25,18 @@ const FloatingPlanks = dynamic(() => import("./FloatingPlanks"), { ssr: false })
  * video sinhronizuje i nema razlike izmedju brzog i sporog scrolla. Sekcija je
  * visoka SCROLL_LENGTH_VH i pinovana, pa se kadar drzi na mjestu dok se prevrce.
  *
- * Pred kraj snimak se pretapa u zivu three.js scenu (FloatingPlanks). Ispod nje
- * stoji prvi kadar snimka kao slika sobe, pa se pri prelazu mijenjaju samo
- * daske - soba ostaje ista i rez se ne vidi.
+ * Snimak ide do posljednjeg kadra i tu ostaje. Ranije je pred kraj preuzimala
+ * ziva three.js scena, ali su njene daske stajale na pozicijama iz desete
+ * sekunde: otkad je snimak skracen na sedmu, kroz pretapanje su se vidjele
+ * dvostruke daske i soba je skakala iz blijede u punu.
  */
 export default function ScrollSequenceHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const sceneRef = useRef<HTMLDivElement>(null);
 
   const reducedMotion = usePrefersReducedMotion();
   const isMobile = useIsMobile();
-  const [sceneMounted, setSceneMounted] = useState(false);
 
   /*
     Napredak za natpise. Nije isto sto i `state.frame`: taj se mijenja na svaki
@@ -172,23 +165,8 @@ export default function ScrollSequenceHero() {
     resize();
     window.addEventListener("resize", resize);
 
-    /*
-      PRETAPANJE. Opacity se vodi preko refova, ne preko React state-a: state bi
-      znacio novi render na svaki frejm scrolla. State postoji samo za jedno
-      pitanje - da li je scena uopste montirana.
-    */
-    const applyHandoff = (sequenceProgress: number) => {
-      const t = gsap.utils.clamp(
-        0,
-        1,
-        (sequenceProgress - HANDOFF.start) / (1 - HANDOFF.start),
-      );
-      canvas.style.opacity = String(1 - t);
-      if (sceneRef.current) sceneRef.current.style.opacity = String(t);
-    };
-
     if (reducedMotion) {
-      // bez animacije: posljednji kadar odmah, bez pina i bez zive scene
+      // bez animacije: posljednji kadar odmah, bez pina
       state.frame = FRAME_COUNT - 1;
       draw();
       return () => {
@@ -213,13 +191,11 @@ export default function ScrollSequenceHero() {
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          // snimak se odvrti u prvom dijelu pina, pa stane na posljednjem kadru
-          const sequence = gsap.utils.clamp(0, 1, self.progress / SEQUENCE_SPAN);
+          // snimak se odvrti kroz cijeli pin i stane na posljednjem kadru
+          const sequence = self.progress;
           state.frame = sequence * (FRAME_COUNT - 1);
           draw();
-          if (sequence >= HANDOFF.mount) setSceneMounted(true);
           pushOverlayProgress(sequence);
-          applyHandoff(sequence);
         },
       });
     }, section);
@@ -255,32 +231,16 @@ export default function ScrollSequenceHero() {
       >
         {/* Odnos i ponasanje kadra su u .hero-stage-frame u globals.css. */}
         <div className="hero-stage-frame">
-          {/* Soba ispod zive scene: prvi kadar snimka, bez podignutih dasaka. */}
+          {/* Poster dok prvi frejm ne stigne. */}
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${HANDOFF_BACKDROP})`, pointerEvents: "none" }}
+            style={{ backgroundImage: `url(${POSTER_FRAME})`, pointerEvents: "none" }}
             aria-hidden="true"
           />
 
           {/*
-            Ziva scena ide iznad natpisa (natpisi su na 5 i 6): kad na kraju
-            preuzme kadar, daske lete ispred teksta, ne iza njega.
-          */}
-          {sceneMounted && (
-            <div
-              ref={sceneRef}
-              className="absolute inset-0"
-              style={{ opacity: 0, zIndex: 7, pointerEvents: "none" }}
-            >
-              <FloatingPlanks animated={!reducedMotion} />
-            </div>
-          )}
-
-          {/*
-            Snimak stoji navrh i gasi se tek na kraju scrolla. Ugasen znaci
-            providan, ne i nepostojeci: bez `pointerEvents: none` platno bi i
-            dalje hvatalo klikove i dugme ispod njega ne bi radilo. Isto vazi za
-            pozadinu i zivu scenu - nijedan od ta tri sloja ne prima mis.
+            Platno ne prima mis, isto kao ni poster ispod njega: bez
+            `pointerEvents: none` hvatalo bi klikove i dugme ispod ne bi radilo.
           */}
           <canvas
             ref={canvasRef}

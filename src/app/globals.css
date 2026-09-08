@@ -3590,15 +3590,6 @@ footer.site-footer .footer-brand-column .brand.brand-image { width: 220px; heigh
 }
 
 /* ---------- Rezervisane prazne sekcije na vrhu ---------- */
-.placeholder-section {
-  height: 100svh;
-  background: var(--hero-cream);
-}
-.placeholder-section[data-placeholder="2"] {
-  background: var(--c);
-  border-top: 1px solid var(--brand-line);
-}
-
 /* ---------- STANDARDI: jedna centrirana kolona, dva stila ----------
    serif (Lora)  = naslov sekcije i brojevi
    sans (Arial)  = sve ostalo: pill, opis, labele, naslovi kartica, dugme   */

@@ -199,8 +199,6 @@ export default function SitePage() {
       </header>
       <main id="top">
         <ScrollSequenceHero />
-        {/* Druga sekcija u nizu, jos neodredjena. */}
-        <section className="placeholder-section" aria-hidden="true" data-placeholder="2" />
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />
