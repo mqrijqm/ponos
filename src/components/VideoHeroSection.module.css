@@ -11,7 +11,7 @@
 
   --orange: #e66c2c;
   --orange-dark: #c85620;
-  --dark: #1a1a1a;
+  --dark: var(--ink-black);
   --grey: #888888;
 
   --pad-y: 80px;
@@ -19,7 +19,7 @@
   --title: 32px;
   --body: 16px;
 
-  background: #f9f9f9;
+  background: #fff;
   padding: var(--pad-y) var(--pad-x);
 }
 
@@ -33,7 +33,7 @@
   aspect-ratio: var(--ratio);
   overflow: hidden;
   /* boja dok se snimak ucitava, da kadar ne poskoci iz bijelog */
-  background: #f0f0f0;
+  background: var(--cream-tint);
 }
 
 .video {

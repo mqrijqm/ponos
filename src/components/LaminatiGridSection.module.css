@@ -15,7 +15,7 @@
   --price: 16px;
 
   --orange: #e66c2c;
-  --dark: #1a1a1a;
+  --dark: var(--ink-black);
   --grey: #888888;
   --body: #666666;
   --blue: #2563eb;
@@ -93,7 +93,7 @@
   /* SVE slike su kvadratne - bez ovoga red ispadne nazubljen */
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #f0ece7;
+  background: var(--cream-tint);
 }
 
 .image {
