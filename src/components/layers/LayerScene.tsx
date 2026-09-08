@@ -223,6 +223,7 @@ function Marker({
                 fontSize: Math.round(size * 0.3),
                 fontWeight: 700,
                 letterSpacing: ".12em",
+                textTransform: "uppercase",
               }}
             >
               {label}
@@ -285,6 +286,15 @@ function Layers({
 }) {
   const materials = useLayerMaterials();
   const groups = useRef<(THREE.Group | null)[]>([]);
+  const viewportWidth = useThree((state) => state.size.width);
+  const viewportHeight = useThree((state) => state.size.height);
+  /*
+    Koliko prostora ostane od ivice daske do ivice ekrana ne zavisi samo od
+    sirine nego i od oblika kadra: na niskom, skoro kvadratnom prozoru kamera
+    stane blize i daska pojede vecinu sirine. Zato natpis traži i dovoljno
+    sirok prozor i dovoljno izduzen kadar; inace marker ostaje samo krug.
+  */
+  const hasRoomForLabel = viewportWidth >= 1200 && viewportWidth / viewportHeight >= 1.5;
 
   const geometries = useMemo(
     () =>
@@ -304,7 +314,15 @@ function Layers({
     }
   }, -1);
 
-  const markerSize = isMobile ? 29 : 38;
+  /*
+    Marker mora rasti i padati sa sirinom prozora. Krug sjedi uz ivicu daske, a
+    daska se fituje u kadar — prostor od nje do ivice ekrana je stalan UDIO
+    sirine, dok bi marker fiksne velicine na uzem ekranu izasao iz kadra.
+    Ovaj koeficijent drzi red (krug + linija + natpis) unutar tog prostora.
+  */
+  const markerSize = isMobile
+    ? 29
+    : Math.round(Math.min(38, Math.max(26, viewportWidth * 0.027)));
 
   return (
     <group>
@@ -331,7 +349,7 @@ function Layers({
             anchor={layer.anchor}
             size={markerSize}
             label={layer.oznaka}
-            withLabel={!isMobile}
+            withLabel={!isMobile && hasRoomForLabel}
             progressRef={progressRef}
             animated={animated}
           />

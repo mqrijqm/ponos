@@ -5002,3 +5002,54 @@ main > section.wpc-section {
 .wpc-cta {
   margin-top: clamp(24px, 3vw, 36px);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DVA TEKSTA JEDAN PORED DRUGOG
+   Uspravna linija razdvaja kolone, a razmak oko nje je s obje strane
+   isti — zato nema gap-a, nego padding na svakoj koloni.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.editorial-split {
+  padding-top: clamp(64px, 8vh, 110px);
+  padding-bottom: clamp(64px, 8vh, 110px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+.editorial-split > article {
+  min-width: 0;
+  padding-right: clamp(28px, 4vw, 68px);
+}
+.editorial-split > article + article {
+  padding-right: 0;
+  padding-left: clamp(28px, 4vw, 68px);
+  border-left: 1px solid var(--brand-line);
+}
+.editorial-split h2 {
+  margin: 0 0 14px;
+}
+.editorial-split p {
+  max-width: 52ch;
+  margin: 0 0 14px;
+  color: var(--m);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.editorial-split p:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 767px) {
+  /* Jedna ispod druge — linija sa strane postaje linija iznad. */
+  main > section.editorial-split {
+    grid-template-columns: 1fr;
+  }
+  .editorial-split > article {
+    padding-right: 0;
+  }
+  .editorial-split > article + article {
+    margin-top: 34px;
+    padding-left: 0;
+    padding-top: 34px;
+    border-left: 0;
+    border-top: 1px solid var(--brand-line);
+  }
+}

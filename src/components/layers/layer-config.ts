@@ -417,10 +417,10 @@ export const MARKER_STEPS = { duration: 0.38, lineAt: 0.3, labelAt: 0.6 };
 /**
  * Duzina linije i razmaci, kao UDIO PRECNIKA KRUGA. Odnosi su iz dostavljenog
  * 1.svg (krug 152, linija 556, razmak 108 jedinica), ali je linija skracena sa
- * 3.66 na 2.6: puni natpisi su siri od nekadasnjeg "SLOJ N", pa je red sa
- * originalnom linijom curio preko desne ivice ekrana.
+ * 3.66 na 1.9: puni natpisi u verzalu su mnogo siri od nekadasnjeg "SLOJ N",
+ * pa je red sa originalnom linijom curio preko desne ivice ekrana.
  */
-export const MARKER_ROW = { line: 2.6, gapToLine: 0.71, gapToLabel: 0.5 };
+export const MARKER_ROW = { line: 1.9, gapToLine: 0.71, gapToLabel: 0.5 };
 
 /** Boja teksta uz marker — ista bakarna kao prsten i linija u SVG-ovima. */
 export const MARKER_COLOR = "#A77342";

@@ -128,16 +128,6 @@ export default async function Page({
             </div>
           </section>
         )}
-        {slug === "parketi" && (
-          <section className="editorial-copy">
-            <h2>Višeslojna konstrukcija, prirodan osjećaj.</h2>
-            <p>
-              Tarkett parket je 100% drveni pod višeslojne konstrukcije. Gotov
-              je, fabrički lakiran i spreman za korišćenje odmah nakon ugradnje.
-              Ponuda se radi po narudžbi.
-            </p>
-          </section>
-        )}
         {slug === "zidni-paneli" && (
           <section className="editorial-copy">
             <h2>Mirniji prostor, topliji zid.</h2>
@@ -158,6 +148,42 @@ export default async function Page({
               </p>
             </div>
             <ProductGrid items={items} />
+          </section>
+        ) : slug === "parketi" ? (
+          /*
+            Dva teksta stoje jedan pored drugog, razdvojena uspravnom linijom.
+            Naslovi i pasusi dijele isti stil, pa su obje kolone iste tezine.
+          */
+          <section className="editorial-split">
+            <article>
+              <h2>Dostupno po narudžbi.</h2>
+              <p>
+                Za aktuelne dekore, cijene i rok isporuke kontaktirajte prodajni
+                tim.
+              </p>
+            </article>
+            <article>
+              <h2>Višeslojna konstrukcija, prirodan osjećaj.</h2>
+              <p>
+                Tarkett parket je 100% drveni pod višeslojne konstrukcije. Gotov
+                je, fabrički lakiran i spreman za korišćenje odmah nakon ugradnje.
+              </p>
+              <p>
+                Gornji sloj je pravo drvo, pa svaka daska nosi svoj crtež godova
+                i čvorova. Pod se čita kao prirodan materijal, a ne kao otisak
+                dezena — dvije daske nikada nisu iste.
+              </p>
+              <p>
+                Slojevi ispod postavljeni su unakrsno. Takva konstrukcija drži
+                dasku mirnom kada se vlažnost i temperatura u prostoriji
+                mijenjaju, pa parket dobro podnosi i podno grijanje.
+              </p>
+              <p>
+                Površina dolazi fabrički lakirana, bez brušenja i lakiranja na
+                licu mjesta. Prostor je upotrebljiv odmah nakon ugradnje, a
+                održava se suvim čišćenjem i povremenim vlažnim brisanjem.
+              </p>
+            </article>
           </section>
         ) : (
           <section className="editorial-copy">
