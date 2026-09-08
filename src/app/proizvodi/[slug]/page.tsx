@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import LayerStack from "@/components/layers/LayerStack";
 import ProductGrid from "@/components/ProductGrid";
+import QuoteCta from "@/components/QuoteCta";
 import VideoHeroSection from "@/components/VideoHeroSection";
 import { Footer, Header, PageHero } from "@/components/SiteChrome";
 import { catalog, categories } from "@/data/catalog";
@@ -183,11 +184,9 @@ export default async function Page({
                 i čvorova. Pod se čita kao prirodan materijal, a ne kao otisak
                 dezena — dvije daske nikada nisu iste.
               </p>
-              <p>
-                Slojevi ispod postavljeni su unakrsno. Takva konstrukcija drži
-                dasku mirnom kada se vlažnost i temperatura u prostoriji
-                mijenjaju, pa parket dobro podnosi i podno grijanje.
-              </p>
+              <QuoteCta className="cta-dot">
+                <i /> Vidi ponudu
+              </QuoteCta>
             </article>
           </section>
         ) : (

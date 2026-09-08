@@ -9,7 +9,6 @@ export type ShowcaseProduct = {
   brand: string;
   name: string;
   code: string;
-  description: string;
   specs: [string, string][];
   texture: string;
   textureAlt: string;
@@ -23,8 +22,6 @@ export const wickedHarvestOak: ShowcaseProduct = {
   brand: "Krono Original",
   name: "Wicked Harvest Oak",
   code: "2218",
-  description:
-    "Wicked Harvest Oak donosi prirodan izgled hrasta u modernom riblja kost dezenu. Topla smeđa nijansa i realistična struktura drveta daju prostoru elegantan i ugodan karakter, čineći ga idealnim izborom za savremene interijere.",
   specs: [
     ["Kolekcija", "Herringbone 8"],
     ["Dekor", "Wicked Harvest Oak"],
@@ -55,7 +52,6 @@ export default function ProductShowcase({
           <span className="showcase-brand">{product.brand}</span>
           <h2 id="showcase-title">{product.name}</h2>
           <p className="showcase-code">Šifra proizvoda: {product.code}</p>
-          <p className="showcase-description">{product.description}</p>
 
           <hr className="showcase-rule" />
 
