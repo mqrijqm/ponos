@@ -15,6 +15,7 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
 import ProductShowcase from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
+import ScrollSequenceHero from "./hero/ScrollSequenceHero";
 
 /* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
    .jpg fotografije, ostalo su kvadratni .webp krupni planovi. */
@@ -197,8 +198,7 @@ export default function SitePage() {
         )}
       </header>
       <main id="top">
-        {/* Hero animacija (PlankHero) uklonjena — mjesto rezervisano za novu. */}
-        <section className="placeholder-section" aria-hidden="true" data-placeholder="1" />
+        <ScrollSequenceHero />
         {/* Druga sekcija u nizu, jos neodredjena. */}
         <section className="placeholder-section" aria-hidden="true" data-placeholder="2" />
         <span id="naslovna" />

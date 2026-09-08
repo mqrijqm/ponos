@@ -5053,3 +5053,32 @@ main > section.editorial-split {
     border-top: 1px solid var(--brand-line);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   HERO SA SEKVENCOM
+   Kadar mora lezati na samom vrhu ekrana, pa sekcija ne smije nositi
+   vertikalni padding koji globalni `main > section` daje svima —
+   inace ScrollTrigger zalijepi pin tih stotinjak piksela nize.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.hero-sequence {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+/*
+   Kadar drzi 16:9 preko cijele sirine ekrana. Na uspravnom prozoru bi taj
+   odnos ostavio traku od dvjestotinjak piksela usred praznog ekrana, pa tamo
+   kadar puni visinu, a canvas mu odsijece strane (crta se po principu cover).
+*/
+.hero-stage-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 100svh;
+}
+@media (max-aspect-ratio: 6 / 5) {
+  .hero-stage-frame {
+    height: 100%;
+    aspect-ratio: auto;
+    max-height: none;
+  }
+}
