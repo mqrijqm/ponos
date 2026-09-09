@@ -14,7 +14,8 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
-import VideoHero from "./hero/VideoHero";
+import HeroVideo from "./hero/HeroVideo";
+import HeroOverlay from "./HeroOverlay";
 import { useMediaQuery } from "./hero/hooks";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
@@ -214,7 +215,16 @@ export default function SitePage() {
         <MobileMenu open={menu} onClose={() => setMenu(false)} />
       </header>
       <main id="top">
-        <VideoHero />
+        <HeroVideo
+          srcDesktop="/videos/hero.mp4"
+          srcMobile="/videos/hero-mobile.mp4"
+          poster="/images/hero-poster.webp"
+          label="Hrastove daske se podižu u praznoj sobi"
+        >
+          {/* Snimak se vrti u petlji, pa natpisi ne mogu visiti o njegovom
+              napretku — stoje od pocetka. */}
+          <HeroOverlay scrollProgress={1} />
+        </HeroVideo>
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />

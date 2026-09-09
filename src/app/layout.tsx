@@ -43,10 +43,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <head>
-        {/* Hero snimak se skida uporedo sa stranicom, da doceka prvi scroll. */}
-        <link rel="preload" as="video" href="/videos/hero-planks.webm" type="video/webm" />
-      </head>
       <body className={lora.variable}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
