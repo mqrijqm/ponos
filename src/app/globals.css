@@ -15,6 +15,9 @@
   --ink: #3b2a21;                /* topla tamna, glavni tekst */
   --ink-black: #1a1a1a;          /* neutralna crna (video/laminati sekcije) */
   --ink-deep: #241d18;           /* podnozje i tamne trake na telefonu */
+  --cta-smedja: #a77342;         /* elipsa, natpis i strelica na dugmadima */
+  /* Strelica u dugmetu. Maska, ne slika — boju uzima od teksta. */
+  --cta-strelica: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 12.5L12.5 3.5M12.5 3.5H5.5M12.5 3.5V10.5' fill='none' stroke='%23000' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   --text-soft: #5b5550;          /* sekundarni tekst u pasusima */
   --font-support: 14px;
   /* Kratki aliasi — zadrzani jer ih koristi puno starijeg koda */
@@ -7126,19 +7129,29 @@ header.home-sticky-header.is-solid {
    Pisano za telefon; siroki ekran je na kraju bloka.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ─── Dugme u ovalu (hero i "Kako funkcionise") ─── */
-.oval-dugme {
+/* ═══════════════════════════════════════════════════════════════════
+   CTA — ELIPSA, NATPIS, STRELICA
+   Jedan oblik za cijeli sajt. `.cta-dot` je zatecena klasa dugmadi i
+   nosi isti izgled, pa se ne mijenja markup na dvanaest mjesta.
+
+   Elipsa je `border-radius: 50%`, ne pilula: pilula ima prave stranice,
+   elipsa nema nijednu. Strelica je maska, pa uzima boju teksta — bijela
+   preko snimka, smedja na kremu, bez druge datoteke.
+   ═══════════════════════════════════════════════════════════════════ */
+.oval-dugme,
+.cta-dot:not(.catalog-count):not(.catalog-filter) {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 13px;
   /* 48px je najmanji prst — ne spustati ispod. */
   min-height: 48px;
-  padding: 14px 42px;
-  border: 0;
+  padding: 15px 40px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
   background: none;
-  color: currentColor;
+  color: var(--cta-smedja);
   font-family: var(--font-manrope);
   font-size: 12px;
   font-weight: 500;
@@ -7146,30 +7159,36 @@ header.home-sticky-header.is-solid {
   line-height: 1;
   text-transform: uppercase;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
+  transition: opacity 220ms ease;
 }
-.oval-dugme-elipsa {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.9;
-}
-.oval-dugme-strelica {
+.oval-dugme::after,
+.cta-dot:not(.catalog-count):not(.catalog-filter)::after {
+  content: "";
+  flex: 0 0 auto;
   width: 15px;
   height: 15px;
-  flex: 0 0 auto;
+  background: currentColor;
+  -webkit-mask: var(--cta-strelica) center / contain no-repeat;
+  mask: var(--cta-strelica) center / contain no-repeat;
 }
-.oval-dugme:hover .oval-dugme-elipsa {
-  opacity: 1;
+.oval-dugme:hover,
+.cta-dot:not(.catalog-count):not(.catalog-filter):hover {
+  opacity: 0.72;
+  background: none;
+  color: var(--cta-smedja);
 }
-/* Preko snimka je bijelo, na kremu smedje. */
+/* Tacka je izasla iz dugmeta — na njeno mjesto je dosla strelica. */
+.cta-dot:not(.catalog-count):not(.catalog-filter) i {
+  display: none;
+}
+/* Preko snimka je bijelo; sve ostalo nosi smedju. */
 .hv-cta {
   color: #fff;
 }
-.how-cta,
-.oval-smedje {
-  color: var(--brand-brown);
+.hv-cta:hover {
+  color: #fff;
 }
 
 /* ─── Recenica, strelica, tri artikla ─── */
@@ -7193,12 +7212,16 @@ main > section.uvod {
   font-size: clamp(14px, 3.9vw, 16px);
   line-height: 1.5;
 }
-/* Znak se okrece u mjestu; nema okvira oko sebe — sam oblik nosi mjesto. */
+/*
+  Znak se okrece u mjestu; nema okvira oko sebe — sam oblik nosi mjesto.
+  Malen je i u beige tonu slova, ne u punoj smedjoj: stoji uz recenicu kao
+  znak, a ne kao drugi naslov pored nje.
+*/
 .uvod-znak {
   flex: 0 0 auto;
   display: block;
-  width: 54px;
-  color: #a77342;
+  width: 26px;
+  color: var(--brand-muted);
 }
 .uvod-znak svg {
   display: block;
@@ -7388,7 +7411,7 @@ main > section.galerija {
     font-size: 16px;
   }
   .uvod-znak {
-    width: 66px;
+    width: 32px;
   }
   /* Na sirokom ekranu kartica ima svoju mjeru; traka se i dalje lista. */
   .uvod-kartice {
@@ -7492,5 +7515,147 @@ main > section.galerija {
   }
   .calc-product b {
     font-size: 18px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PANEL ZA UPIT — jednostavniji slog
+   Forma je bila dva reda po dva polja, pa grad, pa tri read-only polja,
+   pa red radio dugmadi. Sada je jedna kolona: ime, telefon, e-mail,
+   poruka, saglasnost, dugme. Ono sto je bilo u read-only poljima stoji
+   kao sazetak na vrhu, a u upit ide skriveno.
+   ═══════════════════════════════════════════════════════════════════ */
+.upit-forma {
+  display: grid;
+  gap: 18px;
+}
+.upit-forma label {
+  display: grid;
+  gap: 7px;
+  font-family: var(--font-manrope);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-muted);
+}
+/*
+  Polja bez okvira, samo linija pod tekstom: u panelu bez ukrasa okviri su
+  bili jedina teska stvar na ekranu.
+*/
+.upit-forma input:not([type="checkbox"]),
+.upit-forma textarea {
+  width: 100%;
+  padding: 9px 0;
+  border: 0;
+  border-bottom: 1px solid var(--brand-line);
+  border-radius: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--font-manrope);
+  font-size: 15px;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: border-color 200ms ease;
+}
+.upit-forma input:focus,
+.upit-forma textarea:focus {
+  outline: none;
+  border-bottom-color: var(--cta-smedja);
+}
+.upit-forma textarea {
+  resize: vertical;
+}
+/* Sazetak: proizvod · povrsina · kolicina, u jednom redu. */
+.upit-sazetak {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0 0 2px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--brand-line);
+  color: var(--cta-smedja);
+  font-family: var(--font-manrope);
+  font-size: 13px;
+}
+.upit-sazetak span + span::before {
+  content: "· ";
+  color: var(--brand-line);
+}
+.upit-forma .consent {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--text-soft);
+}
+.upit-forma .consent input {
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+  accent-color: var(--cta-smedja);
+}
+.upit-forma > .oval-dugme {
+  justify-self: start;
+  margin-top: 6px;
+}
+.upit-napomena {
+  color: var(--brand-muted);
+  font-family: var(--font-manrope);
+  font-size: 11px;
+}
+
+/*
+  Dugme u panelu je puna smedja povrsina preko cijele sirine (pravilo
+  `.quote-modal form > button` gore). Sada nosi isti oval kao i sva ostala
+  dugmad — pravila su ista tezina, pa pobjedjuje kasnije.
+*/
+.quote-modal form > button.oval-dugme,
+.success button.oval-dugme {
+  width: auto;
+  margin-top: 0;
+  padding: 15px 40px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  background: none;
+  color: var(--cta-smedja);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+.quote-modal form > button.oval-dugme:hover,
+.success button.oval-dugme:hover {
+  background: none;
+  border-color: currentColor;
+  color: var(--cta-smedja);
+  opacity: 0.72;
+}
+
+/*
+  Panel iznad trake sajta. Traka je fiksna na z-index 120, a panel je bio na
+  100, pa su logo i meni ostajali preko njega — i dugme za zatvaranje je
+  padalo tacno pod njih.
+*/
+.modal-backdrop {
+  z-index: 140;
+}
+
+/* Natpis panela stoji sam iznad forme, pa mu treba razmak do prvog polja. */
+.quote-modal .eyebrow {
+  display: block;
+  margin-bottom: 26px;
+}
+
+/*
+  Dugme u traci ostaje skriveno na uskom ekranu, kao i prije. Pravilo koje ga
+  je krilo (`.header-cta { display: none }`) je slabije od novog CTA pravila,
+  pa se dugme vratilo i gurnulo hamburger uz ivicu.
+*/
+@media (max-width: 480px) {
+  .home-sticky-header .header-cta.cta-dot {
+    display: none;
   }
 }

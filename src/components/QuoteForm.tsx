@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
 export type QuotePrefill = {
@@ -62,79 +62,62 @@ export default function QuoteForm({
     );
   }
 
+  /* Sazetak onoga sto se trazi. Ranije su proizvod, povrsina i kolicina bili
+     tri read-only polja — tri prazna okvira koja se ne popunjavaju i samo
+     produzuju formu. Sada stoje kao jedan red teksta, a u formu idu skriveni,
+     pa se u upitu i dalje salju. */
+  const sazetak = [prefill?.product, prefill?.area, prefill?.quantity].filter(
+    Boolean,
+  );
+
   return (
-    <form onSubmit={submit}>
+    <form className="upit-forma" onSubmit={submit}>
+      {sazetak.length > 0 && (
+        <p className="upit-sazetak">
+          {sazetak.map((x, i) => (
+            <span key={i}>{x}</span>
+          ))}
+        </p>
+      )}
+      {prefill?.product && (
+        <input type="hidden" name="proizvod" value={prefill.product} />
+      )}
+      {prefill?.area && (
+        <input type="hidden" name="povrsina" value={prefill.area} />
+      )}
+      {prefill?.quantity && (
+        <input type="hidden" name="kolicina" value={prefill.quantity} />
+      )}
+
       <label>
         Ime i prezime
         <input required name="ime" autoFocus={autoFocus} />
       </label>
-      <div className="form-row">
-        <label>
-          Telefon
-          <input required name="telefon" type="tel" />
-        </label>
-        <label>
-          E-mail
-          <input required name="email" type="email" />
-        </label>
-      </div>
-      <div className="form-row">
-        <label>
-          Grad
-          <input name="grad" defaultValue="Banja Luka" />
-        </label>
-        {prefill?.area && (
-          <label>
-            Površina prostorije
-            <input name="povrsina" value={prefill.area} readOnly />
-          </label>
-        )}
-      </div>
-      {prefill?.product && (
-        <label>
-          Odabrani proizvod
-          <input name="proizvod" value={prefill.product} readOnly />
-        </label>
-      )}
-      {prefill?.quantity && (
-        <label>
-          Potrebna količina
-          <input name="kolicina" value={prefill.quantity} readOnly />
-        </label>
-      )}
+      <label>
+        Telefon
+        <input required name="telefon" type="tel" />
+      </label>
+      <label>
+        E-mail
+        <input required name="email" type="email" />
+      </label>
       <label>
         Poruka
         <textarea
           name="poruka"
           rows={3}
           placeholder={
-            isQuote
-              ? "Napomena uz upit (opciono)"
-              : "Kako vam možemo pomoći?"
+            isQuote ? "Napomena uz upit (opciono)" : "Kako vam možemo pomoći?"
           }
         />
       </label>
-      <fieldset>
-        <legend>Preferirani način kontakta</legend>
-        {["Telefon", "Viber", "E-mail"].map((x) => (
-          <label key={x}>
-            <input
-              type="radio"
-              name="kontakt"
-              value={x}
-              defaultChecked={x === "Telefon"}
-            />
-            {x}
-          </label>
-        ))}
-      </fieldset>
       <label className="consent">
         <input required type="checkbox" name="privatnost" />
         Saglasan/na sam da MT PONOS koristi ove podatke isključivo radi odgovora
         na upit.
       </label>
-      <button type="submit">
-        {isQuote ? "Sačuvaj demo upit" : "Pošaljite upit"} <ArrowRight size={17} />
+      <button type="submit" className="oval-dugme">
+        <span>{isQuote ? "Sačuvaj demo upit" : "Pošaljite upit"}</span>
       </button>
     </form>
   );

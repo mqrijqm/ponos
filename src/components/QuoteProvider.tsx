@@ -113,7 +113,7 @@ export default function QuoteProvider({
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-labelledby="quote-title"
+              aria-label={step === "calculator" ? "Proračun količine" : "Upit"}
               className="quote-modal"
               initial={{ x: 40, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -147,14 +147,12 @@ export default function QuoteProvider({
                 </>
               ) : (
                 <>
+                  {/* Bez naslova i uvodnog reda: panel se otvara na dugme koje
+                      je vec reklo sta radi, pa forma pocinje odmah. Ime za
+                      citac ekrana nosi `aria-label` na samom panelu. */}
                   <span className="eyebrow">
                     {item ? "PERSONALIZOVANA PONUDA" : "UPIT"}
                   </span>
-                  <h2 id="quote-title">Recite nam šta vam je potrebno.</h2>
-                  <p>
-                    Podaci se u ovoj demo verziji čuvaju samo lokalno. Nema
-                    slanja e-maila bez povezanog backend sistema.
-                  </p>
                   <QuoteForm
                     context="quote"
                     autoFocus
