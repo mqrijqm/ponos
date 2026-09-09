@@ -16,8 +16,11 @@ import { catalog, productImage } from "@/data/catalog";
  * citac ekrana, kroz `alt` fotografije.
  */
 
-/* Prva dva laminata iz kataloga — Herringbone serija, oba sa oznakom. */
-const artikli = catalog.filter((p) => p.category === "laminati").slice(0, 2);
+/*
+  Cijeli katalog, redom kako stoji i na /proizvodi. Traka ih nosi sve — nema
+  izbora "prvih koliko", pa nema ni spiska koji treba odrzavati uz katalog.
+*/
+const artikli = catalog;
 
 export default function LandingUvod() {
   return (
@@ -45,7 +48,16 @@ export default function LandingUvod() {
         </Link>
       </div>
 
-      <div className="uvod-kartice">
+      {/*
+        `tabIndex` nije greska: traka koja se scrolluje mora biti dostupna i
+        tastaturom, inace artikli iza prvog ekrana ostanu nedohvatljivi.
+      */}
+      <div
+        className="uvod-kartice"
+        tabIndex={0}
+        role="group"
+        aria-label="Artikli iz ponude"
+      >
         {artikli.map((p) => (
           <Link
             key={p.code}
@@ -56,7 +68,7 @@ export default function LandingUvod() {
               src={productImage(p)}
               alt={`${p.brand} ${p.name}, zvanična fotografija proizvoda`}
               fill
-              sizes="(max-width: 767px) 33vw, 25vw"
+              sizes="(max-width: 767px) 42vw, 220px"
             />
             {p.badge && <span className="uvod-oznaka">{p.badge}</span>}
           </Link>

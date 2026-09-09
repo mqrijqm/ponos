@@ -7200,15 +7200,44 @@ main > section.uvod {
   background: var(--brand-brown);
   color: var(--cream);
 }
+/*
+  Traka artikala, ne mreza. Dvije kartice u redu su bile kraj ponude; ovako
+  ih ide koliko ih ima u katalogu i traka sama kazuje da ima jos — zadnja
+  vidljiva je odsjecena na ivici ekrana.
+
+  Negativne margine izvlace traku iz --page-gutter do same ivice, a isti taj
+  guter se vraca kao padding, pa prva kartica ostaje poravnata sa tekstom
+  iznad dok ostale idu van stranice.
+*/
 .uvod-kartice {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(10px, 3.5vw, 22px);
+  display: flex;
+  gap: 10px;
   margin-top: clamp(30px, 8vw, 56px);
+  margin-right: calc(-1 * var(--page-gutter));
+  margin-left: calc(-1 * var(--page-gutter));
+  padding: 0 var(--page-gutter);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  /*
+    Bez ovoga snap racuna od ivice trake, a ne od gutera: traka se sama
+    pomjeri za guter i prva kartica sjedne uz ivicu ekrana, van osi teksta
+    iznad. Ovim snap pocinje tamo gdje pocinje i tekst.
+  */
+  scroll-padding-left: var(--page-gutter);
+  /* Traka nosi svoj scroll; bez ovoga se vidi sistemska sipka. */
+  scrollbar-width: none;
+}
+.uvod-kartice::-webkit-scrollbar {
+  display: none;
 }
 .uvod-kartica {
   position: relative;
-  aspect-ratio: 1 / 1.05;
+  flex: 0 0 auto;
+  /* 42vw: dvije stanu cijele, treca je zarezana — traka se vidi kao traka. */
+  width: 42vw;
+  aspect-ratio: 1 / 1;
+  scroll-snap-align: start;
   overflow: hidden;
   background: var(--cream-tint);
   text-decoration: none;
@@ -7329,14 +7358,12 @@ main > section.galerija {
     width: 66px;
     height: 66px;
   }
-  /*
-    Dvije kartice preko cijele sirine na 1440 ispadnu po 512px — vise nego
-    sto artikal ovdje treba da nosi. Red se zato zauzda, a ostatak sirine
-    ostaje prazan, kao i uz tekst iznad.
-  */
+  /* Na sirokom ekranu kartica ima svoju mjeru; traka se i dalje lista. */
   .uvod-kartice {
-    max-width: 700px;
-    gap: 20px;
+    gap: 16px;
+  }
+  .uvod-kartica {
+    width: 220px;
   }
   .galerija-slike {
     gap: 18px;
@@ -7399,9 +7426,17 @@ main > section.galerija {
     padding: 52px 6vw;
     gap: 30px;
   }
+  /*
+    `minmax(0, 1fr)`, ne `1fr`: broj-polje nosi svoju minimalnu sirinu (oko
+    175px sa strelicama), a `1fr` je `minmax(auto, 1fr)` i ne da mu da se
+    skupi ispod nje. Dva takva stupca su gurala stranicu 28px u stranu.
+  */
   .calc-inputs {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+  .calc-inputs input[type="number"] {
+    min-width: 0;
   }
   /* Dodatna povrsina i rezerva idu preko oba stupca: prva je izuzetak koji
      se rijetko popunjava, druga je red dugmica koji se ne da prepoloviti. */
