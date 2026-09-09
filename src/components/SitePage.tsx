@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CatalogItem, categories } from "@/data/catalog";
+import { CatalogItem } from "@/data/catalog";
 import Calculator, { calculableItems } from "./Calculator";
 import { useQuote } from "./QuoteProvider";
 import { track } from "@/lib/analytics";
@@ -17,6 +17,7 @@ import BasketMenu from "./BasketMenu";
 import VideoHero from "./hero/VideoHero";
 import { useMediaQuery } from "./hero/hooks";
 import HomeHeroReveal from "./HomeHeroReveal";
+import MobileMenu from "./MobileMenu";
 
 /* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
    .jpg fotografije, ostalo su kvadratni .webp krupni planovi. */
@@ -210,29 +211,7 @@ export default function SitePage() {
         >
           {menu ? <X /> : <Menu />}
         </button>
-        {menu && (
-          <div className="mobile-nav">
-            {categories.map((c) => (
-              <a
-                key={c.slug}
-                className="mobile-sub"
-                onClick={() => setMenu(false)}
-                href={`/proizvodi/${c.slug}`}
-              >
-                {c.title}
-              </a>
-            ))}
-            {[
-              ["Vizualizator", "/vizualizator"],
-              ["O nama", "/o-nama"],
-              ["Kontakt", "/kontakt"],
-            ].map(([label, href]) => (
-              <a onClick={() => setMenu(false)} key={label} href={href}>
-                {label}
-              </a>
-            ))}
-          </div>
-        )}
+        <MobileMenu open={menu} onClose={() => setMenu(false)} />
       </header>
       <main id="top">
         <VideoHero />

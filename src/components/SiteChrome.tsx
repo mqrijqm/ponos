@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronDown, Menu } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { categories } from "@/data/catalog";
 import QuoteCta from "./QuoteCta";
 import BasketMenu from "./BasketMenu";
+import { MobileMenuButton } from "./MobileMenu";
 
 /** Padajuci meni za "Proizvodi" — bez JS-a, otvara se na hover i na fokus. */
 export function ProductsNav() {
@@ -54,21 +55,7 @@ export function Header() {
         <i /> Vidi ponudu
       </QuoteCta>
       <BasketMenu />
-      <details className="mobile-menu">
-        <summary aria-label="Otvori meni">
-          <Menu />
-        </summary>
-        <div>
-          {categories.map((c) => (
-            <Link key={c.slug} href={`/proizvodi/${c.slug}`} className="mobile-sub">
-              {c.title}
-            </Link>
-          ))}
-          <Link href="/vizualizator">Vizualizator</Link>
-          <Link href="/o-nama">O nama</Link>
-          <Link href="/kontakt">Kontakt</Link>
-        </div>
-      </details>
+      <MobileMenuButton />
     </header>
   );
 }
