@@ -53,6 +53,8 @@ export default function VideoHero() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    /* U ciscenju se ne smije citati `.current` — do tada moze pokazivati drugdje. */
+    const section = sectionRef.current;
 
     /*
       Izvor se bira ovdje, a ne u markupu. Da <source> stoji u HTML-u, telefon
@@ -242,7 +244,7 @@ export default function VideoHero() {
       if (!document.hidden) probaj();
     };
 
-    sectionRef.current?.addEventListener("pointerdown", naDodirKadra, { passive: true });
+    section?.addEventListener("pointerdown", naDodirKadra, { passive: true });
     window.addEventListener("scroll", pusti, { passive: true });
     window.addEventListener("wheel", pustiNaTocak, { passive: true });
     window.addEventListener("touchmove", pustiNaDodir, { passive: true });
@@ -261,7 +263,7 @@ export default function VideoHero() {
       clearTimeout(rokPocetka);
       /* Demontiranje nikad ne smije ostaviti stranicu zakljucanom. */
       otkljucaj();
-      sectionRef.current?.removeEventListener("pointerdown", naDodirKadra);
+      section?.removeEventListener("pointerdown", naDodirKadra);
       window.removeEventListener("scroll", pusti);
       window.removeEventListener("wheel", pustiNaTocak);
       window.removeEventListener("touchmove", pustiNaDodir);
