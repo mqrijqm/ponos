@@ -22,7 +22,6 @@ import OvalDugme from "./landing/OvalDugme";
 import Traka from "./landing/Traka";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
-import CategoryCarousel from "./mobile/CategoryCarousel";
 import StatementSlider from "./mobile/StatementSlider";
 
 /* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
@@ -328,9 +327,12 @@ export default function SitePage() {
         {/* Ista traka zatvara uvodni dio; ispod nje stranica ide dalje kao
             i ranije — kalkulator, detalji artikala, kvalitet. */}
         <Traka tekst="Specijalizovan je za veleprodaju" />
-        {/* Traka kategorija: samo telefon, sirok ekran ima svoje sekcije
-            proizvoda. Stoji ispod uvodnog dijela, ne u njemu. */}
-        <CategoryCarousel />
+        {/*
+          Traka kategorija ("Asortiman / Grupe proizvoda") je izasla sa
+          stranice: nosila je iste sobe koje vec stoje u galeriji iznad i u
+          sekcijama proizvoda ispod, pa je bila treci prolaz kroz iste slike.
+          Komponenta (mobile/CategoryCarousel) je ostala u kodu.
+        */}
         <section id="kalkulator" className="calculator-section">
           <div>
             <span className="eyebrow">PRECIZNIJI UPIT</span>
