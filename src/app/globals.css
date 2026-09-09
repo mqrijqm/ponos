@@ -7675,3 +7675,14 @@ main > section.galerija {
   font-size: 11px;
   letter-spacing: 0.1em;
 }
+
+/*
+  Kalkulator je sam u svojoj sekciji. Sekcija je bila dvije kolone — tekst
+  lijevo, kalkulator desno; sada kad teksta nema, kalkulator stoji na sredini
+  umjesto da visi u lijevoj polovini.
+*/
+main > section.calculator-section {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}

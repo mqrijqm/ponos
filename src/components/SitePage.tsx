@@ -330,19 +330,13 @@ export default function SitePage() {
             })}
           </div>
         </section>
-        {/* Ista traka zatvara uvodni dio; ispod nje stranica ide dalje kao
-            i ranije — kalkulator, detalji artikala, kvalitet. */}
-        <Traka tekst="Specijalizovan je za veleprodaju" />
+        {/*
+          Traka nosi naslov kalkulatora koji stoji odmah ispod nje. Natpis
+          "Precizniji upit", isti taj naslov i pasus o dimenzijama su izasli —
+          bili su tri reda teksta ispred polja koja to isto traze.
+        */}
+        <Traka tekst="Izračunajte potrebnu količinu" />
         <section id="kalkulator" className="calculator-section">
-          <div>
-            <span className="eyebrow">PRECIZNIJI UPIT</span>
-            <h2>Izračunajte potrebnu količinu.</h2>
-            <p>
-              Unesite dimenzije prostorije. Računamo rezervu, broj cijelih
-              paketa i informativnu vrijednost materijala za trenutno odabrani
-              pod.
-            </p>
-          </div>
           <Calculator
             item={calcItem}
             showPicker
