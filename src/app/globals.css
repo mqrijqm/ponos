@@ -5532,3 +5532,172 @@ main > section.hero-sequence {
     width: 104px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   KATALOG — prozracna mreza i alatke iznad nje
+   Broj artikala je bio natpis od 10px stisnut uz pasus u istom redu.
+   Sada, zajedno sa dugmetom za filter, stoji u redu za sebe iznad mreze i
+   nosi isti oblik kao CTA drugdje na sajtu.
+   Kartica je svedena na sliku, ime i kolekciju — sifra, debljina i
+   dostupnost cekaju na stranici artikla, jednim klikom dalje.
+   ═══════════════════════════════════════════════════════════════════ */
+.catalog-bar {
+  display: block;
+  margin-bottom: clamp(30px, 4vw, 52px);
+  padding-bottom: 0;
+  border-bottom: 0;
+  font-size: inherit;
+}
+.catalog-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+/* Broj nije dugme, pa ne smije ni da se ponasa kao dugme pod misem. */
+.catalog-count {
+  cursor: default;
+}
+.catalog-count:hover {
+  background: none;
+  color: var(--brand-brown);
+}
+.catalog-filter {
+  cursor: pointer;
+}
+.catalog-filter.is-open,
+.catalog-filter.is-open:hover {
+  background: var(--brand-brown);
+  color: var(--hero-cream);
+}
+.catalog-filter-panel {
+  display: grid;
+  gap: 16px;
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--brand-line);
+}
+.catalog-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.catalog-filter-group > span {
+  min-width: 84px;
+  color: var(--brand-muted);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.catalog-chip {
+  padding: 8px 14px;
+  border: 1px solid var(--brand-line);
+  background: none;
+  color: var(--brand-brown);
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.catalog-chip.is-active {
+  border-color: var(--brand-brown);
+  background: var(--brand-brown);
+  color: var(--hero-cream);
+}
+.catalog-note {
+  max-width: 520px;
+  margin: 22px 0 0;
+  color: var(--m);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.catalog-none {
+  margin: 40px 0 0;
+  color: var(--m);
+}
+.catalog-none button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--brand-brown);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Mreza bez sivih hairline linija — razmak radi isti posao, mirnije. */
+.catalog-grid {
+  gap: clamp(26px, 3vw, 44px) clamp(14px, 1.8vw, 26px);
+  background: none;
+}
+.catalog-card {
+  padding: 0;
+  background: none;
+}
+.catalog-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.catalog-image {
+  height: auto;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 14px;
+}
+.catalog-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  padding: 6px 10px;
+  background: var(--brand-brown);
+  color: var(--hero-cream);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.catalog-card h2 {
+  margin: 0;
+  color: var(--brand-deep);
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(1.05rem, 1.3vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+}
+.catalog-link > small {
+  display: block;
+  margin-top: 7px;
+  color: var(--brand-muted);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* Decking stranica vise ne pocinje uvodom nego prvim opisom, pa tekst nema
+   sta da se uvlaci udesno — stajao bi sam u praznom gornjem uglu. Artikli
+   svake grupe idu punom sirinom odmah ispod svog opisa. */
+.flooring-editorial.is-split .decking-story {
+  width: min(760px, 100%);
+  margin: 0;
+}
+.flooring-editorial.is-split .decking-story + .catalog-grid {
+  margin-top: clamp(34px, 4vw, 56px);
+}
+.flooring-editorial.is-split .catalog-grid + .decking-story {
+  margin-top: clamp(72px, 9vw, 130px);
+}
+
+@media (max-width: 767px) {
+  .catalog-filter-group > span {
+    min-width: 100%;
+  }
+  .catalog-card h2 {
+    font-size: 15px;
+  }
+  .catalog-note {
+    font-size: 11px;
+  }
+}

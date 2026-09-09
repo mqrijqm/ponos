@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import LayerStack from "@/components/layers/LayerStack";
+import CategoryCatalog from "@/components/CategoryCatalog";
 import ProductGrid from "@/components/ProductGrid";
 import QuoteCta from "@/components/QuoteCta";
 import { Footer, Header, PageHero } from "@/components/SiteChrome";
@@ -67,12 +68,12 @@ export default async function Page({
           Sve brojke i sadrzaj markera su u components/layers/layer-config.ts.
         */}
         {slug === "parketi" && <LayerStack />}
+        {/*
+          Decking stranica ne ide kroz `catalog-section` na dnu: artikli su
+          podijeljeni na dvije grupe i svaka stoji odmah ispod svog opisa.
+        */}
         {slug === "spc-vinyl-decking" && (
-          <section className="flooring-editorial">
-            <div className="flooring-editorial-intro">
-              <span className="eyebrow">MATERIJALI ZA ENTERIJER I EKSTERIJER</span>
-              <h2>Dvije pouzdane opcije za prostore koji traže više.</h2>
-            </div>
+          <section className="flooring-editorial is-split">
             <article className="decking-story">
               <span className="flooring-index">01</span>
               <h3>WPC Decking</h3>
@@ -89,6 +90,7 @@ export default async function Page({
                 u našim poslovnim objektima u Dervišima i Lazarevu.
               </p>
             </article>
+            <ProductGrid items={items.filter((x) => x.brand === "WPC")} />
             <article className="decking-story">
               <span className="flooring-index">02</span>
               <h3>SPC Vinyl</h3>
@@ -105,6 +107,7 @@ export default async function Page({
                 stabilne dimenzije i jednostavnu ugradnju.
               </p>
             </article>
+            <ProductGrid items={items.filter((x) => x.brand !== "WPC")} />
           </section>
         )}
         {slug === "lajsne" && (
@@ -217,16 +220,12 @@ export default async function Page({
             </div>
           </section>
         )}
-        {items.length ? (
+        {items.length && slug !== "spc-vinyl-decking" ? (
           <section className="catalog-section">
-            <div className="catalog-head">
-              <span>{items.length} artikala</span>
-              <p>
-                Šifre i kolekcije preuzete iz aktuelne ponude MT PONOS. Cijenu i
-                dostupnost provjerite upitom.
-              </p>
-            </div>
-            <ProductGrid items={items} />
+            <CategoryCatalog
+              items={items}
+              note="Šifre i kolekcije preuzete iz aktuelne ponude MT PONOS. Cijenu i dostupnost provjerite upitom."
+            />
           </section>
         ) : slug === "parketi" ? (
           /*
