@@ -53,6 +53,12 @@ const SUSTIZANJE = 0.18;
 /** Manje od pola frejma razlike se ne trazi — skok se ne bi ni vidio. */
 const NAJMANJI_SKOK = 1 / 48;
 
+/**
+ * Visina bijelog prelaza na dnu kadra. Sekcija ispod je krem (`--cream`), pa
+ * prelaz ide u istu boju — do bijele bi na spoju ostala vidljiva linija.
+ */
+const PRELAZ = "clamp(140px, 26svh, 300px)";
+
 export default function HeroVideo({
   /* MP4 izvori — obavezni, jedini koje svaki browser sigurno cita. */
   srcDesktop,
@@ -295,6 +301,29 @@ export default function HeroVideo({
             style={{ pointerEvents: "none" }}
           />
         )}
+
+        {/*
+          Dno kadra se gubi u boju sekcije ispod, pa se prelaz na nju ne vidi
+          kao rez. Stoji iznad snimka, ispod natpisa, i ne hvata misa.
+        */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: PRELAZ,
+            /*
+              Tri stanice, ne dvije: linearni prelaz iz prozirnog u punu boju
+              daje vidljivu ivicu na pola puta, jer oko ne cita alfu linearno.
+            */
+            background:
+              "linear-gradient(to bottom, rgba(245, 243, 238, 0) 0%, rgba(245, 243, 238, 0.55) 58%, var(--cream, #f5f3ee) 100%)",
+            pointerEvents: "none",
+            zIndex: 2,
+          }}
+        />
 
         {/* Sadrzaj preko kadra; sloj ne hvata misa osim gdje sam vrati. */}
         {children && (

@@ -104,13 +104,15 @@ export default function HeroText() {
           fontSize: "clamp(21px, 2.9vw, 42px)",
           lineHeight: 1.25,
           letterSpacing: "0.005em",
-          color: "#8b7e6e",
+          color: "#ffffff",
           /*
-            Svijetli halo, ne obris: taupe na svijetlom drvetu daje kontrast
-            oko 2.8:1, a slova se gube u godovima i naslonima iza. Halo ih
-            odvoji od detalja bez da se vidi kao sjena i bez diranja boje.
+            Bijelo na svijetloj sobi samo po sebi ima kontrast oko 1.3:1 —
+            slova bi se izgubila u podu. Dvije sjene ih drze: siroka mekana
+            nosi razliku od pozadine, tijesna crta ivicu slova. Nijedna se ne
+            vidi kao sjena.
           */
-          textShadow: "0 1px 20px rgba(255, 253, 250, 0.6)",
+          textShadow:
+            "0 2px 30px rgba(38, 30, 24, 0.55), 0 1px 3px rgba(38, 30, 24, 0.3)",
         }}
       >
         {TEKST.split(" ").map((rijec, i) => (

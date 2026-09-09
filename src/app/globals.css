@@ -4204,6 +4204,19 @@ main.quality-page > section.quality-section + section.quality-section {
   color: var(--hero-cream);
 }
 .calculator > button.cta-dot { width: 100%; }
+/* Isto dugme, ali preko snimka: smeda bi se na kadru izgubila, pa je bijelo.
+   Sjena je ista logika kao na natpisu — nosi ga na svijetlom podu. */
+.cta-dot.cta-on-video {
+  border-color: rgba(255, 255, 255, .72);
+  color: #fff;
+  text-shadow: 0 1px 14px rgba(38, 30, 24, .45);
+}
+.cta-dot.cta-on-video:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--brand-brown);
+  text-shadow: none;
+}
 @media (max-width: 600px) {
   .cta-dot { padding: 12px 16px; gap: 10px; font-size: 10px; letter-spacing: .18em; }
 }

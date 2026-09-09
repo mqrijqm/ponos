@@ -84,7 +84,7 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
           pa i isti modal za ponudu. Ovdje se samo vraca `pointerEvents`,
           koji sloj iznad gasi.
         */}
-        <QuoteCta className="cta-dot" label="Zatraži ponudu">
+        <QuoteCta className="cta-dot cta-on-video" label="Zatraži ponudu">
           <i /> {COPY.cta}
         </QuoteCta>
       </div>
