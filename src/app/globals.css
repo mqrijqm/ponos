@@ -7252,8 +7252,11 @@ main > section.uvod {
     transform: translateX(calc(-50% - 5px));
   }
 }
-/* Stane pod prstom i pod fokusom — da se artikal moze pogledati i otvoriti. */
-.uvod-traka:hover .uvod-kartice,
+/*
+  Ne staje pod misem — traka ide bez prekida. Staje samo kad je neko u njoj
+  tastaturom: fokusirani artikal bi inace otklizao ispod prsta prije nego sto
+  se stigne otvoriti.
+*/
 .uvod-traka:focus-within .uvod-kartice {
   animation-play-state: paused;
 }
