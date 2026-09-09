@@ -18,9 +18,13 @@ import { motion, useMotionValue, useTransform, useReducedMotion, MotionValue } f
    recenica pocinje od onoga sto firma radi. */
 const LABEL = "MT PONOS · BANJA LUKA";
 const KICKER = "PODOVI KOJI STVARAJU DOM";
-const PRIJE = "Specijalizovan je za veleprodaju i maloprodaju,";
-const ISTAKNUTO = "dostavu i ugradnju";
-const POSLIJE = "laminata, parketa, vinila i deckinga.";
+/* Recenica o veleprodaji je otisla u uvodni blok (LandingUvod) i u traku
+   iznad; ovdje sada stoji ono sto je iza nje — sta se sve drzi na jednom
+   mjestu. Isticu se rijeci koje nose tu misao. */
+const PRIJE = "Pet grupa proizvoda, jedan salon. Cijeli asortiman na";
+const ISTAKNUTO = "jednom mjestu";
+const POSLIJE =
+  "— laminati evropskih proizvođača, prirodni parketi, vodootporni podovi, decking, zidni paneli i lajsne.";
 
 const PALE = 0.18;
 const FAKTOR = 2.4;

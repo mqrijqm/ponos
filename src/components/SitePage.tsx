@@ -16,6 +16,10 @@ import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import { useMediaQuery } from "./hero/hooks";
 import HeroVideo from "./hero/HeroVideo";
+import GalerijaLaminati from "./landing/GalerijaLaminati";
+import LandingUvod from "./landing/LandingUvod";
+import OvalDugme from "./landing/OvalDugme";
+import Traka from "./landing/Traka";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
 import CategoryCarousel from "./mobile/CategoryCarousel";
@@ -226,13 +230,24 @@ export default function SitePage() {
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />
-        {/* Traka kategorija: telefon je dobija odmah poslije izjave, sirok
-            ekran je ne prikazuje — njemu kategorije nose sekcije ispod. */}
-        <CategoryCarousel />
+        {/*
+          Otvaranje stranice ide redom sa predloska: recenica sa strelicom i
+          tri artikla, traka, izjava, par slika, pa "Kako funkcionise".
+          Ispod toga stranica nastavlja onako kako je i bila.
+        */}
+        <LandingUvod />
+        <Traka tekst="Specijalizovan je za veleprodaju" />
         <EditorialStatement />
+        <GalerijaLaminati />
         <section className="how process-section">
           <div className="how-heading">
             <span className="eyebrow">KAKO FUNKCIONIŠE</span>
+            {/* Isto dugme kao na herou, samo smedje — vodi na isto mjesto. */}
+            <OvalDugme
+              natpis="Pogledaj ponudu"
+              className="how-cta"
+              onClick={() => openQuote()}
+            />
           </div>
           <div
             className="process-accordion"
@@ -310,6 +325,12 @@ export default function SitePage() {
             })}
           </div>
         </section>
+        {/* Ista traka zatvara uvodni dio; ispod nje stranica ide dalje kao
+            i ranije — kalkulator, detalji artikala, kvalitet. */}
+        <Traka tekst="Specijalizovan je za veleprodaju" />
+        {/* Traka kategorija: samo telefon, sirok ekran ima svoje sekcije
+            proizvoda. Stoji ispod uvodnog dijela, ne u njemu. */}
+        <CategoryCarousel />
         <section id="kalkulator" className="calculator-section">
           <div>
             <span className="eyebrow">PRECIZNIJI UPIT</span>

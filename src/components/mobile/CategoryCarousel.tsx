@@ -21,8 +21,10 @@ export default function CategoryCarousel() {
     <section className="m-band m-cats" aria-labelledby="m-cats-title">
       <div className="m-band-head">
         <span className="m-label">ASORTIMAN</span>
+        {/* "Pet grupa proizvoda, jedan salon." je preuzela velika izjava iznad
+            (EditorialStatement); ovdje bi ista recenica stajala drugi put. */}
         <h2 id="m-cats-title" className="m-heading">
-          Pet grupa proizvoda, jedan salon.
+          Grupe proizvoda.
         </h2>
       </div>
 

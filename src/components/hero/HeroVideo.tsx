@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import OvalDugme from "../landing/OvalDugme";
 import { useQuote } from "../QuoteProvider";
 import { usePrefersReducedMotion } from "./hooks";
 
@@ -106,44 +107,11 @@ export default function HeroVideo() {
             <span>PONOS</span>
             <span>PROSTORA</span>
           </h1>
-          <button type="button" className="hv-cta" onClick={() => openQuote()}>
-            {/*
-              Oval je SVG, ne border-radius: rastegne se tacno preko dugmeta
-              koliko god natpis bio sirok, a `non-scaling-stroke` drzi liniju
-              na 1px i kad se elipsa razvuce.
-            */}
-            <svg
-              className="hv-cta-oval"
-              viewBox="0 0 200 60"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <ellipse
-                cx="100"
-                cy="30"
-                rx="99"
-                ry="29"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-            <span>Pogledaj ponudu</span>
-            <svg
-              className="hv-cta-strelica"
-              viewBox="0 0 16 16"
-              aria-hidden="true"
-            >
-              <path
-                d="M4 12L12 4M12 4H5.5M12 4V10.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="square"
-              />
-            </svg>
-          </button>
+          <OvalDugme
+            natpis="Pogledaj ponudu"
+            className="hv-cta"
+            onClick={() => openQuote()}
+          />
         </div>
       </div>
     </section>

@@ -2,7 +2,7 @@
 :root {
   /* Brend paleta */
   --brand-brown: #6b4e2d;        /* glavni naslovi i navigacija */
-  --brand-bark: #463c35;         /* tamna kafena iz logotipa — podnozje */
+  --brand-bark: #463c35;         /* tamna kafena iz logotipa */
   --brand-brown-dark: #503920;   /* hover na punim smedjim povrsinama */
   --brand-deep: var(--brand-brown);  /* dugmici, akcenti, brojevi — puna smedja povrsina */
   --brand-wood: #d4a574;         /* akcent (tacke, hover) — NE za linije */
@@ -14,6 +14,7 @@
   --sand: #d8cbbe;               /* pjescane povrsine i ikone */
   --ink: #3b2a21;                /* topla tamna, glavni tekst */
   --ink-black: #1a1a1a;          /* neutralna crna (video/laminati sekcije) */
+  --ink-deep: #241d18;           /* podnozje i tamne trake na telefonu */
   --text-soft: #5b5550;          /* sekundarni tekst u pasusima */
   --font-support: 14px;
   /* Kratki aliasi — zadrzani jer ih koristi puno starijeg koda */
@@ -558,8 +559,10 @@ footer.site-footer {
   min-height: 0;
   padding: 80px 48px 48px;
   display: block;
-  /* Ista tamna kafena koju nosi logotip (#463c35), ne svijetlija smedja. */
-  background: var(--brand-bark);
+  /* Ista tamna koju na telefonu nose tamne trake (--m-dark). Bila je kafena
+     iz logotipa (#463c35) — ovo je dublje i podnozje sjeda kao dno stranice,
+     a ne kao jos jedna smedja sekcija. */
+  background: var(--ink-deep);
   color: var(--cream);
 }
 .footer-main {
@@ -1316,7 +1319,7 @@ footer.site-footer .footer-bottom { display: flex; }
   padding-top: 20px;
 }
 footer {
-  background: var(--brand-bark);
+  background: var(--ink-deep);
   color: var(--cream);
   padding: 65px 7vw 24px;
   display: grid;
@@ -2880,7 +2883,7 @@ header:has(.brand-image) {
 footer.site-footer {
   min-height: min(620px, 68vh);
   padding: clamp(40px, 5vw, 70px) 4vw 28px;
-  background: var(--brand-bark);
+  background: var(--ink-deep);
   color: var(--cream);
   display: grid;
   grid-template-columns: 1fr minmax(260px, 1.2fr) 1fr;
@@ -5989,7 +5992,7 @@ html.menu-open body {
 @media (max-width: 767px) {
   :root {
     /* Tamna podloga za naizmjenicne sekcije — topla, ne neutralno crna. */
-    --m-dark: #241d18;
+    --m-dark: var(--ink-deep);
     --m-gutter: 26px;
     /* Razmak izmedju blokova: sekcije ne smiju biti zbijene. */
     --m-space: 82px;
@@ -6839,26 +6842,8 @@ main > section.hero-video {
   text-transform: uppercase;
   cursor: pointer;
 }
-/*
-  Oval je SVG, ne `border-radius`: elipsa se razvlaci preko cijelog dugmeta
-  koliko god natpis bio dug, a ostaje elipsa — zaobljeni pravougaonik ima
-  prave stranice i ne izgleda isto.
-*/
-.hv-cta-oval {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.9;
-}
-.hv-cta-strelica {
-  width: 15px;
-  height: 15px;
-  flex: 0 0 auto;
-}
-.hv-cta:hover .hv-cta-oval {
-  opacity: 1;
-}
+/* Oblik dugmeta stoji u .oval-dugme (dole, kod uvodnih sekcija) — ovdje je
+   samo ono sto je posebno za dugme preko snimka. */
 /*
   Pocetno stanje stoji u CSS-u, ne u JS-u: da skripta zakasni ili zakaze,
   natpis bi bljesnuo pun prije nego sto ga JS sakrije.
@@ -7058,4 +7043,293 @@ header.home-sticky-header.is-solid {
   border-bottom: 1px solid rgba(59, 42, 33, .08);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   UVODNE SEKCIJE ISPOD HEROJA
+   Redom kako stoje na stranici: recenica sa strelicom i tri artikla
+   (.uvod), traka sa jednom recenicom (.traka), par slika (.galerija).
+   Pisano za telefon; siroki ekran je na kraju bloka.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── Dugme u ovalu (hero i "Kako funkcionise") ─── */
+.oval-dugme {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  /* 48px je najmanji prst — ne spustati ispod. */
+  min-height: 48px;
+  padding: 14px 42px;
+  border: 0;
+  background: none;
+  color: currentColor;
+  font-family: var(--font-manrope);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+.oval-dugme-elipsa {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+}
+.oval-dugme-strelica {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+.oval-dugme:hover .oval-dugme-elipsa {
+  opacity: 1;
+}
+/* Preko snimka je bijelo, na kremu smedje. */
+.hv-cta {
+  color: #fff;
+}
+.how-cta {
+  color: var(--brand-brown);
+}
+
+/* ─── Recenica, strelica, tri artikla ─── */
+main > section.uvod {
+  padding: clamp(38px, 8vw, 64px) var(--page-gutter) clamp(40px, 9vw, 72px);
+  background: #fff;
+}
+.uvod-red {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.uvod-tekst {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--brand-brown);
+  font-family: var(--font-manrope);
+  font-size: clamp(13px, 3.6vw, 15px);
+  line-height: 1.45;
+}
+.uvod-strelica {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid rgba(107, 78, 45, 0.45);
+  border-radius: 50%;
+  color: var(--brand-brown);
+  transition: background 250ms ease, color 250ms ease;
+}
+.uvod-strelica svg {
+  width: 17px;
+  height: 17px;
+}
+.uvod-strelica:hover {
+  background: var(--brand-brown);
+  color: var(--cream);
+}
+.uvod-kartice {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: clamp(30px, 8vw, 56px);
+}
+.uvod-kartica {
+  position: relative;
+  aspect-ratio: 1 / 1.05;
+  overflow: hidden;
+  background: var(--cream-tint);
+  text-decoration: none;
+}
+.uvod-kartica img {
+  object-fit: cover;
+}
+/*
+  Zatamnjenje samo pri dnu kartice. Dekori su svijetli, pa bi bijeli natpis
+  bez ovoga nestao u godovima; puno zatamnjenje bi ugasilo boju dekora, a
+  dekor je ono zbog cega kartica i postoji.
+*/
+.uvod-kartica::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 56%;
+  background: linear-gradient(to top, rgba(20, 15, 11, 0.62), rgba(20, 15, 11, 0));
+}
+.uvod-oznaka {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  padding: 5px 9px;
+  background: rgba(36, 29, 24, 0.72);
+  color: var(--cream);
+  font-family: var(--font-manrope);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.uvod-natpis {
+  position: absolute;
+  z-index: 2;
+  right: 10px;
+  bottom: 9px;
+  left: 10px;
+  display: grid;
+  gap: 1px;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(20, 15, 11, 0.5);
+}
+.uvod-natpis b {
+  font-family: var(--font-manrope);
+  font-size: clamp(10px, 2.9vw, 12px);
+  font-weight: 400;
+}
+.uvod-natpis i {
+  font-family: var(--font-manrope);
+  font-size: clamp(9px, 2.6vw, 11px);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ─── Traka sa jednom recenicom ─── */
+.traka {
+  padding: 17px var(--page-gutter);
+  border-top: 1px solid var(--brand-line);
+  border-bottom: 1px solid var(--brand-line);
+  background: #fff;
+  text-align: center;
+}
+.traka span {
+  color: var(--brand-brown);
+  font-family: var(--font-manrope);
+  font-size: clamp(12px, 3.3vw, 13px);
+}
+
+/* ─── Enterijer i traka teksture ─── */
+main > section.galerija {
+  display: grid;
+  /* Uska traka je odsjecak dekora — otud i mjera: taman toliko da se vidi
+     sara, ne toliko da se takmici sa enterijerom. */
+  grid-template-columns: 1fr 0.17fr;
+  gap: 12px;
+  padding: clamp(34px, 8vw, 60px) var(--page-gutter);
+  background: var(--cream);
+}
+.galerija-glavna {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  margin: 0;
+  overflow: hidden;
+}
+.galerija-glavna img {
+  object-fit: cover;
+}
+.galerija-glavna figcaption {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  color: #fff;
+  font-family: var(--font-manrope);
+  font-size: clamp(11px, 3vw, 13px);
+  letter-spacing: 0.18em;
+  text-shadow: 0 1px 14px rgba(20, 15, 11, 0.55);
+}
+.galerija-traka {
+  position: relative;
+  overflow: hidden;
+}
+.galerija-traka img {
+  object-fit: cover;
+}
+
+/* ─── "Kako funkcionise": natpis lijevo, dugme desno ─── */
+.how-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  /* Natpis lijevo, dugme desno — red se mora pruziti preko cijele sekcije.
+     Ranije je bio ogranicen na 620px, jer je nosio samo natpis. */
+  max-width: none;
+  /* Na uskom ekranu ne stanu jedno pored drugog; dugme tada ide u novi red. */
+  flex-wrap: wrap;
+}
+
+@media (min-width: 1024px) {
+  .uvod-tekst {
+    max-width: 42ch;
+    font-size: 16px;
+  }
+  .uvod-strelica {
+    width: 66px;
+    height: 66px;
+  }
+  /*
+    Tri kartice preko cijele sirine na 1440 ispadnu blok od 400px po kartici
+    — vise nego sto artikal ovdje treba da nosi. Red se zato zauzda, a
+    ostatak sirine ostaje prazan, kao i uz tekst iznad.
+  */
+  .uvod-kartice {
+    max-width: 1040px;
+    gap: 16px;
+  }
+  main > section.galerija {
+    gap: 18px;
+  }
+  /*
+    Uspravan kadar 3:4 na sirokom ekranu naraste na preko 1300px visine i
+    enterijer se gleda kroz kljucaonicu. Ovdje ide polozen kadar; uska traka
+    uz njega prati istu visinu.
+  */
+  .galerija-glavna {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ─── Kartice procesa na telefonu: krem, ne tamno ───
+   Sekcija je bila tamna traka; sada je svijetla kao i sve oko nje. Pravila
+   su ovdje, poslije tamnih, jer ista tezina selektora — pobjedjuje kasnije. */
+@media (max-width: 767px) {
+  main .how.process-section {
+    background: var(--cream-tint);
+    color: var(--ink);
+  }
+  main .how.process-section .eyebrow {
+    color: var(--brand-brown);
+  }
+  main .how.process-section h2,
+  main .how.process-section h3,
+  main .how.process-section strong,
+  main .how.process-section b {
+    color: var(--brand-brown);
+  }
+  main .how.process-section .process-card-description {
+    color: var(--text-soft);
+  }
+  main .how.process-section .process-card,
+  main .how.process-section .process-card.is-active {
+    border: 1px solid rgba(59, 42, 33, 0.18);
+  }
+  main .how.process-section .process-card b {
+    color: var(--brand-muted);
+  }
+  main .how.process-section .process-card strong {
+    color: var(--ink);
+  }
+  main .how.process-section .process-card-cta {
+    border-color: rgba(59, 42, 33, 0.4);
+    color: var(--brand-brown);
+  }
 }
