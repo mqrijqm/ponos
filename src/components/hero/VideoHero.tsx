@@ -35,10 +35,12 @@ const NAZAD_PO_JEDINICI = 0.0022;
 const SNIMAK_SIROK = "/videos/hero-planks.mp4"; //  1920×1080, ~3 MB
 const SNIMAK_UZAK = "/videos/hero-planks-mobile.mp4"; // 1280×720, ~700 KB
 
+
 type Stanje = "mirno" | "naprijed" | "gotovo" | "nazad";
 
 export default function VideoHero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = usePrefersReducedMotion();
 
   /*
@@ -122,17 +124,22 @@ export default function VideoHero() {
     let rokPocetka: ReturnType<typeof setTimeout> | undefined;
 
     /*
-      Snimak nije krenuo: ili je pustanje odbijeno (iOS u stednji struje odbija
-      i nijemi autoplay), ili se predugo puni. Stranica se otkljucava, natpisi
-      se prikazuju do kraja da hero ne ostane samo poster bez teksta, a `trazen`
-      pada — pa sljedeci scroll pokusava iznova.
+      Snimak nije krenuo na vrijeme — ili se jos puni, ili je pustanje odbijeno
+      (iOS u stednji struje odbija i nijemi autoplay).
+
+      Stranica se pusta i vise se ne zakljucava, ali se od snimka NE odustaje:
+      pusta se i dalje, samo kao obican kadar u pozadini umjesto da drzi
+      stranicu. Ranije je ovdje stanje padalo na "mirno" i snimak nije imao ko
+      da pokrene — hero bi zauvijek ostao poster.
+
+      Ako ni to ne prodje, natpisi se prikazuju do kraja da kadar ne ostane
+      slika bez ijedne rijeci na sebi.
     */
     const odustani = () => {
       clearTimeout(rokPocetka);
-      stanje = "mirno";
-      trazen = false;
+      stanje = "gotovo";
       otkljucaj();
-      setOverlayProgress(1);
+      video.play().catch(() => setOverlayProgress(1));
     };
 
     /*
@@ -167,6 +174,16 @@ export default function VideoHero() {
       if (e.deltaY > 0) pusti();
     };
     const pustiNaDodir = () => pusti();
+
+    /*
+      Posljednja odstupnica. iPhone u stednji struje odbija cak i nijemi
+      autoplay, i tu nikakav scroll ne pomaze — ali dodir je gest korisnika,
+      koji Safari uvijek postuje. Zato dodir po kadru pusta snimak i onda kad
+      je sve ostalo odbijeno. Kad snimak vec ide, ovo ne radi nista.
+    */
+    const naDodirKadra = () => {
+      if (video.paused) video.play().catch(() => setOverlayProgress(1));
+    };
 
     const naKraj = () => {
       stanje = "gotovo";
@@ -225,6 +242,7 @@ export default function VideoHero() {
       if (!document.hidden) probaj();
     };
 
+    sectionRef.current?.addEventListener("pointerdown", naDodirKadra, { passive: true });
     window.addEventListener("scroll", pusti, { passive: true });
     window.addEventListener("wheel", pustiNaTocak, { passive: true });
     window.addEventListener("touchmove", pustiNaDodir, { passive: true });
@@ -243,6 +261,7 @@ export default function VideoHero() {
       clearTimeout(rokPocetka);
       /* Demontiranje nikad ne smije ostaviti stranicu zakljucanom. */
       otkljucaj();
+      sectionRef.current?.removeEventListener("pointerdown", naDodirKadra);
       window.removeEventListener("scroll", pusti);
       window.removeEventListener("wheel", pustiNaTocak);
       window.removeEventListener("touchmove", pustiNaDodir);
@@ -258,6 +277,7 @@ export default function VideoHero() {
 
   return (
     <section
+      ref={sectionRef}
       className="hero-sequence is-fullbleed relative w-full"
       aria-label="Hrastove daske se podižu u praznoj sobi"
     >
@@ -272,6 +292,12 @@ export default function VideoHero() {
 
             Bez `src` u markupu — postavlja ga efekat iznad, po sirini ekrana.
             Dok ne stigne, kadar drzi poster.
+
+            Skripta koja bi ga postavila jos pri parsiranju (prije hidracije)
+            ovdje ne moze: <script> u React stablu razbije hidraciju, pa se
+            slusaci scrolla nikad ne zakace i snimak ostane stajati. Na iOS-u
+            to ionako ne bi pomoglo — Safari ne skida snimak dok se `play()` ne
+            zatrazi, bez obzira na `preload`.
           */}
           <video
             ref={videoRef}
