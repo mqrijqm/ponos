@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import OvalDugme from "../landing/OvalDugme";
 import { useQuote } from "../QuoteProvider";
-import { usePrefersReducedMotion } from "./hooks";
+import { useMediaQuery, usePrefersReducedMotion } from "./hooks";
 
 /**
  * Hero: snimak na kojem se panel u sredini mijenja, natpis i dugme dolaze
@@ -32,13 +32,73 @@ const REZ_DUGME = 2.17;
  */
 const REZERVA_MS = 2600;
 
+/** Udio scrolla kroz sekciju na kojem kadar dostigne punu mjeru. */
+const KRAJ_ZUMA = 0.62;
+/** Udio na kojem ulaze natpis i dugme — tek kad je kadar narastao. */
+const PRAG_NATPISA = 0.66;
+
 type Faza = 0 | 1 | 2;
 
 export default function HeroVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const sekcijaRef = useRef<HTMLElement>(null);
+  const okvirRef = useRef<HTMLDivElement>(null);
   const [faza, setFaza] = useState<Faza>(0);
   const reducedMotion = usePrefersReducedMotion();
+  const sirokEkran = useMediaQuery("(min-width: 1024px)");
   const { openQuote } = useQuote();
+
+  /*
+    Siroki ekran: snimak raste pod scrollom.
+    ────────────────────────────────────────
+    Sekcija je visoka vise od ekrana, a sloj u njoj je sticky — dok se prolazi
+    kroz tu visinu nista se ne pomjera osim samog kadra. Kadar pocinje malen i
+    udaljen i raste do pune mjere; natpis i dugme cekaju da naraste.
+
+    Napredak ne ide kroz React state: to bi bio novi render cijelog stabla na
+    svaki piksel scrolla. Upisuje se kao CSS promjenljiva na okvir, a racuna
+    se iz zive pozicije sekcije na svaki frejm — sekcije ispod mijenjaju visinu
+    dok se slike ucitavaju, pa jednom izmjerene pozicije ne bi valjale.
+  */
+  useEffect(() => {
+    if (!sirokEkran) return;
+    const sekcija = sekcijaRef.current;
+    const okvir = okvirRef.current;
+    if (!sekcija || !okvir) return;
+
+    /* Bez animacije: kadar odmah pun, natpis i dugme odmah tu. */
+    if (reducedMotion) {
+      okvir.style.setProperty("--hv-p", "1");
+      okvir.classList.add("uvecan");
+      return;
+    }
+
+    let raf = 0;
+    const izmjeri = () => {
+      const r = sekcija.getBoundingClientRect();
+      const put = r.height - window.innerHeight;
+      const p = put <= 0 ? 1 : Math.min(1, Math.max(0, -r.top / put));
+      /* Rast se zavrsi prije kraja sekcije, pa kadar ostane pun na ekranu
+         prije nego sto sekcija ode. */
+      okvir.style.setProperty("--hv-p", String(Math.min(1, p / KRAJ_ZUMA)));
+      okvir.classList.toggle("uvecan", p >= PRAG_NATPISA);
+    };
+    const naScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(izmjeri);
+    };
+
+    izmjeri();
+    window.addEventListener("scroll", naScroll, { passive: true });
+    window.addEventListener("resize", naScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", naScroll);
+      window.removeEventListener("resize", naScroll);
+      okvir.style.removeProperty("--hv-p");
+      okvir.classList.remove("uvecan");
+    };
+  }, [sirokEkran, reducedMotion]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -82,36 +142,41 @@ export default function HeroVideo() {
   /* `is-fullbleed`: sekcija je izuzeta iz --page-gutter, snimak ide do ivice. */
   return (
     <section
+      ref={sekcijaRef}
       className="hero-video is-fullbleed"
       aria-label="MT PONOS — podne obloge"
     >
-      <div className={`hv-frame faza-${prikazanaFaza}`}>
-        <video
-          ref={videoRef}
-          className="hv-video"
-          poster="/video/hero-poster.webp"
-          /* muted + playsInline: bez njih iOS ne pusta sam. */
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-        >
-          <source src="/video/hero.webm" type="video/webm" />
-          <source src="/video/hero.mp4" type="video/mp4" />
-        </video>
-        {/* Zatamnjenje pri dnu: bijeli natpis pada preko svijetlog panela. */}
-        <div className="hv-scrim" aria-hidden="true" />
-        <div className="hv-overlay">
-          <h1 className="hv-title">
-            <span>PONOS</span>
-            <span>PROSTORA</span>
-          </h1>
-          <OvalDugme
-            natpis="Pogledaj ponudu"
-            className="hv-cta"
-            onClick={() => openQuote()}
-          />
+      {/* Sloj koji na sirokom ekranu stoji dok sekcija prolazi (sticky). Na
+          telefonu ne radi nista — snimak tamo nosi svoju visinu. */}
+      <div className="hv-stage">
+        <div ref={okvirRef} className={`hv-frame faza-${prikazanaFaza}`}>
+          <video
+            ref={videoRef}
+            className="hv-video"
+            poster="/video/hero-poster.webp"
+            /* muted + playsInline: bez njih iOS ne pusta sam. */
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+          >
+            <source src="/video/hero.webm" type="video/webm" />
+            <source src="/video/hero.mp4" type="video/mp4" />
+          </video>
+          {/* Zatamnjenje pri dnu: bijeli natpis pada preko svijetlog panela. */}
+          <div className="hv-scrim" aria-hidden="true" />
+          <div className="hv-overlay">
+            <h1 className="hv-title">
+              <span>PONOS</span>
+              <span>PROSTORA</span>
+            </h1>
+            <OvalDugme
+              natpis="Pogledaj ponudu"
+              className="hv-cta"
+              onClick={() => openQuote()}
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -6855,23 +6855,38 @@ main > section.hero-video {
   transition: opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1),
     transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.faza-1 .hv-title,
-.faza-2 .hv-title,
-.faza-2 .hv-cta {
-  opacity: 1;
-  transform: none;
+/* Telefon: natpis i dugme dolaze na rez u snimku (faza). Siroki ekran ima
+   svoj okidac — kadar mora prvo narasti — pa mu ova pravila ne trebaju. */
+@media (max-width: 1023px) {
+  .faza-1 .hv-title,
+  .faza-2 .hv-title,
+  .faza-2 .hv-cta {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ─── Siroki ekran: kolona na kremu, jedna linija natpisa, zum ─── */
 @media (min-width: 1024px) {
   main > section.hero-video {
     --hv-nav: 88px;
-    /* Snimak stoji u stranici, a ne preko nje: kadar je manji od ekrana i
-       centriran, sa kremom oko sebe. */
-    min-height: 100vh;
+    /*
+      Visina sekcije je razdaljina scrolla kroz koju kadar raste. Sloj u njoj
+      je sticky, pa se dok se prolazi kroz tu visinu nista ne pomjera osim
+      samog kadra — nema klizanja sadrzaja ispod njega.
+    */
+    height: 210vh;
+    min-height: 0;
+    display: block;
+    padding: 0;
+  }
+  .hv-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
     display: grid;
     place-items: center;
-    padding: calc(var(--hv-nav) + 28px) 0 44px;
+    padding-top: var(--hv-nav);
   }
   .hv-frame {
     /*
@@ -6901,19 +6916,26 @@ main > section.hero-video {
     transition-duration: 620ms;
   }
   /*
-    Zum krece na rezu na kojem ulazi dugme i ostaje uvecan — snimak se vrti u
-    krug, a vracanje na 1.0 na svakom krugu bi se vidjelo kao trzaj.
+    Zum ide po scrollu, ne po vremenu snimka: `--hv-p` (0→1) upisuje
+    HeroVideo na svaki frejm. Zato ni prelaz — vrijednost vec dolazi
+    zaglađena, a prelaz bi je vukao za sobom i kadar bi kasnio za prstom.
 
-    Raste cijeli okvir, ne snimak u njemu. Da raste snimak, okvir bi mu sjekao
-    visak i kadar bi se opet gubio po ivicama; ovako se uvecava cijela slika,
-    kao da se korak priblizi.
+    Raste cijeli okvir, ne snimak u njemu: da raste snimak, okvir bi mu sjekao
+    visak i kadar bi se opet gubio po ivicama.
+
+    Pocinje na 0.46 — malen i udaljen — i staje na punoj mjeri.
   */
   .hv-frame {
-    transform: scale(1);
-    transition: transform 1200ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    --hv-p: 0;
+    transform: scale(calc(0.46 + 0.54 * var(--hv-p)));
+    transform-origin: center;
+    transition: none;
   }
-  .hv-frame.faza-2 {
-    transform: scale(1.06);
+  /* Natpis i dugme cekaju da kadar naraste. */
+  .hv-frame.uvecan .hv-title,
+  .hv-frame.uvecan .hv-cta {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -6925,8 +6947,8 @@ main > section.hero-video {
     transition: none;
   }
   /* Bez zuma: snimak stoji na poster kadru, pa nema sta ni da se uvecava. */
-  .hv-frame.faza-2 {
-    transform: none;
+  .hv-frame {
+    --hv-p: 1;
   }
 }
 
