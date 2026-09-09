@@ -14,6 +14,7 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
+import { useMediaQuery } from "./hero/hooks";
 import HeroVideo from "./hero/HeroVideo";
 import CategoryCarousel from "./mobile/CategoryCarousel";
 import LandingUvod from "./landing/LandingUvod";
@@ -136,6 +137,45 @@ export default function SitePage() {
   const [activeProcessStep, setActiveProcessStep] = useState(0);
   const [calcItem, setCalcItem] = useState<CatalogItem>(calculableItems[0]);
   const { openQuote } = useQuote();
+  /*
+    Na telefonu snimak ide ispod trake, pa traka nad njim nema podlogu i sve
+    u njoj je bijelo. Cim snimak prodje, podloga se vraca — preko kremastog i
+    tamnog sadrzaja ispod bijeli znak se ne bi vidio.
+
+    Na sirokom ekranu snimak stoji u stranici, ispod trake, pa je traka tamo
+    uvijek puna.
+  */
+  const [prekoSnimka, setPrekoSnimka] = useState(false);
+  const uzakEkran = useMediaQuery("(max-width: 1023px)");
+
+  useEffect(() => {
+    /* Sirok ekran nema sta da prati; vrijednost se tamo i ne koristi
+       (vidi `naSnimku` ispod), pa se ovdje samo izlazi. */
+    if (!uzakEkran) return;
+    let raf = 0;
+    const izmjeri = () => {
+      const hero = document.querySelector(".hero-video");
+      if (!hero) return;
+      /* Prag je dno snimka manje visina trake — traka se zatamni tacno kad
+         snimak izadje ispod nje. */
+      setPrekoSnimka(hero.getBoundingClientRect().bottom > 64);
+    };
+    const naScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(izmjeri);
+    };
+    naScroll();
+    window.addEventListener("scroll", naScroll, { passive: true });
+    window.addEventListener("resize", naScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", naScroll);
+      window.removeEventListener("resize", naScroll);
+    };
+  }, [uzakEkran]);
+
+  /* Traka je providna samo na uskom ekranu i samo dok je snimak pod njom. */
+  const naSnimku = uzakEkran && prekoSnimka;
 
   return (
     <>
@@ -144,14 +184,16 @@ export default function SitePage() {
         herojem preko cijelog ekrana; sada je prvi sadrzaj kremast, pa bi
         providna traka ostala bez podloge i ne bi se citala.
       */}
-      <header className="home-sticky-header is-visible is-solid">
+      <header
+        className={`home-sticky-header is-visible${naSnimku ? "" : " is-solid"}`}
+      >
         <a
           className="brand brand-image"
           href="#top"
           aria-label="MT PONOS — početna"
         >
           <Image
-            src="/logo-ponos.svg"
+            src={naSnimku ? "/logo-ponos-light.svg" : "/logo-ponos.svg"}
             alt="MT PONOS — podne obloge"
             width={300}
             height={79}

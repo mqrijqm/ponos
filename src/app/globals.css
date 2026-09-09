@@ -7853,3 +7853,49 @@ main .how.process-section .process-card-indicator {
     flex-wrap: nowrap;
   }
 }
+
+/* Kartice koraka su bijele, da se odvoje od kremaste sekcije. */
+main .how.process-section .process-card,
+main .how.process-section .process-card.is-active {
+  background: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TELEFON — SNIMAK IDE ISPOD TRAKE
+   Snimak pocinje od vrha ekrana, a traka lezi na njemu bez podloge i
+   sve u njoj je bijelo. Kad snimak prodje, traka dobija `is-solid`
+   (postavlja ga SitePage) i vraca se u svoje boje.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  main > section.hero-video {
+    padding-top: 0;
+  }
+  .hv-frame {
+    height: 100svh;
+  }
+  .home-sticky-header:not(.is-solid) {
+    background: none;
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  /*
+    Bijelo sa mekom sjenom: kadar ispod je taman, ali se mijenja svakih
+    par sekundi i zna doci svijetla daska pod sam znak.
+  */
+  .home-sticky-header:not(.is-solid) .menu,
+  .home-sticky-header:not(.is-solid) nav a,
+  .home-sticky-header:not(.is-solid) .nav-basket {
+    color: #fff;
+  }
+  .home-sticky-header:not(.is-solid) .menu svg,
+  .home-sticky-header:not(.is-solid) .nav-basket svg {
+    filter: drop-shadow(0 1px 6px rgba(20, 15, 11, 0.45));
+  }
+  .home-sticky-header:not(.is-solid) .brand.brand-image img {
+    filter: drop-shadow(0 1px 8px rgba(20, 15, 11, 0.4));
+  }
+  .home-sticky-header:not(.is-solid) .nav-basket {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+}
