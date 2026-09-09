@@ -5701,3 +5701,37 @@ main > section.hero-sequence {
     font-size: 11px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   NAVBAR PREKO HEROJA — proziran, bez svoje pozadine
+   Traka je stajala u punoj kremastoj boji, pa je snimak pocinjao ispod nje.
+   Sada lezi preko njega: pozadina je tek naznaka, a citljivost drzi
+   backdrop-filter — on zamuti ono sto je iza trake umjesto da to prekrije.
+   Logo, korpa i meni zadrzavaju svoje boje; nista se ne prebojava.
+
+   `absolute` umjesto `fixed`: traka pripada heroju i odlazi sa njim.
+   ═══════════════════════════════════════════════════════════════════ */
+header.home-sticky-header {
+  position: absolute;
+  z-index: 100;
+  background: rgba(255, 255, 255, .02);
+  border-bottom: 1px solid rgba(0, 0, 0, .05);
+  /* Safari trazi prefiks; bez njega traka ostane potpuno providna. */
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/*
+   Kadar ide od vrha ekrana do dna, bez 16:9 trake i bez praznog pojasa ispod
+   trake. Strane snimka se odsijecaju (object-fit: cover), sto je i bila
+   namjera — sredina kadra nosi radnju.
+
+   Visina je `svh`, ne `vh`: na telefonu je `100vh` visi od onoga sto se zaista
+   vidi (racuna i traku browsera), pa bi dno kadra ostalo odsjeceno ispod ivice
+   ekrana. `svh` je uvijek tacno onoliko koliko gost vidi.
+*/
+main > section.hero-sequence .hero-stage-frame {
+  height: 100%;
+  aspect-ratio: auto;
+  max-height: none;
+}

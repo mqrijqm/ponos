@@ -25,6 +25,16 @@ import { usePrefersReducedMotion } from "./hooks";
 /** Koliko sekundi snimka odmota jedna jedinica scrolla pri vrtnji unatrag. */
 const NAZAD_PO_JEDINICI = 0.0022;
 
+/*
+  Dva snimka istog kadra. Telefon nema sta da radi sa 1080p — ekran mu je uzi
+  od 500 CSS piksela — pa dobija 720p i cetiri puta manji fajl.
+
+  Oba su remuksovana sa `faststart`: zaglavlje stoji na pocetku fajla, pa
+  browser moze da pusti snimak dok se jos skida umjesto da ceka posljednji bajt.
+*/
+const SNIMAK_SIROK = "/videos/hero-planks.mp4"; //  1920×1080, ~3 MB
+const SNIMAK_UZAK = "/videos/hero-planks-mobile.mp4"; // 1280×720, ~700 KB
+
 type Stanje = "mirno" | "naprijed" | "gotovo" | "nazad";
 
 export default function VideoHero() {
@@ -41,6 +51,16 @@ export default function VideoHero() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    /*
+      Izvor se bira ovdje, a ne u markupu. Da <source> stoji u HTML-u, telefon
+      bi krenuo da skida desktop fajl jos prije nego sto bi ijedan JS stigao da
+      ga zamijeni — pa bi lakši snimak bio drugo skidanje, a ne jedino.
+    */
+    const uzak = window.matchMedia("(max-width: 767px)").matches;
+    const zeljeni = uzak ? SNIMAK_UZAK : SNIMAK_SIROK;
+    /* Bez provjere bi svaka promjena `reducedMotion` vratila snimak na pocetak. */
+    if (video.getAttribute("src") !== zeljeni) video.src = zeljeni;
 
     /* Bez animacije snimak stoji na prvom kadru; natpise rjesava render ispod. */
     if (reducedMotion) return;
@@ -249,6 +269,9 @@ export default function VideoHero() {
             pokrenu snimak i ostane samo poster. `preload="auto"` jer snimak
             treba da bude spreman u trenutku prvog scrolla, a ne da se tek tada
             krene skidati.
+
+            Bez `src` u markupu — postavlja ga efekat iznad, po sirini ekrana.
+            Dok ne stigne, kadar drzi poster.
           */}
           <video
             ref={videoRef}
@@ -259,10 +282,7 @@ export default function VideoHero() {
             playsInline
             style={{ pointerEvents: "none" }}
             aria-hidden="true"
-          >
-            <source src="/videos/hero-planks.webm" type="video/webm" />
-            <source src="/videos/hero-planks.mp4" type="video/mp4" />
-          </video>
+          />
 
           {/* Natpisi preko kadra; sloj ne hvata misa osim na dugmetu. */}
           <HeroOverlay scrollProgress={reducedMotion ? 1 : overlayProgress} />
