@@ -221,6 +221,13 @@ export default function SitePage() {
         <MobileMenu open={menu} onClose={() => setMenu(false)} />
       </header>
       <main id="top">
+        {/*
+          Mjesto za novi hero. Prazan ekran, krem kao i traka iznad njega, dok
+          se hero ne napravi — stoji ovdje da sekcije ispod vec sada sjede na
+          visini na kojoj ce sjediti i sa herojem, pa se raspored ne mijenja
+          kad hero dodje.
+        */}
+        <section className="hero-blank" aria-hidden="true" />
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />

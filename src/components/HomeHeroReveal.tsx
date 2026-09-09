@@ -2,16 +2,21 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { usePrefersReducedMotion } from "./hero/hooks";
 
+gsap.registerPlugin(ScrollTrigger);
+
 /**
- * Sekcija "Na jednom mjestu" se sama sastavi kad se stranica otvori.
+ * Sekcija "Na jednom mjestu" se sastavi kad udje u kadar.
  *
- * Ranije je to bio scroll: sekcija se pinovala i sastavljala pod prstom, jer
- * je iznad nje stajao hero preko nekoliko ekrana i do ove sekcije se dolazilo
- * scrollom. Sada je ona prvi ekran — da je ostala na scrollu, stranica bi se
- * otvarala prazna dok se ne pomjeri. Zato ide na vrijeme, po otvaranju.
+ * Iznad nje stoji prazan ekran rezervisan za hero, pa se do ove sekcije dolazi
+ * scrollom. Zato okidac nije otvaranje stranice — animacija bi prosla dok je
+ * niko ne gleda i sekcija bi docekala oko vec sastavljena.
+ *
+ * Sekcija se ne pinuje: scroll samo kaze kada da krene, dalje ide sama u
+ * svom ritmu. Pin bi zaustavio stranicu odmah poslije heroja.
  *
  * Redoslijed je namjeran: prvo natpis, pa "PONOS PROSTORA" — toliko dugo da se
  * stigne procitati — i tek onda plocice uskacu u kadar. Da idu zajedno, oko bi
@@ -46,7 +51,15 @@ export default function HomeHeroReveal({ children }: { children: React.ReactNode
       gsap.set(tiles, { opacity: 0, scale: 0.62, y: 26 });
 
       gsap
-        .timeline({ delay: 0.15 })
+        .timeline({
+          scrollTrigger: {
+            trigger: section,
+            /* Kad je gornja cetvrtina sekcije u kadru — dovoljno rano da natpis
+               ne uleti procitan, dovoljno kasno da se ne desi izvan ekrana. */
+            start: "top 75%",
+            once: true,
+          },
+        })
         .to(copy, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out" })
         .to(title, { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, ">-0.35")
         // plocice tek kad je naslov procitan; brzo i u preklapanju
