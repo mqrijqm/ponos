@@ -15,6 +15,7 @@ import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import { useMediaQuery } from "./hero/hooks";
+import HeroVideo from "./hero/HeroVideo";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
 import CategoryCarousel from "./mobile/CategoryCarousel";
@@ -221,13 +222,7 @@ export default function SitePage() {
         <MobileMenu open={menu} onClose={() => setMenu(false)} />
       </header>
       <main id="top">
-        {/*
-          Mjesto za novi hero. Prazan ekran, krem kao i traka iznad njega, dok
-          se hero ne napravi — stoji ovdje da sekcije ispod vec sada sjede na
-          visini na kojoj ce sjediti i sa herojem, pa se raspored ne mijenja
-          kad hero dodje.
-        */}
-        <section className="hero-blank" aria-hidden="true" />
+        <HeroVideo />
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />
@@ -252,10 +247,13 @@ export default function SitePage() {
                 <HeroDetail slot={6} />
               </div>
             </div>
-            <h1 className="home-hero-title">
+            {/* h2, ne h1: isti natpis nosi hero iznad, a dva h1 sa istim
+                tekstom su jedan naslov previse. Izgled se ne mijenja —
+                stilovi idu po klasi. */}
+            <h2 className="home-hero-title">
               <span>PONOS</span>
               <b>PROSTORA</b>
-            </h1>
+            </h2>
           </div>
         </HomeHeroReveal>
         {/* Traka kategorija: telefon je dobija odmah poslije izjave, sirok

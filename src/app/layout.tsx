@@ -18,6 +18,13 @@ const lora = localFont({
   display: "swap",
   variable: "--font-lora",
 });
+/* Aurena — serif sa natpisa u herou i nigdje drugdje. Rez je podrezan na
+   latinicu bez nasih slova (č, ć, ž, š, đ ih font nema), pa je 5 kB. */
+const aurena = localFont({
+  src: [{ path: "../fonts/Aurena-Regular.woff2", weight: "400", style: "normal" }],
+  display: "swap",
+  variable: "--font-aurena",
+});
 /* Samo srednja debljina i samo latinica: natpis preko heroja je jedini
    tekst u ovom fontu, pa nema smisla skidati cijelu familiju. */
 const comfortaa = Comfortaa({
@@ -53,7 +60,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <body className={`${lora.variable} ${comfortaa.variable}`}>
+      <body className={`${lora.variable} ${comfortaa.variable} ${aurena.variable}`}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
           <PoruciCursor />
