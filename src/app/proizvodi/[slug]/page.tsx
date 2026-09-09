@@ -89,52 +89,22 @@ export default async function Page({
                 u našim poslovnim objektima u Dervišima i Lazarevu.
               </p>
             </article>
-            <div className="spc-layout">
-              <div className="spc-illustration">
-                <Image
-                  src="/forest-detail.svg"
-                  alt="Stilizovani crtež šume"
-                  width={400}
-                  height={320}
-                />
-              </div>
-              <article className="spc-story">
-                <span className="flooring-index">02</span>
-                <h3>SPC Vinyl</h3>
-                <p>
-                  Kolekcija inspirisana prirodnim ljepotama šume. Prigušene boje
-                  i struktura drveta osiguravaju sklad i jedinstvenu atmosferu.
-                  Pod je ekološki prihvatljiv i u potpunosti se može reciklirati.
-                </p>
-                <p>
-                  Natural Floor kolekcija idealna je za podno grijanje i
-                  efikasno provodi toplotu bez promjene svojih parametara.
-                  Inovativna jezgra sačinjena je od 80% prirodnih komponenti, uz
-                  polimere koji podu daju otpornost na udarce i oštećenja,
-                  stabilne dimenzije i jednostavnu ugradnju.
-                </p>
-              </article>
-              <aside className="spc-features" aria-label="Karakteristike SPC Vinyl poda">
-                <span className="eyebrow">KARAKTERISTIKE</span>
-                <ul>
-                {[
-                  "Debljina 4 mm i mikro V fuga",
-                  "Prilagođen za podno grijanje",
-                  "100% vodootpornost",
-                  "Vrhunska otpornost na udarce i oštećenja",
-                  "Stabilne dimenzije bez obzira na temperaturu",
-                  "Ekološki prihvatljiv i razgradiv",
-                  "Jednostavna i brza instalacija",
-                  "Apsorpcija zvuka",
-                  "Struktura drveta sa izgledom prirodnih materijala",
-                  "Širok spektar primjena",
-                  "Otpornost na mikroogrebotine i habanje",
-                  "Površinska čvrstoća klase 34",
-                  "Paket: 2,257 m²",
-                  ].map((feature) => <li key={feature}>{feature}</li>)}
-                </ul>
-              </aside>
-            </div>
+            <article className="decking-story">
+              <span className="flooring-index">02</span>
+              <h3>SPC Vinyl</h3>
+              <p>
+                Kolekcija inspirisana prirodnim ljepotama šume. Prigušene boje
+                i struktura drveta osiguravaju sklad i jedinstvenu atmosferu.
+                Pod je ekološki prihvatljiv i u potpunosti se može reciklirati.
+              </p>
+              <p>
+                Natural Floor kolekcija idealna je za podno grijanje i
+                efikasno provodi toplotu bez promjene svojih parametara.
+                Inovativna jezgra sačinjena je od 80% prirodnih komponenti, uz
+                polimere koji podu daju otpornost na udarce i oštećenja,
+                stabilne dimenzije i jednostavnu ugradnju.
+              </p>
+            </article>
           </section>
         )}
         {slug === "lajsne" && (

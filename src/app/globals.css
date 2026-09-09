@@ -5440,3 +5440,95 @@ main > section.hero-sequence {
     max-height: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   KAKO FUNKCIONISE — dodir umjesto hovera
+   Uzak ekran nema hover, pa je dodir po kartici vodio sa stranice prije
+   nego sto se tekst uopste procita. Tu se kartica dodirom samo otvara,
+   odlazak preuzima CTA dugme koje iskoci ispod teksta, a mark u uglu se
+   sklanja — na telefonu je stajao preko brojke.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .process-card-indicator {
+    display: none;
+  }
+  /* Nevidljivo dugme preko cijele kartice: dodir bilo gdje je otvara. */
+  .process-card-hit {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    appearance: none;
+    cursor: pointer;
+  }
+  .process-card-hit:focus-visible {
+    outline: 2px solid var(--brand-brown);
+    outline-offset: -4px;
+  }
+  /* CTA mora stajati iznad tog dugmeta, inace bi dodir po njemu samo otvarao. */
+  .process-card-cta {
+    position: relative;
+    z-index: 2;
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 6px;
+  }
+  .process-card:not(.is-active) .process-card-cta {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DETALJ ARTIKLA NA TELEFONU — manja slika, tabela umjesto spiska
+   Uspravno je sekcija bila duga tri ekrana: pola ekrana teksture, pa
+   sesnaest redova specifikacije (natpis i vrijednost svaki u svom redu),
+   pa zalutala slicica sa uglovnom linijom koja je visila u praznini.
+   Ovdje se tekstura svodi na traku, specifikacija na tabelu sa vrijednoscu
+   uz desnu ivicu, a slicica u dnu se sklanja.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  .showcase-media {
+    height: 32svh;
+  }
+  .showcase-panel,
+  .product-showcase.is-mirrored .showcase-panel {
+    gap: 28px;
+    padding: 36px var(--page-gutter) 44px;
+  }
+  .product-showcase h2 {
+    font-size: clamp(1.9rem, 8vw, 2.4rem);
+  }
+  /* Natpis i vrijednost u istom redu, razdvojeni tankom crtom. */
+  .showcase-specs {
+    gap: 0;
+    border-top: 1px solid var(--brand-line);
+  }
+  .showcase-specs div {
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    gap: 18px;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--brand-line);
+  }
+  .showcase-specs dt {
+    font-size: 10px;
+    letter-spacing: .08em;
+  }
+  .showcase-specs dd {
+    text-align: right;
+  }
+  /* Slicica sobe sa uglovnom linijom je ovdje samo smetnja. */
+  .showcase-room {
+    display: none;
+  }
+  /* Artikal bez logotipa ostaje sa praznim podnozjem — ne treba mu prostor. */
+  .showcase-foot:has(> .showcase-room:only-child) {
+    display: none;
+  }
+  .showcase-brand-logo {
+    width: 104px;
+  }
+}

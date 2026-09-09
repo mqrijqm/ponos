@@ -2,8 +2,14 @@
 
 import { useEffect, useState } from "react";
 
-/** Prati media query, sa SSR-safe pocetnom vrijednoscu. */
-function useMediaQuery(query: string, initial = false) {
+/**
+ * Prati media query, sa SSR-safe pocetnom vrijednoscu.
+ *
+ * Na serveru nema `matchMedia`, pa prvi render uvijek ide po `initial` — tek
+ * poslije montiranja se vrijednost popravi. Zato je siroki raspored ono sto
+ * stigne u HTML-u, a uski se ukljuci u browseru.
+ */
+export function useMediaQuery(query: string, initial = false) {
   const [matches, setMatches] = useState(initial);
 
   useEffect(() => {
