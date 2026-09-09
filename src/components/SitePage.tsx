@@ -14,7 +14,6 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
-import { useMediaQuery } from "./hero/hooks";
 import HeroVideo from "./hero/HeroVideo";
 import CategoryCarousel from "./mobile/CategoryCarousel";
 import LandingUvod from "./landing/LandingUvod";
@@ -61,39 +60,7 @@ type ProcessStep = {
    * "Vidi ponudu" u navbaru.
    */
   href?: string;
-  /** Natpis CTA dugmeta koje na uskom ekranu preuzima odlazak sa kartice. */
-  cta: string;
 };
-
-/*
-  Odlazak sa kartice na uskom ekranu. Sirok ekran ovo nema — tamo je sama
-  kartica link, pa bi ovo bio link u linku. Lezi iznad nevidljivog dugmeta
-  koje karticu otvara, da dodir po njemu vodi dalje umjesto da samo otvara.
-*/
-function ProcessCta({ step, onQuote }: { step: ProcessStep; onQuote: () => void }) {
-  const natpis = (
-    <>
-      <i /> {step.cta}
-    </>
-  );
-  if (!step.href) {
-    return (
-      <button type="button" className="cta-dot process-card-cta" onClick={onQuote}>
-        {natpis}
-      </button>
-    );
-  }
-  /* Sidro na istoj stranici ostaje obican <a>, isto kao i sama kartica. */
-  return step.href.startsWith("#") ? (
-    <a className="cta-dot process-card-cta" href={step.href}>
-      {natpis}
-    </a>
-  ) : (
-    <Link className="cta-dot process-card-cta" href={step.href}>
-      {natpis}
-    </Link>
-  );
-}
 
 const processSteps: ProcessStep[] = [
   {
@@ -103,7 +70,6 @@ const processSteps: ProcessStep[] = [
     image: "/images/process/step-01-measure.webp",
     alt: "Metar razvučen preko laminata u svijetlom dnevnom boravku",
     href: "#kalkulator",
-    cta: "Do kalkulatora",
   },
   {
     number: "2.",
@@ -112,7 +78,6 @@ const processSteps: ProcessStep[] = [
     image: "/images/process/step-02-compare.webp",
     alt: "Tri daske u različitim dekorima poređane jedna preko druge",
     href: "/proizvodi",
-    cta: "Pogledaj proizvode",
   },
   {
     number: "3.",
@@ -120,7 +85,6 @@ const processSteps: ProcessStep[] = [
     description: "Pošaljite izabrani proizvod i potrebnu količinu našem prodajnom timu.",
     image: "/images/process/step-03-quote.webp",
     alt: "Sto u salonu podova sa uzorcima, blokom i tabletom",
-    cta: "Zatraži ponudu",
   },
 ];
 
@@ -170,8 +134,6 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
 export default function SitePage() {
   const [menu, setMenu] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
-  /* Ista granica na kojoj se u globals.css kartice slazu jedna ispod druge. */
-  const uzakEkran = useMediaQuery("(max-width: 900px)");
   const [calcItem, setCalcItem] = useState<CatalogItem>(calculableItems[0]);
   const { openQuote } = useQuote();
 
@@ -254,14 +216,9 @@ export default function SitePage() {
               onClick={() => openQuote()}
             />
           </div>
-          <div
-            className="process-accordion"
-            style={{
-              gridTemplateColumns: processSteps
-                .map((_, index) => (index === activeProcessStep ? "1.7fr" : ".65fr"))
-                .join(" "),
-            }}
-          >
+          {/* Tri jednaka kvadrata; ranije su se sirine mijenjale sa aktivnom
+              karticom, pa je red poskakivao na svaki prelaz misa. */}
+          <div className="process-accordion">
             {processSteps.map((step, index) => {
               const isActive = index === activeProcessStep;
               // Kartica se otvara na hover i fokus; klik je vodi dalje.
@@ -270,41 +227,27 @@ export default function SitePage() {
                 onFocus: () => setActiveProcessStep(index),
                 onMouseEnter: () => setActiveProcessStep(index),
                 transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
-                /* Na uskom ekranu stanje nosi dugme ispod, ne sam omotac. */
-                ...(uzakEkran ? {} : { "aria-expanded": isActive }),
+                "aria-expanded": isActive,
               };
               /*
-                Uzak ekran nema hover, pa bi dodir po kartici odveo sa stranice
-                prije nego sto se tekst uopste vidi. Tamo kartica prestaje da
-                bude link i postaje obican <div>: preko nje lezi nevidljivo
-                dugme koje je otvara, a odrediste preuzima CTA ispod teksta.
-                Omotac mora biti neinteraktivan jer link u linku nije dozvoljen.
+                Kartica je link na svakoj sirini. Na telefonu je ranije bila
+                obican <div> sa nevidljivim dugmetom preko sebe, jer je slika
+                cekala dodir; sada je slika tamo uvijek vidljiva, pa nema sta
+                da se otvara — dodir vodi tamo gdje kartica i pokazuje.
+
+                Sidro na istoj stranici ostaje obican <a>, da ga Lenis uhvati i
+                klizne do njega; prelazak na drugu stranicu ide kroz next/link.
               */
-              // Sidro na istoj stranici ostaje obican <a> — Lenis ga hvata i
-              // klizi do njega; prelazak na drugu stranicu ide kroz next/link.
-              const Card = uzakEkran
-                ? motion.div
-                : !step.href
-                  ? motion.button
-                  : step.href.startsWith("#")
-                    ? motion.a
-                    : MotionLink;
-              const target = uzakEkran
-                ? {}
-                : step.href
-                  ? { href: step.href }
-                  : { type: "button" as const, onClick: () => openQuote() };
+              const Card = !step.href
+                ? motion.button
+                : step.href.startsWith("#")
+                  ? motion.a
+                  : MotionLink;
+              const target = step.href
+                ? { href: step.href }
+                : { type: "button" as const, onClick: () => openQuote() };
               return (
                 <Card key={step.number} {...shared} {...target}>
-                  {uzakEkran && (
-                    <button
-                      type="button"
-                      className="process-card-hit"
-                      aria-expanded={isActive}
-                      aria-label={`${step.number} ${step.title}`}
-                      onClick={() => setActiveProcessStep(index)}
-                    />
-                  )}
                   {step.image && (
                     <span className="process-card-media">
                       <Image
@@ -323,7 +266,6 @@ export default function SitePage() {
                     <span className="process-card-indicator" aria-hidden="true">
                       <Image src="/images/process/card-corner-mark.png" alt="" width={96} height={96} />
                     </span>
-                    {uzakEkran && <ProcessCta step={step} onQuote={() => openQuote()} />}
                   </span>
                 </Card>
               );
