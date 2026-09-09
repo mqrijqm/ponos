@@ -49,30 +49,37 @@ export default function LandingUvod() {
       </div>
 
       {/*
-        `tabIndex` nije greska: traka koja se scrolluje mora biti dostupna i
-        tastaturom, inace artikli iza prvog ekrana ostanu nedohvatljivi.
+        Traka ide sama, u krug. Zato dva puta isti spisak: kad prvi prodje,
+        drugi je vec na njegovom mjestu, pa se sastav ne vidi. Kopija je samo
+        slika — za citac ekrana i tastaturu je nema, inace bi svaki artikal
+        bio naveden dvaput.
       */}
-      <div
-        className="uvod-kartice"
-        tabIndex={0}
-        role="group"
-        aria-label="Artikli iz ponude"
-      >
-        {artikli.map((p) => (
-          <Link
-            key={p.code}
-            href={`/proizvodi/artikli/${encodeURIComponent(p.code)}`}
-            className="uvod-kartica"
-          >
-            <Image
-              src={productImage(p)}
-              alt={`${p.brand} ${p.name}, zvanična fotografija proizvoda`}
-              fill
-              sizes="(max-width: 767px) 42vw, 220px"
-            />
-            {p.badge && <span className="uvod-oznaka">{p.badge}</span>}
-          </Link>
-        ))}
+      <div className="uvod-traka" role="group" aria-label="Artikli iz ponude">
+        <div className="uvod-kartice">
+          {[0, 1].map((krug) =>
+            artikli.map((p) => (
+              <Link
+                key={`${krug}-${p.code}`}
+                href={`/proizvodi/artikli/${encodeURIComponent(p.code)}`}
+                className="uvod-kartica"
+                aria-hidden={krug === 1 ? true : undefined}
+                tabIndex={krug === 1 ? -1 : undefined}
+              >
+                <Image
+                  src={productImage(p)}
+                  alt={
+                    krug === 1
+                      ? ""
+                      : `${p.brand} ${p.name}, zvanična fotografija proizvoda`
+                  }
+                  fill
+                  sizes="(max-width: 767px) 42vw, 220px"
+                />
+                {p.badge && <span className="uvod-oznaka">{p.badge}</span>}
+              </Link>
+            )),
+          )}
+        </div>
       </div>
     </section>
   );

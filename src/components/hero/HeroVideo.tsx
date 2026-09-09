@@ -32,6 +32,13 @@ const REZ_DUGME = 2.17;
  */
 const REZERVA_MS = 2600;
 
+/**
+ * Koliko brze snimak ide od svoje brzine. Rezovi se ne pomjeraju — mjere se
+ * u vremenu snimka (`currentTime`), koje ide istim redom, samo brze; mijenja
+ * se koliko se ceka na njih, ne gdje su.
+ */
+const BRZINA = 1.4;
+
 /** Udio scrolla kroz sekciju na kojem kadar dostigne punu mjeru. */
 const KRAJ_ZUMA = 0.62;
 /** Udio na kojem ulaze natpis i dugme — tek kad je kadar narastao. */
@@ -113,6 +120,14 @@ export default function HeroVideo() {
       return;
     }
 
+    /* Brzina se gubi kad browser ucita novi izvor, pa se postavlja i sada i
+       na `loadedmetadata`. */
+    const ubrzaj = () => {
+      video.playbackRate = BRZINA;
+    };
+    ubrzaj();
+    video.addEventListener("loadedmetadata", ubrzaj);
+
     const naVrijeme = () => {
       const t = video.currentTime;
       /*
@@ -132,6 +147,7 @@ export default function HeroVideo() {
 
     return () => {
       video.removeEventListener("timeupdate", naVrijeme);
+      video.removeEventListener("loadedmetadata", ubrzaj);
       window.clearTimeout(rezerva);
     };
   }, [reducedMotion]);

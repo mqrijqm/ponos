@@ -6950,6 +6950,17 @@ main > section.hero-video {
   .hv-frame {
     --hv-p: 1;
   }
+  /*
+    Traka stoji. Kad se ne krece sama, mora se moci pomjeriti rukom — inace
+    ostane vidljivo samo prvih par artikala.
+  */
+  .uvod-kartice {
+    animation: none;
+  }
+  .uvod-traka {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
 }
 
 
@@ -7209,27 +7220,42 @@ main > section.uvod {
   guter se vraca kao padding, pa prva kartica ostaje poravnata sa tekstom
   iznad dok ostale idu van stranice.
 */
-.uvod-kartice {
-  display: flex;
-  gap: 10px;
+/*
+  Okvir trake. Ide do ivice ekrana (negativne margine ponistavaju --page-gutter)
+  i sijece ono sto izadje; prva kartica ostaje u osi teksta iznad jer je guter
+  vracen kao padding.
+*/
+.uvod-traka {
   margin-top: clamp(30px, 8vw, 56px);
   margin-right: calc(-1 * var(--page-gutter));
   margin-left: calc(-1 * var(--page-gutter));
-  padding: 0 var(--page-gutter);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  /*
-    Bez ovoga snap racuna od ivice trake, a ne od gutera: traka se sama
-    pomjeri za guter i prva kartica sjedne uz ivicu ekrana, van osi teksta
-    iznad. Ovim snap pocinje tamo gdje pocinje i tekst.
-  */
-  scroll-padding-left: var(--page-gutter);
-  /* Traka nosi svoj scroll; bez ovoga se vidi sistemska sipka. */
-  scrollbar-width: none;
+  padding-left: var(--page-gutter);
+  overflow: hidden;
 }
-.uvod-kartice::-webkit-scrollbar {
-  display: none;
+/*
+  Spisak ide dva puta, a pomjeranje staje tacno na duzinu jednog kruga
+  (`-50%` je pola dvostruke trake, plus pola razmaka koji ostaje izmedju dva
+  kruga). Kad prvi krug izadje, drugi je piksel u piksel na njegovom mjestu,
+  pa se vrti bez sastava.
+*/
+.uvod-kartice {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation: uvod-klizi 42s linear infinite;
+}
+@keyframes uvod-klizi {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 5px));
+  }
+}
+/* Stane pod prstom i pod fokusom — da se artikal moze pogledati i otvoriti. */
+.uvod-traka:hover .uvod-kartice,
+.uvod-traka:focus-within .uvod-kartice {
+  animation-play-state: paused;
 }
 .uvod-kartica {
   position: relative;
@@ -7237,7 +7263,6 @@ main > section.uvod {
   /* 42vw: dvije stanu cijele, treca je zarezana — traka se vidi kao traka. */
   width: 42vw;
   aspect-ratio: 1 / 1;
-  scroll-snap-align: start;
   overflow: hidden;
   background: var(--cream-tint);
   text-decoration: none;
