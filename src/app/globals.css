@@ -5875,3 +5875,79 @@ html.menu-open body {
     padding-top: 28px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PRESJEK DASKE — legenda ispod modela
+   Markeri na samoj dasci nose natpis samo kad pored nje ima mjesta, a
+   na telefonu nikad. Bez legende su tamo bili goli brojevi bez znacenja.
+   Ovdje stoji isti znak i uz njega ime sloja, pa se model i spisak citaju
+   zajedno.
+   ═══════════════════════════════════════════════════════════════════ */
+.layer-legend {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(12px, 1.6vw, 28px);
+  margin: 0;
+  padding: 0 var(--page-gutter) clamp(28px, 4vh, 52px);
+  list-style: none;
+}
+.layer-legend li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 2px;
+  align-items: baseline;
+  padding-top: 14px;
+  border-top: 1px solid var(--brand-line);
+}
+.layer-legend img {
+  grid-row: 1 / span 2;
+  width: 22px;
+  height: 22px;
+  /* Znak je crtez broja — poravnava se sa prvim redom teksta, ne sa linijom. */
+  align-self: start;
+}
+.layer-legend b {
+  color: var(--brand-deep);
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(.95rem, 1.15vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+.layer-legend span {
+  color: var(--brand-muted);
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Uspravno je pet kolona neupotrebljivo usko — spisak ide jedan ispod drugog. */
+@media (max-width: 900px) {
+  .layer-legend {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-bottom: clamp(20px, 3vh, 32px);
+  }
+  .layer-legend li {
+    grid-template-columns: 22px auto 1fr;
+    grid-template-rows: auto;
+    column-gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .layer-legend img {
+    grid-row: 1;
+    width: 18px;
+    height: 18px;
+    align-self: center;
+  }
+  .layer-legend span {
+    justify-self: end;
+    text-align: right;
+    font-size: 10px;
+  }
+}

@@ -30,21 +30,31 @@ import {
  */
 type ProgressRef = { current: number };
 
-/** Ravan spisak svih mapa, u obliku koji useTexture ocekuje. */
+/**
+ * Ravan spisak mapa, u obliku koji useTexture ocekuje — u dvije verzije.
+ *
+ * Telefon uzima samo boju. Normala i roughness na daski sirokoj tristotinjak
+ * piksela ne vide se golim okom, a kostaju i skidanje i memoriju grafike:
+ * tekstura u VRAM-u stoji raspakovana, pa 1024² zauzme 5 MB bez obzira koliko
+ * je fajl mali. Pet takvih mapa manje je razlika izmedju scene koja se iscrta
+ * i scene kojoj telefon obori kontekst.
+ */
 const TEXTURE_URLS: Record<string, string> = {};
+const TEXTURE_URLS_MOBILE: Record<string, string> = {};
 for (const layer of LAYERS) {
   const def = layer.materijal;
   if (def.vrsta !== "teksture") continue;
   TEXTURE_URLS[`${layer.id}.map`] = def.map;
+  TEXTURE_URLS_MOBILE[`${layer.id}.map`] = def.map;
   TEXTURE_URLS[`${layer.id}.normalMap`] = def.normalMap;
   if (def.roughnessMap) TEXTURE_URLS[`${layer.id}.roughnessMap`] = def.roughnessMap;
 }
 
 // ---------------------------------------------------------------- materijali
 
-function useLayerMaterials() {
+function useLayerMaterials(isMobile: boolean) {
   const maxAnisotropy = useThree((s) => s.gl.capabilities.getMaxAnisotropy());
-  const loaded = useTexture(TEXTURE_URLS);
+  const loaded = useTexture(isMobile ? TEXTURE_URLS_MOBILE : TEXTURE_URLS);
 
   const materials = useMemo(() => {
     const anisotropy = Math.min(8, maxAnisotropy);
@@ -53,6 +63,27 @@ function useLayerMaterials() {
       const def = layer.materijal;
 
       if (def.vrsta === "folija") {
+        /*
+          Transmisija je najskuplja stvar u ovoj sceni: cim je neki materijal
+          ima, three.js iscrta CIJELU scenu jos jednom u poseban render target,
+          svaki frejm. Na telefonu je to dvostruko crtanje plus jos jedan buffer
+          preko vec tanke memorije. Zato tamo ide obicna prozirnost: folija se
+          i dalje cita kao staklo po odsjaju i ivicama, samo svjetlo kroz nju
+          vise ne lomi.
+        */
+        if (isMobile) {
+          return new THREE.MeshPhysicalMaterial({
+            color: def.boja,
+            transparent: true,
+            opacity: 0.42,
+            roughness: def.roughness,
+            metalness: 0,
+            specularIntensity: 0.25,
+            clearcoat: 0.15,
+            clearcoatRoughness: 0.18,
+            envMapIntensity: 0.12,
+          });
+        }
         // transmission umjesto obicne prozirnosti: svjetlo prolazi KROZ sloj i
         // lomi se, pa folija dobije debljinu umjesto da izgleda kao rupa
         return new THREE.MeshPhysicalMaterial({
@@ -93,6 +124,7 @@ function useLayerMaterials() {
 
       for (const slot of ["map", "normalMap", "roughnessMap"] as const) {
         const source = loaded[`${layer.id}.${slot}`];
+        /* Na telefonu su ucitane samo mape boje — ostale slotove nema smisla traziti. */
         if (!source) continue;
 
         const texture = source.clone();
@@ -114,7 +146,7 @@ function useLayerMaterials() {
         envMapIntensity: 0.4,
       });
     });
-  }, [loaded, maxAnisotropy]);
+  }, [loaded, maxAnisotropy, isMobile]);
 
   useEffect(() => {
     return () => {
@@ -284,7 +316,7 @@ function Layers({
   animated: boolean;
   isMobile: boolean;
 }) {
-  const materials = useLayerMaterials();
+  const materials = useLayerMaterials(isMobile);
   const groups = useRef<(THREE.Group | null)[]>([]);
   const viewportWidth = useThree((state) => state.size.width);
   const viewportHeight = useThree((state) => state.size.height);
@@ -340,8 +372,8 @@ function Layers({
             geometry={geometries[i]}
             material={materials[i]}
             // folija ne baca sjenku - providan sloj bi bacio punu crnu mrlju
-            castShadow={layer.materijal.vrsta !== "folija"}
-            receiveShadow
+            castShadow={!isMobile && layer.materijal.vrsta !== "folija"}
+            receiveShadow={!isMobile}
           />
 
           <Marker
@@ -458,6 +490,7 @@ function ScrollReader({
  * bi ostavio sivi pravougaonik preko bijele pozadine.
  */
 function ShadowCatcher() {
+  /* Poziva se samo na sirokom ekranu — na telefonu sjenki uopste nema. */
   return (
     <mesh receiveShadow rotation-x={-Math.PI / 2} position-y={-0.75}>
       <planeGeometry args={[40, 40]} />
@@ -493,7 +526,12 @@ function SceneContents({
         preko presjeka i debljina se vidi.
       */}
       <directionalLight
-        castShadow
+        /*
+          Sjenka je na telefonu iskljucena: variance shadow map trazi mapu od
+          megapiksela i jos jedan prolaz zamucenja preko nje, svaki frejm.
+          Bez nje daska izgubi malo tezine, ali se scena uopste iscrta.
+        */
+        castShadow={!isMobile}
         position={[6, 5, 4]}
         intensity={2}
         color="#ffffff"
@@ -517,7 +555,7 @@ function SceneContents({
         Okolina se crta u sceni umjesto skidanja HDRI-ja. Foliji treba nesto da
         lomi, inace transmission nema sta da pokaze.
       */}
-      <Environment resolution={128} frames={1}>
+      <Environment resolution={isMobile ? 64 : 128} frames={1}>
         {/*
           Okolina mora biti boje stranice. Transmisija i odsjaji uzimaju boju
           odavde, a ne iz CSS-a - platno je providno i scena ne zna sta je iza
@@ -537,7 +575,7 @@ function SceneContents({
 
       <Layers progressRef={progressRef} animated={animated} isMobile={isMobile} />
 
-      <ShadowCatcher />
+      {!isMobile && <ShadowCatcher />}
     </>
   );
 }
@@ -559,8 +597,12 @@ export default function LayerScene({ sectionRef, animated, isMobile, active }: L
     // key: prelazak preko mobilnog praga mijenja fov, kadar i velicinu markera
     <Canvas
       key={isMobile ? "mobile" : "desktop"}
-      shadows="variance"
-      dpr={[1, 2]}
+      shadows={isMobile ? false : "variance"}
+      /*
+        Telefon ima gust ekran, ali daska od trista piksela ne dobija nista od
+        trostrukog crtanja — samo tri puta vise piksela za GPU.
+      */
+      dpr={isMobile ? [1, 1.5] : [1, 2]}
       frameloop={!active ? "never" : animated ? "always" : "demand"}
       // alpha, i nigdje scene.background: bijelo dolazi iz CSS-a na sticky
       // kontejneru, pa se sjenka na shadowMaterial-u stapa sa pozadinom

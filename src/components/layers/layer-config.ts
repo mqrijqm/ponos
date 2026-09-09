@@ -140,7 +140,7 @@ export const LAYERS: LayerDef[] = [
       vrsta: "teksture",
       // jedini sloj sa vidljivim drvetom; teksture su vec u projektu iz heroja
       map: "/textures/laminate/diff.webp",
-      normalMap: "/textures/laminate/normal.png",
+      normalMap: "/textures/laminate/normal.webp",
       tile: 9,
       roughness: 0.55,
       normalScale: 0.7,
@@ -158,8 +158,8 @@ export const LAYERS: LayerDef[] = [
     materijal: {
       vrsta: "teksture",
       map: "/textures/layers/hdf/color.webp",
-      normalMap: "/textures/layers/hdf/normal.png",
-      roughnessMap: "/textures/layers/hdf/rough.png",
+      normalMap: "/textures/layers/hdf/normal.webp",
+      roughnessMap: "/textures/layers/hdf/rough.webp",
       tile: 0.9,
       roughness: 1,
       normalScale: 0.9,
@@ -188,8 +188,8 @@ export const LAYERS: LayerDef[] = [
     materijal: {
       vrsta: "teksture",
       map: "/textures/layers/cork/color.webp",
-      normalMap: "/textures/layers/cork/normal.png",
-      roughnessMap: "/textures/layers/cork/rough.png",
+      normalMap: "/textures/layers/cork/normal.webp",
+      roughnessMap: "/textures/layers/cork/rough.webp",
       tile: 1.1,
       roughness: 1,
       normalScale: 1,
