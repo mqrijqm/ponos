@@ -15,6 +15,7 @@ import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
+import HeroText from "./hero/HeroText";
 import HeroOverlay from "./HeroOverlay";
 import { useMediaQuery } from "./hero/hooks";
 import HomeHeroReveal from "./HomeHeroReveal";
@@ -221,8 +222,9 @@ export default function SitePage() {
           poster="/images/hero-poster.webp"
           label="Hrastove daske se podižu u praznoj sobi"
         >
-          {/* Snimak se vrti u petlji, pa natpisi ne mogu visiti o njegovom
-              napretku — stoje od pocetka. */}
+          <HeroText />
+          {/* Dugme stoji od pocetka: kadar sad pomjera scroll, pa nema
+              napretka snimka o kojem bi visilo. */}
           <HeroOverlay scrollProgress={1} />
         </HeroVideo>
         <span id="naslovna" />

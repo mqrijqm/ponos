@@ -7,41 +7,26 @@ import QuoteCta from "./QuoteCta";
 import { usePrefersReducedMotion } from "./hero/hooks";
 
 /**
- * Natpisi preko heroja: naslov ulazi na sredini sekvence, dugme tek pred kraj -
- * kad su daske vec u vazduhu i ima smisla ponuditi sljedeci korak.
+ * Dugme preko heroja. Naslov je otisao u HeroText — tamo ulazi rijec po
+ * rijec, pa mu je i mjesto u sopstvenoj komponenti.
  *
- * Komponenta ne mjeri nista sama. Napredak joj daje roditelj (VideoHero), koji
- * ga cita iz samog snimka — tako natpisi prate kadar, a ne scroll.
- *
- * VAZNO za roditelja: `scrollProgress` se NE smije slati na svaku promjenu.
- * Roditelj ga mijenja samo kad pređe jedan od pragova ispod, inace bi svaki
- * otkucaj snimka bio novi render. Vidi HERO_OVERLAY_STOPS.
+ * Komponenta ne mjeri nista sama: `scrollProgress` (0-1) joj daje roditelj, a
+ * dugme se pojavi kad on pređe CTA_AT.
  */
 
-/** Napredak sekvence (0-1) na kojem se svaki element pojavljuje. */
-const TITLE_AT = 0.42;
+/** Napredak (0-1) na kojem dugme ulazi. */
 const CTA_AT = 0.88;
 
-/**
- * Pragovi za roditelja: on salje novi `scrollProgress` samo kad ga napredak
- * pređe, u bilo kom smjeru. Izvezeno da brojevi zive na jednom mjestu.
- */
-export const HERO_OVERLAY_STOPS = [TITLE_AT, CTA_AT];
-
 const COPY = {
-  title: "Prostor počinje ovdje",
   cta: "Vidi ponudu",
 };
 
-const BRAND = "#8b7e6e"; // ista boja kao --brand-muted u globals.css
-
 export default function HeroOverlay({ scrollProgress = 0 }) {
-  const titleRef = useRef(null);
   const ctaWrapRef = useRef(null); // nosi pojavljivanje (opacity + y)
   const reducedMotion = usePrefersReducedMotion();
 
   /* Pamti sta je vec prikazano, da isti prelaz ne krene dvaput. */
-  const shown = useRef({ title: false, cta: false });
+  const shown = useRef({ cta: false });
 
   useEffect(() => {
     const toggle = (element, key, visible, offset) => {
@@ -61,8 +46,6 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
       });
     };
 
-    // naslov: mekan fade, jedva primjetno odozdo
-    toggle(titleRef.current, "title", scrollProgress > TITLE_AT, 18);
     // dugme: izrazitiji slide-up, da se primijeti kad kasno uleti
     toggle(ctaWrapRef.current, "cta", scrollProgress > CTA_AT, 28);
   }, [scrollProgress, reducedMotion]);
@@ -106,26 +89,6 @@ export default function HeroOverlay({ scrollProgress = 0 }) {
         </QuoteCta>
       </div>
 
-      <h1
-        ref={titleRef}
-        style={{
-          zIndex: 5,
-          margin: 0,
-          // Sitan razmaknut sans: naslov nosi kadar, ne velicina slova.
-          // Na uskom ekranu ide na 12px da razmak ne pokida rijeci.
-          fontSize: "clamp(12px, 1.15vw, 17px)",
-          fontWeight: 600,
-          lineHeight: 1.4,
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          color: BRAND,
-          fontFamily: "var(--font-manrope), Arial, Helvetica, sans-serif",
-          opacity: 0,
-          transform: "translateY(18px)",
-        }}
-      >
-        {COPY.title}
-      </h1>
     </div>
   );
 }

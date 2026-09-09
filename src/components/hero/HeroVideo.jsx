@@ -2,24 +2,31 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { usePrefersReducedMotion } from "./hooks";
 
+gsap.registerPlugin(ScrollTrigger);
+
 /**
- * HERO: snimak preko cijelog prvog ekrana, u petlji.
+ * HERO: snimak koji se ne pusta sam — pomjera ga scroll.
  *
  * Tok je ovakav:
  *
  *   sekcija ulazi u kadar  → postavlja se izvor i krece skidanje (lazy)
- *   snimak stigne          → pojavljuje se preko postera i vrti se u petlji
- *   scroll dalje od heroja → snimak se pauzira, ne trosi ni struju ni CPU
- *   scroll nazad           → nastavlja odakle je stao
+ *   scroll nadolje         → daske se dizu, kadar prati poziciju scrolla
+ *   scroll nagore          → isto unatrag, do prvog frejma
+ *   scroll dalje od heroja → nista se ne racuna
  *   snimak pukne           → ostaje statična slika
  *
- * Vidljivost mjeri IntersectionObserver, ne slusac scrolla: browser ga racuna
- * sam, van glavne nitke, pa ne kuca na svaki piksel scrolla.
+ * Stranica se ne zakljucava: sekcija je visoka dva ekrana, kadar u njoj je
+ * sticky, i taj drugi ekran scrolla je razdaljina kroz koju snimak prolazi.
  *
- * Sadrzaj preko kadra (natpisi, dugme) ide kao `children`.
+ * Snimak stoji pauziran cijelo vrijeme — kadar se mijenja samo pomjeranjem
+ * `currentTime`. Zato je fajl kodiran sa keyframeom svakih 6 frejmova: na
+ * obicnom snimku (keyframe svakih 250) svaki skok bi trazio dekodiranje
+ * desetak sekundi unatrag i scroll bi trzao.
  */
 
 /**
@@ -31,8 +38,20 @@ const UZAK_EKRAN = "(max-width: 767px)";
 /** Koliko prije ulaska u kadar snimak krece da se skida. */
 const RANO = "200px";
 
-/** Koliko sekcije mora biti vidljivo da bi snimak isao. */
-const DOSTA_VIDLJIVO = 0.1;
+/**
+ * Koliko ekrana scrolla odmota cijeli snimak. Manji broj = brzi snimak:
+ * jedan ekran je dvostruko brze od dva, koliko bi bio mirniji raspored.
+ */
+const EKRANA_SCROLLA = 1;
+
+/**
+ * Koliko kadar sustize scroll. Lenis vec zaglađuje sam scroll, ovo samo
+ * skrati skokove pri naglom trzaju tocka.
+ */
+const SUSTIZANJE = 0.18;
+
+/** Manje od pola frejma razlike se ne trazi — skok se ne bi ni vidio. */
+const NAJMANJI_SKOK = 1 / 48;
 
 export default function HeroVideo({
   /* MP4 izvori — obavezni, jedini koje svaki browser sigurno cita. */
@@ -82,11 +101,10 @@ export default function HeroVideo({
     if (!zeljeni) return;
 
     /*
-      Telefon je cesto na mobilnoj vezi, pa unaprijed skida samo zaglavlje;
-      ostatak krece kad pustanje pocne. Desktop skida odmah, da kadar krene
-      bez cekanja.
+      Skakanje po snimku ne moze nad samim zaglavljem: da bi se kadar pomjerao,
+      fajl mora biti tu. Telefon zato dobija laksi fajl, ali ga skida cijelog.
     */
-    video.preload = uzak ? "metadata" : "auto";
+    video.preload = "auto";
 
     /*
       Sirina se mjeri jednom, pri prvom skidanju. Da se izvor mijenja i na
@@ -102,7 +120,6 @@ export default function HeroVideo({
     const observer = new IntersectionObserver(
       ([entry], obs) => {
         if (!entry.isIntersecting) return;
-        /* Skida se jednom; dalju vidljivost prati drugi posmatrac ispod. */
         obs.disconnect();
         skini();
       },
@@ -113,83 +130,124 @@ export default function HeroVideo({
     return () => observer.disconnect();
   }, [srcDesktop, srcMobile, webmDesktop, webmMobile]);
 
-  /* ── pustanje i pauza po vidljivosti ──────────────────────── */
+  /* ── scroll pomjera kadar ─────────────────────────────────── */
 
   useEffect(() => {
     const section = sectionRef.current;
     const video = videoRef.current;
     if (!section || !video) return;
 
-    /* Iskljucene animacije: kadar stoji na prvom frejmu, bez petlje. */
-    if (reducedMotion) {
-      video.pause();
-      return;
-    }
+    /* Iskljucene animacije: kadar stoji na prvom frejmu, scroll ga ne dira. */
+    if (reducedMotion) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          /*
-            Odbijeno pustanje nije greska: iOS u stednji struje odbija i nijemi
-            autoplay. Tada ostaje poster, a dodir po kadru (ispod) snimak
-            pusta — gest korisnika Safari uvijek postuje.
-          */
-          video.play().catch(() => {});
-        } else if (!video.paused) {
-          video.pause();
-        }
+    /* Gdje kadar treba da bude i gdje je stvarno — sustize ga po frejmu. */
+    let cilj = 0;
+    let gdje = 0;
+    let raf = 0;
+
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      /* Prvi ekran sekcije je sam kadar; scroll kroz ostatak vrti snimak. */
+      end: () => `+=${window.innerHeight * EKRANA_SCROLLA}`,
+      /* Bez ovoga bi promjena visine prozora ostavila stari raspon. */
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const trajanje = video.duration;
+        if (trajanje) cilj = self.progress * trajanje;
       },
-      { threshold: DOSTA_VIDLJIVO },
-    );
+    });
 
-    observer.observe(section);
-    return () => observer.disconnect();
+    const kadar = () => {
+      raf = requestAnimationFrame(kadar);
+      if (!video.duration) return;
+
+      gdje += (cilj - gdje) * SUSTIZANJE;
+      /* Na kraju sustizanja se sjeda tacno na cilj, da ne ostane zujanje. */
+      if (Math.abs(cilj - gdje) < 0.002) gdje = cilj;
+
+      if (Math.abs(video.currentTime - gdje) < NAJMANJI_SKOK) return;
+      /*
+        `fastSeek` sjeda na najblizi keyframe umjesto da dekodira do tacne
+        sekunde — a keyframe je svakih 0.25s, pa se razlika ne vidi. Chrome ga
+        nema, tamo ide obicno postavljanje.
+      */
+      if (typeof video.fastSeek === "function") video.fastSeek(gdje);
+      else video.currentTime = gdje;
+    };
+    raf = requestAnimationFrame(kadar);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      trigger.kill();
+    };
   }, [reducedMotion]);
 
-  /* ── spremnost, greska, dodir ─────────────────────────────── */
+  /* ── spremnost, greska, prvi kadar ────────────────────────── */
 
   useEffect(() => {
     const section = sectionRef.current;
     const video = videoRef.current;
     if (!video) return;
 
-    const naSpreman = () => setSpreman(true);
+    /*
+      Snimak se nikad ne pusta, ali mobilni Safari ne nacrta ni jedan kadar
+      dok se pustanje jednom ne zatrazi — ostao bi prazan okvir preko postera.
+      Zato se pusti i odmah pauzira: to natjera dekoder da izbaci prvi kadar.
+      Ako pustanje bude odbijeno, isto radi prvi dodir po sekciji.
+    */
+    const probudi = () => {
+      video
+        .play()
+        .then(() => video.pause())
+        .catch(() => {});
+    };
+
+    const naSpreman = () => {
+      setSpreman(true);
+      probudi();
+    };
     /*
       Samo tvrda greska gasi snimak. Spora veza se ne racuna ovdje — dok se
       snimak puni, poster ionako stoji na njegovom mjestu, pa nema sta da se
       mijenja; a rok bi ubio snimak koji bi za sekundu ipak stigao.
     */
     const naGresku = () => setGreska(true);
-    const naDodir = () => {
-      if (video.paused && !reducedMotion) video.play().catch(() => {});
-    };
 
-    /* Ako je prvi kadar stigao prije nego sto se slusac zakacio. */
-    if (video.readyState >= 2) setSpreman(true);
+    if (video.readyState >= 2) naSpreman();
 
     video.addEventListener("loadeddata", naSpreman);
     video.addEventListener("error", naGresku);
-    section?.addEventListener("pointerdown", naDodir, { passive: true });
+    section?.addEventListener("pointerdown", probudi, { passive: true });
 
     return () => {
       video.removeEventListener("loadeddata", naSpreman);
       video.removeEventListener("error", naGresku);
-      section?.removeEventListener("pointerdown", naDodir);
+      section?.removeEventListener("pointerdown", probudi);
     };
-  }, [reducedMotion]);
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       /* `.is-fullbleed` vadi sekciju iz bocnog paddinga stranice. */
       className="hero-sequence is-fullbleed relative w-full"
+      /*
+        Visina sekcije je razdaljina scrolla kroz koju snimak prolazi, plus
+        ekran koji kadar zauzima. Bez animacije nema sta da se odmota, pa
+        sekcija ostaje na jednom ekranu i ne pravi mrtav scroll.
+      */
+      style={{
+        height: reducedMotion ? "100svh" : `${(1 + EKRANA_SCROLLA) * 100}svh`,
+      }}
       aria-label={label}
     >
       {/*
-        `h-svh`, ne `h-screen`: na telefonu je 100vh visi od onoga sto se vidi,
-        pa bi dno kadra zavrsilo ispod trake browsera.
+        Kadar stoji dok scroll prolazi kroz visinu sekcije. `h-svh`, ne
+        `h-screen`: na telefonu je 100vh visi od onoga sto se vidi, pa bi dno
+        kadra zavrsilo ispod trake browsera.
       */}
-      <div className="relative h-svh w-full overflow-hidden bg-[var(--cream,#f3efe9)]">
+      <div className="sticky top-0 h-svh w-full overflow-hidden bg-[var(--cream,#f3efe9)]">
         {/*
           Poster stoji od prvog frejma HTML-a — `priority` ga skida uporedo sa
           stranicom, pa prvi ekran nikad nije prazan. Snimak se pojavljuje
@@ -220,8 +278,9 @@ export default function HeroVideo({
 
         {/*
           muted + playsInline idu zajedno: bez njih mobilni browseri odbiju da
-          pokrenu snimak. Bez `src` u markupu — postavlja ga efekat iznad, po
-          sirini ekrana, kad sekcija uđe u kadar.
+          dodirnu snimak. Bez `src` u markupu — postavlja ga efekat iznad, po
+          sirini ekrana, kad sekcija uđe u kadar. Nema `autoPlay` ni `loop`:
+          kadar pomjera scroll, snimak sam nikad ne ide.
         */}
         {!greska && (
           <video
@@ -230,9 +289,7 @@ export default function HeroVideo({
               spreman ? "opacity-100" : "opacity-0"
             }`}
             poster={poster}
-            autoPlay={!reducedMotion}
             muted
-            loop
             playsInline
             aria-hidden="true"
             style={{ pointerEvents: "none" }}
