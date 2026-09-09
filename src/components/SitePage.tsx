@@ -18,6 +18,7 @@ import { useMediaQuery } from "./hero/hooks";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
 import Hero3D from "./hero3d/Hero3D";
+import { EKRANA_SCROLLA } from "./hero3d/floor-config";
 import CategoryCarousel from "./mobile/CategoryCarousel";
 import StatementSlider from "./mobile/StatementSlider";
 
@@ -166,15 +167,36 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
 
 export default function SitePage() {
   const [menu, setMenu] = useState(false);
+  /*
+    Traka na herou ne nosi nikakvu podlogu — laminat ide ispod nje, a znak i
+    linkovi ostaju u svojim bojama. Poslije heroja podloga je obavezna: preko
+    kremastog i tamnog sadrzaja providna traka se ne bi citala.
+  */
+  const [punaTraka, setPunaTraka] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
   /* Ista granica na kojoj se u globals.css kartice slazu jedna ispod druge. */
   const uzakEkran = useMediaQuery("(max-width: 900px)");
   const [calcItem, setCalcItem] = useState<CatalogItem>(calculableItems[0]);
   const { openQuote } = useQuote();
 
+  useEffect(() => {
+    /*
+      Prag je visina heroja: sekcija je visoka 1 + EKRANA_SCROLLA ekrana, a
+      scena u njoj je sticky, pa je hero na ekranu do EKRANA_SCROLLA ekrana
+      scrolla. Mjeri se u slusacu, ne odmah u efektu — poziv u tijelu efekta
+      je jedan render vise i lint ga (opravdano) ne dozvoljava.
+    */
+    const naScroll = () =>
+      setPunaTraka(window.scrollY > window.innerHeight * EKRANA_SCROLLA * 0.98);
+    window.addEventListener("scroll", naScroll, { passive: true });
+    return () => window.removeEventListener("scroll", naScroll);
+  }, []);
+
   return (
     <>
-      <header className="home-sticky-header is-visible">
+      <header
+        className={`home-sticky-header is-visible${punaTraka ? " is-solid" : ""}`}
+      >
         <a
           className="brand brand-image"
           href="#top"

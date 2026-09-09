@@ -11,9 +11,19 @@
 /* Prava daska laminata: 1220 x 190 x 8 mm. Jedna jedinica scene = 200 mm. */
 export const DASKA = { duzina: 6.1, debljina: 0.04, sirina: 0.95 } as const;
 
-/** Tri teksturna seta se smjenjuju po daskama, da pod ne bude monoton. */
+/** Tri seta postoje na disku; hero koristi jedan. */
 export const SETOVI = ["laminate", "kitchen", "oak"] as const;
 export type Set = (typeof SETOVI)[number];
+
+/**
+ * Cijeli pod je od jednog materijala — najsvjetlijeg od tri. Izmjereno na
+ * samim teksturama, ne procijenjeno: srednja svjetlina L* je 55.6 za laminate,
+ * 52.5 za oak i 40.7 za kitchen. Uz to je laminate i glavni set.
+ *
+ * Jedan set znaci i jedan `InstancedMesh` za cijeli pod, i tri fajla manje za
+ * skidanje umjesto devet.
+ */
+export const SET_HEROJA: Set = "laminate";
 
 /*
   Tekstura je kvadratni uzorak od jednog metra. Daska je 1.22 x 0.19 m, pa
@@ -75,12 +85,16 @@ const SJEME = 20260909;
  */
 export function napraviPod(uzakEkran: boolean) {
   /*
-    Tri kolone, ne dvije: pod je siri od kadra, pa zubate ivice koje preklop
-    ostavlja lijevo i desno padaju van slike. Prednja i zadnja ivica se vide i
-    tako pod citaju kao povrsinu koja negdje prestaje, a ne kao beskraj.
+    Pod je namjerno veci od kadra na obje strane: laminat ide do gornje ivice
+    ekrana i ispod navbara, a i kad se kamera na kraju odmakne, njegove ivice
+    ostaju van slike. Sve statične daske su jedan `InstancedMesh`, pa broj
+    dasaka ne kosta ni jedan draw call vise — kosta samo matrice.
+
+    Zato ih je vise od pocetnih 24-30: sa toliko dasaka pod prestaje na pola
+    ekrana, i to se vidi u trenutku kad se kamera odmakne.
   */
-  const kolona = 4;
-  const redova = uzakEkran ? 4 : 7;
+  const kolona = uzakEkran ? 4 : 6;
+  const redova = uzakEkran ? 18 : 30;
   const aktivnih = uzakEkran ? 4 : 7;
   const rnd = slucajni(SJEME);
 
@@ -100,7 +114,7 @@ export function napraviPod(uzakEkran: boolean) {
       const z = (red - (redova - 1) / 2) * DASKA.sirina;
       daske.push({
         id,
-        set: SETOVI[id % SETOVI.length],
+        set: SET_HEROJA,
         polozaj: [x, DASKA.debljina / 2, z],
         aktivna: false,
         uvPomak: [rnd(), rnd()],
@@ -121,10 +135,18 @@ export function napraviPod(uzakEkran: boolean) {
     Aktivne se biraju iz srednjeg dijela poda: da se dizu daske sa same ivice,
     rupe bi ostale van kadra, a kamera na kraju gleda u centar.
   */
+  /*
+    Aktivne daske se biraju iz uzeg pojasa oko sredine poda, ne iz cijelog:
+    kamera i na pocetku i na kraju gleda u centar, pa rupa negdje na ivici
+    velikog poda nikom nista ne znaci.
+  */
   const sredina = daske.filter((d) => {
     const red = Math.floor(d.id / kolona);
-    /* I po redu i po sirini: rupa van kadra nikom ne znaci nista. */
-    return red >= redova * 0.2 && red <= redova * 0.8 && Math.abs(d.polozaj[0]) < 6;
+    return (
+      red >= redova * 0.42 &&
+      red <= redova * 0.62 &&
+      Math.abs(d.polozaj[0]) < 7
+    );
   });
 
   const izabrane: Daska[] = [];
@@ -170,15 +192,19 @@ export function napraviPod(uzakEkran: boolean) {
 }
 
 /**
- * Kamera: iz ptičje perspektive naprijed i naniže, bez obilaska oko scene.
- * Pocetak je dalje i vise, kraj blize i nize — osjecaj ulaska u prostor.
+ * Kamera: iz ptičje perspektive, bez obilaska oko scene — samo translacija i
+ * postepeni pomjeraj cilja pogleda. Pocetak je blizu poda, kraj odmaknut: kad
+ * daske odlete, kadar se otvara oko njih.
  */
 export const KAMERA = {
-  /* ~60 stepeni nadole: dovoljno odozgo da se odvojena daska cita kao
-     pravougaonik sa sjenkom ispod, a ne kao kosina koja siječe kadar. Pod je siri od kadra, pa
-     se vide prednja i zadnja ivica, a zubate bocne ostaju van slike. */
-  pocetak: { polozaj: [0, 12, 6.8] as const, fov: 40 },
-  kraj: { polozaj: [0, 6.2, 3.4] as const, fov: 33 },
+  /*
+    Pocetak: blizu i tijesno, ~60 stepeni nadole. Laminat puni cijeli kadar do
+    gornje ivice i ide ispod navbara — zadnja ivica poda je van slike.
+    Kraj: odmaknuto i sa sirim uglom. Kad se daske dignu, kamera se udalji da
+    se vidi kako lebde, umjesto da ulazi medu njih.
+  */
+  pocetak: { polozaj: [0, 9, 5.2] as const, fov: 38 },
+  kraj: { polozaj: [0, 16.5, 11] as const, fov: 44 },
   /* Pogled na pocetku ide u sredinu poda, na kraju u sredinu lebdecih dasaka. */
   pocetniCilj: [0, 0, 0] as const,
 };

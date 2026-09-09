@@ -10,7 +10,7 @@ import {
   Daska,
   EKRANA_SCROLLA,
   KAMERA,
-  SETOVI,
+  SET_HEROJA,
   Set,
   TALASANJE,
   UV_PONAVLJANJE,
@@ -47,26 +47,32 @@ function putevi(set: Set) {
   ];
 }
 
-/** Ucitava sva tri seta i namjesta im boju, ponavljanje i filtriranje. */
-function useSetovi(): Record<Set, Teksture> {
-  const sve = useTexture(SETOVI.flatMap(putevi));
-
-  return useMemo(() => {
-    const gotovo = {} as Record<Set, Teksture>;
-    SETOVI.forEach((set, i) => {
-      const [map, normalMap, roughnessMap] = sve.slice(i * 3, i * 3 + 3);
-      /* Samo boja je u sRGB-u; normala i roughness su podaci i ostaju linearni. */
-      map.colorSpace = THREE.SRGBColorSpace;
-      [map, normalMap, roughnessMap].forEach((t) => {
-        t.wrapS = THREE.RepeatWrapping;
-        t.wrapT = THREE.RepeatWrapping;
-        t.repeat.set(...UV_PONAVLJANJE);
-        t.anisotropy = ANIZOTROPIJA;
-      });
-      gotovo[set] = { map, normalMap, roughnessMap };
+/**
+ * Ucitava jedan set — onaj kojim je pod obloxen — i namjesta mu boju,
+ * ponavljanje i filtriranje. Ostala dva seta stoje na disku i ne skidaju se.
+ */
+function useSetHeroja(): Teksture {
+  /*
+    Namjestanje ide kroz `onLoad` callback samog `useTexture`, a ne poslije
+    njega: lint (react-hooks/immutability) ne dozvoljava mijenjanje vrijednosti
+    koju je hook vratio, a ovaj callback je dio njegovog ucitavanja.
+  */
+  const [map, normalMap, roughnessMap] = useTexture(putevi(SET_HEROJA), (ucitane) => {
+    const sve = Array.isArray(ucitane) ? ucitane : [ucitane];
+    /* Samo boja je u sRGB-u; normala i roughness su podaci i ostaju linearni. */
+    if (sve[0]) sve[0].colorSpace = THREE.SRGBColorSpace;
+    sve.forEach((tekstura) => {
+      tekstura.wrapS = THREE.RepeatWrapping;
+      tekstura.wrapT = THREE.RepeatWrapping;
+      tekstura.repeat.set(...UV_PONAVLJANJE);
+      tekstura.anisotropy = ANIZOTROPIJA;
     });
-    return gotovo;
-  }, [sve]);
+  });
+
+  return useMemo(
+    () => ({ map, normalMap, roughnessMap }),
+    [map, normalMap, roughnessMap],
+  );
 }
 
 /**
@@ -84,27 +90,17 @@ function pomjerenaKopija(izvor: THREE.Texture, pomak: [number, number]) {
 function StatickiPod({
   daske,
   geometrija,
-  setovi,
+  teksture,
 }: {
   daske: Daska[];
   geometrija: THREE.BoxGeometry;
-  setovi: Record<Set, Teksture>;
+  teksture: Teksture;
 }) {
-  const grupe = useMemo(
-    () =>
-      SETOVI.map((set) => ({ set, clanovi: daske.filter((d) => !d.aktivna && d.set === set) })),
-    [daske],
-  );
-
-  return (
-    <>
-      {grupe.map(({ set, clanovi }) =>
-        clanovi.length ? (
-          <Grupa key={set} clanovi={clanovi} geometrija={geometrija} teksture={setovi[set]} />
-        ) : null,
-      )}
-    </>
-  );
+  /* Cijeli pod je jedan materijal, pa je i jedan `InstancedMesh` — bez obzira
+     na to koliko dasaka nosi, to je jedan draw call. */
+  const clanovi = useMemo(() => daske.filter((d) => !d.aktivna), [daske]);
+  if (!clanovi.length) return null;
+  return <Grupa clanovi={clanovi} geometrija={geometrija} teksture={teksture} />;
 }
 
 function Grupa({
@@ -135,10 +131,16 @@ function Grupa({
   }, [clanovi]);
 
   return (
+    /*
+      Pod prima sjenu, ali je ne baca: daske u podu su ravne jedna uz drugu i
+      njihove sjene padaju same na sebe. Na velikoj povrsini to je izlazilo kao
+      tamne pruge po podu (shadow acne), jer je jedan texel mape sjenke sirok
+      oko dva centimetra scene. Bacaju samo podignute daske.
+    */
     <instancedMesh
       ref={ref}
       args={[geometrija, undefined, clanovi.length]}
-      castShadow
+      castShadow={false}
       receiveShadow
     >
       <meshStandardMaterial {...teksture} roughness={1} metalness={0} />
@@ -210,7 +212,7 @@ function AktivnaDaska({
   });
 
   return (
-    <mesh ref={ref} geometry={geometrija} castShadow receiveShadow>
+    <mesh ref={ref} geometry={geometrija} castShadow receiveShadow={false}>
       <meshStandardMaterial {...svoje} roughness={1} metalness={0} />
     </mesh>
   );
@@ -292,7 +294,7 @@ function Scena({
   uzakEkran: boolean;
   mirno: boolean;
 }) {
-  const setovi = useSetovi();
+  const teksture = useSetHeroja();
   const { daske, cilj } = useMemo(() => napraviPod(uzakEkran), [uzakEkran]);
   const invalidate = useThree((s) => s.invalidate);
 
@@ -309,7 +311,7 @@ function Scena({
   */
   useEffect(() => {
     if (mirno) invalidate();
-  }, [mirno, invalidate, setovi]);
+  }, [mirno, invalidate, teksture]);
 
   useEffect(() => () => geometrija.dispose(), [geometrija]);
 
@@ -329,10 +331,10 @@ function Scena({
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0008}
-        shadow-camera-left={-11}
-        shadow-camera-right={11}
-        shadow-camera-top={11}
-        shadow-camera-bottom={-11}
+        shadow-camera-left={-14}
+        shadow-camera-right={14}
+        shadow-camera-top={14}
+        shadow-camera-bottom={-14}
         shadow-camera-near={0.5}
         shadow-camera-far={30}
       />
@@ -353,18 +355,18 @@ function Scena({
         renderu, a ne kao dubina ispod poda.
       */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.002, 0]} receiveShadow>
-        <planeGeometry args={[40, 40]} />
+        <planeGeometry args={[90, 90]} />
         <meshStandardMaterial color="#6f6153" roughness={0.95} metalness={0} />
       </mesh>
 
-      <StatickiPod daske={daske} geometrija={geometrija} setovi={setovi} />
+      <StatickiPod daske={daske} geometrija={geometrija} teksture={teksture} />
 
       {aktivne.map((d) => (
         <AktivnaDaska
           key={d.id}
           daska={d}
           geometrija={geometrija}
-          teksture={setovi[d.set]}
+          teksture={teksture}
           napredak={napredak}
           mirno={mirno}
         />

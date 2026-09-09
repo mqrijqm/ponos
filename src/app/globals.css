@@ -6813,19 +6813,7 @@ main > section.hero-blank {
   background: var(--cream);
 }
 
-@media (max-width: 767px) {
-  /*
-    Zaglavlje naslovne je bilo providno da bi snimak prolazio ispod njega.
-    Snimka nema, pa traka nosi punu podlogu kao i na ostalim stranicama —
-    inace bi joj se donja ivica gubila u kremu ispod.
-  */
-  header.home-sticky-header {
-    background: #f5f3eef2;
-    border-bottom: 1px solid rgba(59, 42, 33, .08);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-}
+
 
 /* ═══════════════════════════════════════════════════════════════════
    HERO 3D — pod koji se na scroll raspada
@@ -7006,4 +6994,32 @@ main > section.editorial-statement {
   .es-link i {
     width: 34px;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TRAKA NA HEROJU — bez podloge
+   Laminat ide do gornje ivice ekrana i prolazi ispod trake, pa traka
+   na herou nema nikakvu pozadinu: ni boju, ni zamucenje, ni liniju.
+   Znak i linkovi ostaju u svojim bojama.
+
+   Podloga se pojavi tek kad hero prode (`is-solid` iz SitePage) — preko
+   kremastog i tamnog sadrzaja providna traka se ne bi citala.
+   ═══════════════════════════════════════════════════════════════════ */
+header.home-sticky-header {
+  /*
+    `fixed`, ne `absolute`: traka je ranije pripadala video heroju i odlazila
+    sa njim, ali sada mora stajati na ekranu cijelo vrijeme — i zato joj se
+    podloga ukljucuje kad hero prode.
+  */
+  position: fixed;
+  background: none;
+  border-bottom: 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+header.home-sticky-header.is-solid {
+  background: #f5f3eef2;
+  border-bottom: 1px solid rgba(59, 42, 33, .08);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
