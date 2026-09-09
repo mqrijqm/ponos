@@ -16,7 +16,7 @@ import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import { useMediaQuery } from "./hero/hooks";
 import HeroVideo from "./hero/HeroVideo";
-import GalerijaLaminati from "./landing/GalerijaLaminati";
+import CategoryCarousel from "./mobile/CategoryCarousel";
 import LandingUvod from "./landing/LandingUvod";
 import OvalDugme from "./landing/OvalDugme";
 import Traka from "./landing/Traka";
@@ -237,7 +237,13 @@ export default function SitePage() {
         <LandingUvod />
         <Traka tekst="Ono što čini svaki dom." />
         <EditorialStatement />
-        <GalerijaLaminati />
+        {/*
+          Ponuda odmah ispod izjave: uspravne slike po grupama, kroz koje se
+          prevlaci prstom. Ovdje je ranije stajao par slika koji se nije dao
+          listati — jedan enterijer i traka teksture, bez veze sa ostatkom
+          ponude.
+        */}
+        <CategoryCarousel />
         <section className="how process-section">
           <div className="how-heading">
             <span className="eyebrow">KAKO FUNKCIONIŠE</span>
@@ -327,12 +333,6 @@ export default function SitePage() {
         {/* Ista traka zatvara uvodni dio; ispod nje stranica ide dalje kao
             i ranije — kalkulator, detalji artikala, kvalitet. */}
         <Traka tekst="Specijalizovan je za veleprodaju" />
-        {/*
-          Traka kategorija ("Asortiman / Grupe proizvoda") je izasla sa
-          stranice: nosila je iste sobe koje vec stoje u galeriji iznad i u
-          sekcijama proizvoda ispod, pa je bila treci prolaz kroz iste slike.
-          Komponenta (mobile/CategoryCarousel) je ostala u kodu.
-        */}
         <section id="kalkulator" className="calculator-section">
           <div>
             <span className="eyebrow">PRECIZNIJI UPIT</span>

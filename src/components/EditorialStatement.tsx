@@ -1,143 +1,40 @@
 "use client";
-import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useTransform, useReducedMotion, MotionValue } from "framer-motion";
+
+import OvalDugme from "./landing/OvalDugme";
+import { useQuote } from "./QuoteProvider";
 
 /**
- * Full-bleed traka o firmi. Tekst pocinje jedva vidljiv i otkriva se rijec
- * po rijec dok sekcija prolazi kroz viewport — ne kao jedan fade, nego kao
- * val koji ide slijeva nadesno.
+ * Izjava o firmi: jedna recenica i dugme ispod nje.
  *
- * Slog je sans na bijelom, uz hero: serif kurziv koji je ovdje stajao ranije
- * nije se poklapao ni sa cim drugim na stranici.
+ * Recenica je mirna — stoji u svojoj boji od trenutka kad se vidi. Ranije se
+ * otkrivala rijec po rijec dok sekcija prolazi kroz ekran, a to je trazilo
+ * sekciju visoku 2.6 ekrana i pinovan sloj u njoj: dvije trecine te visine
+ * bile su prazan hod da bi tekst imao kroz sta da se otkriva. Sada je sekcija
+ * visoka koliko i njen sadrzaj, pa recenica stoji odmah ispod trake umjesto
+ * da se ceka.
  *
- * Raspon svake rijeci se preklapa sa susjednim (FAKTOR), pa nema
- * stepenastog utiska. Uz prefers-reduced-motion tekst je odmah pun.
+ * Natpis "MT PONOS · BANJA LUKA" i link "Podovi koji stvaraju dom" su izasli.
+ * Ostaje recenica i dugme — isto ono sa heroja, samo smedje.
  */
-/* "MT PONOS iz Banje Luke" je izasao iz recenice i stoji kao natpis iznad —
-   recenica pocinje od onoga sto firma radi. */
-const LABEL = "MT PONOS · BANJA LUKA";
-const KICKER = "PODOVI KOJI STVARAJU DOM";
-/* Recenica o veleprodaji je otisla u uvodni blok (LandingUvod) i u traku
-   iznad; ovdje sada stoji ono sto je iza nje — sta se sve drzi na jednom
-   mjestu. Isticu se rijeci koje nose tu misao. */
 const PRIJE = "Pet grupa proizvoda, jedan salon. Cijeli asortiman na";
 const ISTAKNUTO = "jednom mjestu";
 const POSLIJE =
   "— laminati evropskih proizvođača, prirodni parketi, vodootporni podovi, decking, zidni paneli i lajsne.";
 
-const PALE = 0.18;
-const FAKTOR = 2.4;
-/* Otkrivanje se zavrsi prije kraja pinovanja, pa pun tekst ostane
-   nekoliko stotina piksela scrolla na ekranu prije nego sekcija ode. */
-const KRAJ_OTKRIVANJA = 0.72;
-
-type Rijec = { tekst: string; istaknuta: boolean };
-
-const rijeci: Rijec[] = [
-  ...PRIJE.split(" ").map((t) => ({ tekst: t, istaknuta: false })),
-  ...ISTAKNUTO.split(" ").map((t) => ({ tekst: t, istaknuta: true })),
-  ...POSLIJE.split(" ").map((t) => ({ tekst: t, istaknuta: false })),
-];
-
-function Rijec({
-  rijec,
-  progress,
-  pocetak,
-  kraj,
-  mirno,
-}: {
-  rijec: Rijec;
-  progress: MotionValue<number>;
-  pocetak: number;
-  kraj: number;
-  mirno: boolean;
-}) {
-  const opacity = useTransform(progress, [pocetak, kraj], [PALE, 1]);
-  return (
-    <>
-      <motion.span
-        className={rijec.istaknuta ? "es-word es-word-accent" : "es-word"}
-        style={mirno ? undefined : { opacity }}
-      >
-        {rijec.tekst}
-      </motion.span>
-      {/* pravi razmak van spana — inline element se lomi samo na razmaku */}
-      {" "}
-    </>
-  );
-}
-
 export default function EditorialStatement() {
-  const ref = useRef<HTMLElement>(null);
-  const mirno = useReducedMotion() ?? false;
-
-  /* Sekcija je visoka nekoliko ekrana, a sadrzaj u njoj je sticky.
-     Dok se prolazi kroz tu visinu slika stoji na mjestu — to je
-     "stani pa listaj". Scroll se ne otima, samo mu se da razdaljina.
-
-     Napredak se mjeri iz zive pozicije sekcije na svaki frame, a ne
-     kroz useScroll — sekcije iznad mijenjaju visinu dok se slike
-     ucitavaju, pa bi jednom izmjerene pozicije bile pogresne. */
-  const scrollYProgress = useMotionValue(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let raf = 0;
-    const izmjeri = () => {
-      const r = el.getBoundingClientRect();
-      const put = r.height - window.innerHeight;
-      scrollYProgress.set(put <= 0 ? 1 : Math.min(1, Math.max(0, -r.top / put)));
-    };
-    const naScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(izmjeri);
-    };
-    izmjeri();
-    window.addEventListener("scroll", naScroll, { passive: true });
-    window.addEventListener("resize", naScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", naScroll);
-      window.removeEventListener("resize", naScroll);
-    };
-  }, [scrollYProgress]);
-
-  const korak = KRAJ_OTKRIVANJA / rijeci.length;
+  const { openQuote } = useQuote();
 
   return (
-    <section ref={ref} className="editorial-statement is-fullbleed" aria-label="O kompaniji">
-      <div className="es-pin">
-        <div className="es-inner">
-          <span className="es-label">{LABEL}</span>
-
-          <p className="es-text">
-            {rijeci.map((r, i) => (
-              <Rijec
-                key={`${r.tekst}-${i}`}
-                rijec={r}
-                progress={scrollYProgress}
-                pocetak={i * korak}
-                kraj={Math.min(KRAJ_OTKRIVANJA, i * korak + korak * FAKTOR)}
-                mirno={mirno}
-              />
-            ))}
-          </p>
-
-          {/*
-            Podnozje je sada jedan tekstualni link, ne natpis pa dugme u krugu
-            odvojeno na drugoj strani reda: krug je bio jedini okrugli element
-            u novom, uglastom slogu sekcije.
-          */}
-          <div className="es-foot">
-            <Link className="es-link" href="/proizvodi">
-              <i aria-hidden="true" />
-              <span>{KICKER}</span>
-              <b aria-hidden="true">→</b>
-            </Link>
-          </div>
-        </div>
+    <section className="editorial-statement is-fullbleed" aria-label="O kompaniji">
+      <div className="es-inner">
+        <p className="es-text">
+          {PRIJE} <span className="es-word-accent">{ISTAKNUTO}</span> {POSLIJE}
+        </p>
+        <OvalDugme
+          natpis="Pogledaj ponudu"
+          className="oval-smedje"
+          onClick={() => openQuote()}
+        />
       </div>
     </section>
   );

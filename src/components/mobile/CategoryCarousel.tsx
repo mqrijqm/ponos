@@ -16,18 +16,11 @@ import { categories } from "@/data/catalog";
  * Vidljiva je samo pod 768px — sirok ekran ima svoje sekcije proizvoda i ova
  * traka mu ne treba. Skrivanje je u globals.css, da raspored ne visi o JS-u.
  */
+/* Bez natpisa iznad trake: "Asortiman / Pet grupa proizvoda" nosi izjava
+   tacno iznad nje, pa bi ovdje isto stajalo drugi put. Ostaju slike. */
 export default function CategoryCarousel() {
   return (
-    <section className="m-band m-cats" aria-labelledby="m-cats-title">
-      <div className="m-band-head">
-        <span className="m-label">ASORTIMAN</span>
-        {/* "Pet grupa proizvoda, jedan salon." je preuzela velika izjava iznad
-            (EditorialStatement); ovdje bi ista recenica stajala drugi put. */}
-        <h2 id="m-cats-title" className="m-heading">
-          Grupe proizvoda.
-        </h2>
-      </div>
-
+    <section className="m-band m-cats" aria-label="Ponuda po grupama">
       {/*
         `tabIndex` nije greska: traka koja se scrolluje mora biti dostupna i
         tastaturom, inace sadrzaj iza prve kartice ostane nedohvatljiv.

@@ -6930,12 +6930,18 @@ main > section.hero-video {
 main > section.editorial-statement {
   background: #fff;
   color: var(--ink-black);
+  /*
+    Visina je bila 260svh — razdaljina scrolla kroz koju se recenica otkrivala
+    rijec po rijec, sa pinovanim slojem u sredini. Otkrivanja vise nema, pa
+    sekcija ima visinu svog sadrzaja i tekst stoji odmah ispod trake.
+  */
+  height: auto;
+  padding: clamp(46px, 11vw, 90px) var(--page-gutter) clamp(52px, 12vw, 96px);
 }
-.es-label {
-  color: var(--brand-muted);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .24em;
+.es-inner {
+  align-items: center;
+  max-width: 760px;
+  margin: 0 auto;
 }
 .editorial-statement .es-text {
   /*
@@ -6953,10 +6959,17 @@ main > section.editorial-statement {
   font-size: clamp(1.5rem, 3.1vw, 2.9rem) !important;
   line-height: 1.6;
   letter-spacing: 0;
-  text-indent: 1.6em;
+  /* Centrirano: uvlaka prvog reda je imala smisla uz lijevo poravnanje, uz
+     centriranje bi samo pomjerila prvi red sa ose. */
+  text-align: center;
+  text-indent: 0;
   max-width: 17em;
-  margin-top: clamp(26px, 4vh, 52px);
+  margin: 0 auto;
   color: var(--brand-muted);
+}
+/* Dugme ispod recenice, na istoj osi. */
+.editorial-statement .oval-smedje {
+  margin-top: clamp(26px, 7vw, 44px);
 }
 /* Naglasene rijeci: bez kurziva, nosi ih tezina i boja. */
 .es-word-accent {
@@ -7107,7 +7120,8 @@ header.home-sticky-header.is-solid {
 .hv-cta {
   color: #fff;
 }
-.how-cta {
+.how-cta,
+.oval-smedje {
   color: var(--brand-brown);
 }
 
