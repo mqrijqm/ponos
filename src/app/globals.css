@@ -6954,7 +6954,8 @@ main > section.hero-video {
     Traka stoji. Kad se ne krece sama, mora se moci pomjeriti rukom — inace
     ostane vidljivo samo prvih par artikala.
   */
-  .uvod-kartice {
+  .uvod-kartice,
+  .uvod-znak svg {
     animation: none;
   }
   .uvod-traka {
@@ -7192,24 +7193,28 @@ main > section.uvod {
   font-size: clamp(14px, 3.9vw, 16px);
   line-height: 1.5;
 }
-.uvod-strelica {
+/* Znak se okrece u mjestu; nema okvira oko sebe — sam oblik nosi mjesto. */
+.uvod-znak {
   flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  border: 1px solid rgba(107, 78, 45, 0.45);
-  border-radius: 50%;
-  color: var(--brand-brown);
-  transition: background 250ms ease, color 250ms ease;
+  display: block;
+  width: 54px;
+  color: #a77342;
 }
-.uvod-strelica svg {
-  width: 17px;
-  height: 17px;
+.uvod-znak svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: center;
+  /* Sporo: znak stoji uz recenicu, ne takmici se s njom. */
+  animation: uvod-znak-vrti 18s linear infinite;
 }
-.uvod-strelica:hover {
-  background: var(--brand-brown);
-  color: var(--cream);
+@keyframes uvod-znak-vrti {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 /*
   Traka artikala, ne mreza. Dvije kartice u redu su bile kraj ponude; ovako
@@ -7382,9 +7387,8 @@ main > section.galerija {
     max-width: 42ch;
     font-size: 16px;
   }
-  .uvod-strelica {
+  .uvod-znak {
     width: 66px;
-    height: 66px;
   }
   /* Na sirokom ekranu kartica ima svoju mjeru; traka se i dalje lista. */
   .uvod-kartice {
