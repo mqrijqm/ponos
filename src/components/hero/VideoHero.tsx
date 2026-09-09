@@ -94,15 +94,44 @@ export default function VideoHero() {
 
     /* ── naprijed: prvi scroll pusta i zakljucava ─────────────── */
 
+    /*
+      Ako snimak ne krene za ovoliko, brava pada sama i stranica se pusta.
+      Bez toga bi gost na sporoj vezi stajao zakljucan pred posterom.
+    */
+    const ROK_POCETKA = 2500;
+    let rokPocetka: ReturnType<typeof setTimeout> | undefined;
+
+    /*
+      Snimak nije krenuo: ili je pustanje odbijeno (iOS u stednji struje odbija
+      i nijemi autoplay), ili se predugo puni. Stranica se otkljucava, natpisi
+      se prikazuju do kraja da hero ne ostane samo poster bez teksta, a `trazen`
+      pada — pa sljedeci scroll pokusava iznova.
+    */
+    const odustani = () => {
+      clearTimeout(rokPocetka);
+      stanje = "mirno";
+      trazen = false;
+      otkljucaj();
+      setOverlayProgress(1);
+    };
+
+    /*
+      Spremnost se ne ceka. iOS Safari ne postuje `preload="auto"` — dok se
+      pustanje ne zatrazi skida samo metapodatke, pa `readyState` nikad ne
+      stigne do 3 niti `canplay` ikad padne. Uslov na spremnost je zato bio
+      mrtav cvor: na telefonu je zauvijek ostajao poster. Sada `play()` ide
+      odmah — taj poziv je ono sto punjenje i pokrece — a `ROK_POCETKA` pusta
+      stranicu ako se snimak ipak ne javi.
+    */
     const probaj = () => {
-      if (!trazen || stanje !== "mirno" || video.readyState < 3) return;
+      if (!trazen || stanje !== "mirno") return;
       stanje = "naprijed";
       zakljucaj();
-      video.play().catch(() => {
-        /* Odbijeno pustanje ne smije ostaviti stranicu zakljucanom. */
-        stanje = "mirno";
-        otkljucaj();
-      });
+      clearTimeout(rokPocetka);
+      rokPocetka = setTimeout(() => {
+        if (stanje === "naprijed" && video.paused) odustani();
+      }, ROK_POCETKA);
+      video.play().catch(odustani);
     };
 
     /*
@@ -130,7 +159,14 @@ export default function VideoHero() {
       njegovog trajanja. Bolje raniji scroll nego zarobljen gost.
     */
     let kocnica: ReturnType<typeof setTimeout> | undefined;
-    const naPlay = () => {
+    /*
+      Racuna se na `playing`, a ne na `play`: `play` padne cim se pustanje
+      zatrazi, jos dok se snimak puni, pa bi kocnica na sporoj vezi otkucala
+      prerano. `playing` stize i poslije svakog dopunjavanja, pa se rok tada
+      racuna nanovo.
+    */
+    const naPocetak = () => {
+      clearTimeout(rokPocetka);
       clearTimeout(kocnica);
       const ostalo = (video.duration || 8) - video.currentTime;
       kocnica = setTimeout(() => {
@@ -176,7 +212,7 @@ export default function VideoHero() {
     document.addEventListener("visibilitychange", naVidljivost);
     video.addEventListener("canplay", probaj);
     video.addEventListener("canplaythrough", probaj);
-    video.addEventListener("play", naPlay);
+    video.addEventListener("playing", naPocetak);
     video.addEventListener("ended", naKraj);
     video.addEventListener("timeupdate", napreduj);
     /* Skidanje krece odmah, da snimak doceka prvi scroll vec napunjen. */
@@ -184,6 +220,7 @@ export default function VideoHero() {
 
     return () => {
       clearTimeout(kocnica);
+      clearTimeout(rokPocetka);
       /* Demontiranje nikad ne smije ostaviti stranicu zakljucanom. */
       otkljucaj();
       window.removeEventListener("scroll", pusti);
@@ -193,7 +230,7 @@ export default function VideoHero() {
       document.removeEventListener("visibilitychange", naVidljivost);
       video.removeEventListener("canplay", probaj);
       video.removeEventListener("canplaythrough", probaj);
-      video.removeEventListener("play", naPlay);
+      video.removeEventListener("playing", naPocetak);
       video.removeEventListener("ended", naKraj);
       video.removeEventListener("timeupdate", napreduj);
     };
