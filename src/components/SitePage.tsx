@@ -14,9 +14,6 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
-import HeroVideo from "./hero/HeroVideo";
-import HeroText from "./hero/HeroText";
-import HeroOverlay from "./HeroOverlay";
 import { useMediaQuery } from "./hero/hooks";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
@@ -168,31 +165,15 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
 
 export default function SitePage() {
   const [menu, setMenu] = useState(false);
-  /*
-    Zaglavlje na telefonu stoji preko snimka providno, ali dalje na stranici
-    prelazi preko tamnih sekcija — tamo bi se tamni znak izgubio. Zato dobija
-    punu kremastu podlogu tek kad hero prode.
-  */
-  const [punaTraka, setPunaTraka] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
   /* Ista granica na kojoj se u globals.css kartice slazu jedna ispod druge. */
   const uzakEkran = useMediaQuery("(max-width: 900px)");
   const [calcItem, setCalcItem] = useState<CatalogItem>(calculableItems[0]);
   const { openQuote } = useQuote();
 
-  useEffect(() => {
-    const naScroll = () =>
-      setPunaTraka(window.scrollY > window.innerHeight * 1.15);
-    naScroll();
-    window.addEventListener("scroll", naScroll, { passive: true });
-    return () => window.removeEventListener("scroll", naScroll);
-  }, []);
-
   return (
     <>
-      <header
-        className={`home-sticky-header is-visible${punaTraka ? " is-solid" : ""}`}
-      >
+      <header className="home-sticky-header is-visible">
         <a
           className="brand brand-image"
           href="#top"
@@ -235,17 +216,12 @@ export default function SitePage() {
         <MobileMenu open={menu} onClose={() => setMenu(false)} />
       </header>
       <main id="top">
-        <HeroVideo
-          srcDesktop="/videos/hero.mp4"
-          srcMobile="/videos/hero-mobile.mp4"
-          poster="/images/hero-poster.webp"
-          label="Hrastove daske se podižu u praznoj sobi"
-        >
-          <HeroText />
-          {/* Dugme stoji od pocetka: kadar sad pomjera scroll, pa nema
-              napretka snimka o kojem bi visilo. */}
-          <HeroOverlay scrollProgress={1} />
-        </HeroVideo>
+        {/*
+          Prvi ekran je prazan: snimak, natpis i dugme su izasli. Sekcija
+          ostaje kao prostor iste visine, da stranica ne pocinje odmah
+          sadrzajem i da novi hero ima gdje da stane.
+        */}
+        <section className="hero-blank is-fullbleed" />
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />

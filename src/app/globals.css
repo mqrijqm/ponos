@@ -6800,3 +6800,29 @@ html.menu-open body {
     font-size: 13.5px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PRAZAN HERO
+   Snimak, natpis i dugme su izasli sa prvog ekrana. Ostaje kremasta
+   povrsina visine jednog ekrana — prostor u koji ide novi hero.
+   `svh`, ne `vh`: na telefonu je 100vh visi od onoga sto se vidi.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.hero-blank {
+  min-height: 100svh;
+  padding: 0;
+  background: var(--cream);
+}
+
+@media (max-width: 767px) {
+  /*
+    Zaglavlje naslovne je bilo providno da bi snimak prolazio ispod njega.
+    Snimka nema, pa traka nosi punu podlogu kao i na ostalim stranicama —
+    inace bi joj se donja ivica gubila u kremu ispod.
+  */
+  header.home-sticky-header {
+    background: #f5f3eef2;
+    border-bottom: 1px solid rgba(59, 42, 33, .08);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
