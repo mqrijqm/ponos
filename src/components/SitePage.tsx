@@ -226,36 +226,6 @@ export default function SitePage() {
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />
-        <HomeHeroReveal>
-          <div className="home-hero-top">
-            <div className="home-hero-copy">
-              <strong>NA JEDNOM MJESTU</strong>
-              <p>Laminat, podne obloge, parket, vinil podovi &amp; zidni paneli.</p>
-            </div>
-          </div>
-          <div className="home-hero-panel">
-            <div className="detail-strip">
-              <div className="detail-group">
-                <HeroDetail slot={0} />
-                <HeroDetail slot={1} />
-              </div>
-              <HeroDetail slot={2} />
-              <HeroDetail slot={3} />
-              <HeroDetail slot={4} />
-              <div className="detail-group">
-                <HeroDetail slot={5} />
-                <HeroDetail slot={6} />
-              </div>
-            </div>
-            {/* h2, ne h1: isti natpis nosi hero iznad, a dva h1 sa istim
-                tekstom su jedan naslov previse. Izgled se ne mijenja —
-                stilovi idu po klasi. */}
-            <h2 className="home-hero-title">
-              <span>PONOS</span>
-              <b>PROSTORA</b>
-            </h2>
-          </div>
-        </HomeHeroReveal>
         {/* Traka kategorija: telefon je dobija odmah poslije izjave, sirok
             ekran je ne prikazuje — njemu kategorije nose sekcije ispod. */}
         <CategoryCarousel />
@@ -394,6 +364,42 @@ export default function SitePage() {
         <ProductShowcase product={miram} mirrored titleId="showcase-miram" />
         <StatementSlider />
         <QualityPage />
+        {/*
+          "Na jednom mjestu" zatvara stranicu, tik iznad podnozja. Bila je
+          prva sekcija ispod heroja; sada je zadnja, pa se plocice i natpis
+          sastavljaju kao zavrsna rijec. Okidac je isti — sekcija krece kad
+          udje u kadar (HomeHeroReveal), sto na dnu radi jednako kao na vrhu.
+        */}
+        <HomeHeroReveal>
+          <div className="home-hero-top">
+            <div className="home-hero-copy">
+              <strong>NA JEDNOM MJESTU</strong>
+              <p>Laminat, podne obloge, parket, vinil podovi &amp; zidni paneli.</p>
+            </div>
+          </div>
+          <div className="home-hero-panel">
+            <div className="detail-strip">
+              <div className="detail-group">
+                <HeroDetail slot={0} />
+                <HeroDetail slot={1} />
+              </div>
+              <HeroDetail slot={2} />
+              <HeroDetail slot={3} />
+              <HeroDetail slot={4} />
+              <div className="detail-group">
+                <HeroDetail slot={5} />
+                <HeroDetail slot={6} />
+              </div>
+            </div>
+            {/* h2, ne h1: isti natpis nosi hero na vrhu, a dva h1 sa istim
+                tekstom su jedan naslov previse. Izgled se ne mijenja —
+                stilovi idu po klasi. */}
+            <h2 className="home-hero-title">
+              <span>PONOS</span>
+              <b>PROSTORA</b>
+            </h2>
+          </div>
+        </HomeHeroReveal>
       </main>
       <Footer />
     </>
