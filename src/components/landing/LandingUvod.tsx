@@ -4,7 +4,7 @@ import Link from "next/link";
 import { catalog, productImage } from "@/data/catalog";
 
 /**
- * Prvi blok ispod heroja: recenica o firmi sa strelicom, pa tri artikla.
+ * Prvi blok ispod heroja: recenica o firmi sa strelicom, pa dva artikla.
  *
  * Artikli nisu prepisani nego uzeti iz kataloga — ista tri koja stoje i na
  * /proizvodi. Kad se katalog promijeni, promijeni se i ovdje; dva spiska
@@ -16,8 +16,8 @@ import { catalog, productImage } from "@/data/catalog";
  * citac ekrana, kroz `alt` fotografije.
  */
 
-/* Prva tri laminata iz kataloga — Herringbone serija, sva tri sa oznakom. */
-const artikli = catalog.filter((p) => p.category === "laminati").slice(0, 3);
+/* Prva dva laminata iz kataloga — Herringbone serija, oba sa oznakom. */
+const artikli = catalog.filter((p) => p.category === "laminati").slice(0, 2);
 
 export default function LandingUvod() {
   return (

@@ -235,7 +235,7 @@ export default function SitePage() {
           Ispod toga stranica nastavlja onako kako je i bila.
         */}
         <LandingUvod />
-        <Traka tekst="Specijalizovan je za veleprodaju" />
+        <Traka tekst="Ono što čini svaki dom." />
         <EditorialStatement />
         <GalerijaLaminati />
         <section className="how process-section">
