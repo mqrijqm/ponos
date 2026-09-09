@@ -97,44 +97,6 @@ export function Footer() {
           telefonu, sirok ekran je ne prikazuje (globals.css). */}
       <QuoteBand />
       <footer className="site-footer">
-      {/*
-        Podnozje na telefonu: dvije kolone linkova sa natpisima, pa kratak
-        pasus, pa kontakt. Sirok ekran i dalje dobija `.footer-main` ispod —
-        jedno od dva je uvijek skriveno u CSS-u, da se raspored ne mijenja
-        kroz JS i ne treperi pri hidraciji.
-      */}
-      <div className="m-foot">
-        <div className="m-foot-cols">
-          <nav aria-label="Proizvodi u podnožju">
-            <span className="m-label m-label-light">PROIZVODI</span>
-            {categories.map((c) => (
-              <Link key={c.slug} href={`/proizvodi/${c.slug}`}>
-                {c.title}
-              </Link>
-            ))}
-          </nav>
-          <nav aria-label="Informacije u podnožju">
-            <span className="m-label m-label-light">INFO</span>
-            <Link href="/o-nama">O nama</Link>
-            <Link href="/kontakt">Kontakt</Link>
-            <Link href="/vizualizator">Vizualizator</Link>
-            <Link href="/priznanja">Priznanja</Link>
-          </nav>
-        </div>
-
-        <p className="m-foot-copy">
-          Veleprodaja, maloprodaja, dostava i ugradnja podnih obloga u Banjoj
-          Luci od 2000. godine. Laminati, parketi, SPC vinil, WPC decking,
-          zidni paneli i lajsne — na jednom mjestu.
-        </p>
-
-        <address className="m-foot-contact">
-          <span>Put srpskih branilaca 47, Derviši, 78000 Banja Luka</span>
-          <a href="tel:+38751386386">+387 51 386 386</a>
-          <a href="mailto:info@mtponos.com">info@mtponos.com</a>
-          <span>Pon–pet 08:00–19:00 · Subota 08:00–16:00</span>
-        </address>
-      </div>
       <div className="footer-main">
         <nav className="footer-nav" aria-label="Navigacija u podnožju">
           <Link href="/proizvodi">Proizvodi</Link>

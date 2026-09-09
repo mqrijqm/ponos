@@ -5982,7 +5982,6 @@ html.menu-open body {
 /* Nove sekcije postoje samo na telefonu. */
 .m-band,
 .m-cta-band,
-.m-foot,
 .m-acc {
   display: none;
 }
@@ -6516,53 +6515,9 @@ html.menu-open body {
 
   /* ── 9. PODNOZJE ─────────────────────────────────────────────── */
 
-  /* Sirok raspored podnozja se na telefonu ne prikazuje; `.m-foot` ga
-     zamjenjuje sa dvije kolone linkova, pasusom i kontaktom. */
-  footer.site-footer .footer-main {
-    display: none;
-  }
-  .m-foot {
-    display: block;
-    padding: 62px var(--m-gutter) 0;
-  }
-  .m-foot-cols {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 34px 18px;
-  }
-  .m-foot-cols nav {
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
-  }
-  .m-foot-cols .m-label {
-    margin-bottom: 6px;
-  }
-  .m-foot-cols a {
-    font-size: 13.5px;
-    color: rgba(245, 243, 240, .82);
-    text-decoration: none;
-  }
-  .m-foot-copy {
-    margin: 52px 0 0;
-    font-size: 13px;
-    line-height: 1.62;
-    text-align: justify;
-    color: rgba(245, 243, 240, .6);
-  }
-  .m-foot-contact {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    margin-top: 40px;
-    font-size: 13px;
-    font-style: normal;
-    color: rgba(245, 243, 240, .72);
-  }
-  .m-foot-contact a {
-    color: rgba(245, 243, 240, .88);
-    text-decoration: none;
-  }
+  /* Podnozje na telefonu je isto ono koje nosi i sirok ekran: dvije kolone
+     linkova, pasus i kontakt su izbaceni. Ostaje samo raspored posljednjeg
+     reda, da copyright i kredit stanu jedan pod drugi. */
   footer.site-footer .footer-bottom {
     display: flex;
     flex-direction: column;
@@ -6790,14 +6745,6 @@ html.menu-open body {
   }
   .m-quote p {
     font-size: 19px !important;
-  }
-  .m-foot-copy,
-  .m-foot-contact,
-  .m-foot-contact a {
-    font-size: 13px !important;
-  }
-  .m-foot-cols a {
-    font-size: 13.5px !important;
   }
 }
 
