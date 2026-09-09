@@ -7660,3 +7660,18 @@ main > section.galerija {
     display: none;
   }
 }
+
+/*
+  Dugme u kalkulatoru i drugim uskim karticama ne ide preko cijele sirine.
+  Zatecena pravila su mu davala `width: 100%`, sto je oval razvuklo od ivice
+  do ivice kartice — natpis je tada dodirivao rub, a elipsa je izgledala kao
+  da ne staje. Sada je siroko koliko mu treba, sa manjim slogom.
+*/
+.calculator > button.cta-dot {
+  width: auto;
+  align-self: start;
+  margin-top: 22px;
+  padding: 14px 30px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}

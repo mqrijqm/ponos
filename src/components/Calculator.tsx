@@ -177,8 +177,11 @@ export default function Calculator({
         Proračun je informativnog karaktera. Konačnu količinu i cijenu potrebno
         je potvrditi prije narudžbe.
       </p>
+      {/* "sa proračunom" je izaslo iz natpisa: dugme stoji ispod samog
+          proracuna, pa se to vidi, a duzi natpis je razvlacio oval preko
+          cijele kartice. */}
       <button className="cta-dot" onClick={() => onRequestQuote(result)}>
-        <i /> Zatraži ponudu sa proračunom
+        <i /> Zatraži ponudu
       </button>
     </div>
   );
