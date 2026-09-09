@@ -10,8 +10,10 @@ import { catalog, productImage } from "@/data/catalog";
  * /proizvodi. Kad se katalog promijeni, promijeni se i ovdje; dva spiska
  * istih artikala razidju se prvi put kad neko doda cetvrti.
  *
- * Kartica nosi natpis preko slike, ne ispod nje kao u mrezi na /proizvodi:
- * ovdje su tri kartice u redu i natpis ispod bi ih razvukao u stub teksta.
+ * Kartica nosi samo dekor i oznaku. Ime artikla i kolekcija stoje na
+ * /proizvodi i na stranici artikla; ovdje bi tri natpisa preko tri slike
+ * potukla ono zbog cega red i postoji — sam dekor. Ime i dalje postoji za
+ * citac ekrana, kroz `alt` fotografije.
  */
 
 /* Prva tri laminata iz kataloga — Herringbone serija, sva tri sa oznakom. */
@@ -57,14 +59,6 @@ export default function LandingUvod() {
               sizes="(max-width: 767px) 33vw, 25vw"
             />
             {p.badge && <span className="uvod-oznaka">{p.badge}</span>}
-            {/*
-              Natpis lezi na fotografiji, koja zna biti gotovo bijela; bez
-              zatamnjenja ispod njega bijela slova se izgube u dekoru.
-            */}
-            <span className="uvod-natpis">
-              <b>{p.name}</b>
-              <i>{p.collection}</i>
-            </span>
           </Link>
         ))}
       </div>

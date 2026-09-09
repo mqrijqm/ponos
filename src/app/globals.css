@@ -7152,18 +7152,6 @@ main > section.uvod {
 .uvod-kartica img {
   object-fit: cover;
 }
-/*
-  Zatamnjenje samo pri dnu kartice. Dekori su svijetli, pa bi bijeli natpis
-  bez ovoga nestao u godovima; puno zatamnjenje bi ugasilo boju dekora, a
-  dekor je ono zbog cega kartica i postoji.
-*/
-.uvod-kartica::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 56%;
-  background: linear-gradient(to top, rgba(20, 15, 11, 0.62), rgba(20, 15, 11, 0));
-}
 .uvod-oznaka {
   position: absolute;
   top: 0;
@@ -7178,31 +7166,6 @@ main > section.uvod {
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.uvod-natpis {
-  position: absolute;
-  z-index: 2;
-  right: 10px;
-  bottom: 9px;
-  left: 10px;
-  display: grid;
-  gap: 1px;
-  color: #fff;
-  text-shadow: 0 1px 12px rgba(20, 15, 11, 0.5);
-}
-.uvod-natpis b {
-  font-family: var(--font-manrope);
-  font-size: clamp(10px, 2.9vw, 12px);
-  font-weight: 400;
-}
-.uvod-natpis i {
-  font-family: var(--font-manrope);
-  font-size: clamp(9px, 2.6vw, 11px);
-  font-weight: 700;
-  font-style: normal;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
 /* ─── Traka sa jednom recenicom ─── */
 .traka {
   padding: 17px var(--page-gutter);
