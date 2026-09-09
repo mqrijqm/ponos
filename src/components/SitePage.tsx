@@ -17,6 +17,7 @@ import BasketMenu from "./BasketMenu";
 import { useMediaQuery } from "./hero/hooks";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
+import Hero3D from "./hero3d/Hero3D";
 import CategoryCarousel from "./mobile/CategoryCarousel";
 import StatementSlider from "./mobile/StatementSlider";
 
@@ -216,12 +217,7 @@ export default function SitePage() {
         <MobileMenu open={menu} onClose={() => setMenu(false)} />
       </header>
       <main id="top">
-        {/*
-          Prvi ekran je prazan: snimak, natpis i dugme su izasli. Sekcija
-          ostaje kao prostor iste visine, da stranica ne pocinje odmah
-          sadrzajem i da novi hero ima gdje da stane.
-        */}
-        <section className="hero-blank is-fullbleed" />
+        <Hero3D />
         <span id="naslovna" />
         <span id="podovi" />
         <span id="o-nama" />

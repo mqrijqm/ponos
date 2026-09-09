@@ -4,9 +4,12 @@ import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useTransform, useReducedMotion, MotionValue } from "framer-motion";
 
 /**
- * Full-bleed editorial traka. Tekst pocinje jedva vidljiv i otkriva se
- * rijec po rijec dok sekcija prolazi kroz viewport — ne kao jedan fade,
- * nego kao val koji ide slijeva nadesno.
+ * Full-bleed traka o firmi. Tekst pocinje jedva vidljiv i otkriva se rijec
+ * po rijec dok sekcija prolazi kroz viewport — ne kao jedan fade, nego kao
+ * val koji ide slijeva nadesno.
+ *
+ * Slog je sans na bijelom, uz hero: serif kurziv koji je ovdje stajao ranije
+ * nije se poklapao ni sa cim drugim na stranici.
  *
  * Raspon svake rijeci se preklapa sa susjednim (FAKTOR), pa nema
  * stepenastog utiska. Uz prefers-reduced-motion tekst je odmah pun.
@@ -118,13 +121,16 @@ export default function EditorialStatement() {
             ))}
           </p>
 
+          {/*
+            Podnozje je sada jedan tekstualni link, ne natpis pa dugme u krugu
+            odvojeno na drugoj strani reda: krug je bio jedini okrugli element
+            u novom, uglastom slogu sekcije.
+          */}
           <div className="es-foot">
-            <span className="es-kicker">
+            <Link className="es-link" href="/proizvodi">
               <i aria-hidden="true" />
-              {KICKER}
-            </span>
-            <Link className="es-arrow" href="/proizvodi" aria-label="Pogledaj proizvode">
-              <span aria-hidden="true">→</span>
+              <span>{KICKER}</span>
+              <b aria-hidden="true">→</b>
             </Link>
           </div>
         </div>

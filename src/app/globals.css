@@ -6826,3 +6826,184 @@ main > section.hero-blank {
     backdrop-filter: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   HERO 3D — pod koji se na scroll raspada
+   Sekcija je visoka nekoliko ekrana; scena u njoj je sticky i ta
+   razdaljina scrolla je cijela sekvenca. Visinu postavlja komponenta
+   (Hero3D), jer zavisi od prefers-reduced-motion.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.hero3d {
+  position: relative;
+  padding: 0;
+  /* Bijela, ne krem: hero se odvaja od ostatka stranice. Ista boja stoji i
+     kao pozadina scene (FloorScene), da se spoj canvasa ne vidi. */
+  background: #fff;
+}
+.hero3d-stage {
+  position: sticky;
+  top: 0;
+  /* svh, ne vh: na telefonu je 100vh visi od onoga sto se vidi. */
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Natpis preko scene. Sloj ne hvata misa — scroll i klik idu kroz njega. */
+.hero3d-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* `top` postavlja komponenta; sredina natpisa stoji na toj visini. */
+  transform: translateY(-50%);
+  padding: 0 26px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 3;
+}
+/*
+  Bijelo, sans, verzal. Sjena je dvostruka: siroka mekana nosi razliku od
+  daske ispod, tijesna crta ivicu slova — bijelo na svijetlom drvetu samo po
+  sebi ima kontrast oko 1.3:1 i izgubilo bi se u godovima.
+*/
+.hero3d-title {
+  margin: 0;
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: clamp(19px, 2.3vw, 34px);
+  line-height: 1.3;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(38, 30, 24, .55), 0 1px 3px rgba(38, 30, 24, .32);
+}
+.hero3d-sub {
+  margin: 22px 0 0;
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: clamp(11px, 1.05vw, 14px);
+  line-height: 1.6;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .88);
+  text-shadow: 0 2px 24px rgba(38, 30, 24, .5), 0 1px 3px rgba(38, 30, 24, .28);
+}
+/*
+  Pocetno stanje rijeci stoji u CSS-u, ne u JS-u: da ceka GSAP, natpis bi
+  bljesnuo pun prije nego sto animacija stigne da ga sakrije.
+*/
+.hero3d-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(10px);
+  /* Bez ovoga browser prekucava sloj na svakom frejmu blura. */
+  will-change: filter, transform, opacity;
+}
+
+@media (max-width: 767px) {
+  .hero3d-copy {
+    padding: 0 22px;
+  }
+  .hero3d-sub {
+    font-size: 13px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   IZJAVA O FIRMI — novi slog
+   Bila je serifna, u krem tonu, sa kurzivom i okruglim dugmetom: nije
+   se poklapala ni sa jednom drugom sekcijom, a najmanje sa herojem.
+   Sada je sans na bijelom, verzalni natpisi sa razmakom i tekstualni
+   link sa podvlakom — isti jezik kojim govori hero iznad.
+   Otkrivanje rijec-po-rijec ostaje, mijenja se samo izgled.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.editorial-statement {
+  background: #fff;
+  color: var(--ink-black);
+}
+.es-label {
+  color: var(--brand-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .24em;
+}
+.editorial-statement .es-text {
+  /* Sans, ne serif. Manje od prethodne velicine: recenica od dvadeset rijeci
+     u 4rem serifu zauzimala je cijeli ekran i citala se kao plakat. */
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.35rem, 2.9vw, 2.7rem) !important;
+  line-height: 1.32;
+  letter-spacing: -.005em;
+  max-width: 20em;
+  margin-top: clamp(26px, 4vh, 52px);
+  color: var(--ink-black);
+}
+/* Naglasene rijeci: bez kurziva, nosi ih tezina i boja. */
+.es-word-accent {
+  font-style: normal;
+}
+.editorial-statement .es-word-accent {
+  font-weight: 600;
+  color: var(--brand-brown);
+}
+
+.es-foot {
+  margin-top: clamp(40px, 7vh, 88px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+/* Tekstualni link sa podvlakom umjesto dugmeta u krugu. */
+.es-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--brand-brown);
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+/* Crta prije natpisa; raste na hover, pa link ima gdje da se pomjeri. */
+.es-link i {
+  display: block;
+  width: clamp(40px, 6vw, 88px);
+  height: 1px;
+  background: currentColor;
+  transition: width 260ms ease;
+}
+.es-link span {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.es-link b {
+  font-weight: 400;
+  font-size: 15px;
+  transition: transform 260ms ease;
+}
+.es-link:hover i {
+  width: clamp(56px, 8vw, 120px);
+}
+.es-link:hover b {
+  transform: translateX(4px);
+}
+
+@media (max-width: 767px) {
+  .editorial-statement .es-text {
+    font-size: clamp(1.2rem, 5.6vw, 1.8rem) !important;
+    line-height: 1.38;
+    max-width: none;
+  }
+  .es-link {
+    font-size: 10px;
+    letter-spacing: .16em;
+    gap: 14px;
+  }
+  .es-link i {
+    width: 34px;
+  }
+}
