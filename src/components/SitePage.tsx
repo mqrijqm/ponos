@@ -20,6 +20,8 @@ import HeroOverlay from "./HeroOverlay";
 import { useMediaQuery } from "./hero/hooks";
 import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
+import CategoryCarousel from "./mobile/CategoryCarousel";
+import StatementSlider from "./mobile/StatementSlider";
 
 /* Pool tekstura kroz koje se pločice smjenjuju. Prvih pet su starije
    .jpg fotografije, ostalo su kvadratni .webp krupni planovi. */
@@ -166,14 +168,31 @@ function HeroDetail({ slot, className = "" }: { slot: number; className?: string
 
 export default function SitePage() {
   const [menu, setMenu] = useState(false);
+  /*
+    Zaglavlje na telefonu stoji preko snimka providno, ali dalje na stranici
+    prelazi preko tamnih sekcija — tamo bi se tamni znak izgubio. Zato dobija
+    punu kremastu podlogu tek kad hero prode.
+  */
+  const [punaTraka, setPunaTraka] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
   /* Ista granica na kojoj se u globals.css kartice slazu jedna ispod druge. */
   const uzakEkran = useMediaQuery("(max-width: 900px)");
   const [calcItem, setCalcItem] = useState<CatalogItem>(calculableItems[0]);
   const { openQuote } = useQuote();
+
+  useEffect(() => {
+    const naScroll = () =>
+      setPunaTraka(window.scrollY > window.innerHeight * 1.15);
+    naScroll();
+    window.addEventListener("scroll", naScroll, { passive: true });
+    return () => window.removeEventListener("scroll", naScroll);
+  }, []);
+
   return (
     <>
-      <header className="home-sticky-header is-visible">
+      <header
+        className={`home-sticky-header is-visible${punaTraka ? " is-solid" : ""}`}
+      >
         <a
           className="brand brand-image"
           href="#top"
@@ -257,6 +276,9 @@ export default function SitePage() {
             </h1>
           </div>
         </HomeHeroReveal>
+        {/* Traka kategorija: telefon je dobija odmah poslije izjave, sirok
+            ekran je ne prikazuje — njemu kategorije nose sekcije ispod. */}
+        <CategoryCarousel />
         <EditorialStatement />
         <section className="how process-section">
           <div className="how-heading">
@@ -390,6 +412,7 @@ export default function SitePage() {
         <WpcDeckingSection />
         {/* Isti detalj kao Krono, samo preslikan — tekstura lijevo. */}
         <ProductShowcase product={miram} mirrored titleId="showcase-miram" />
+        <StatementSlider />
         <QualityPage />
       </main>
       <Footer />

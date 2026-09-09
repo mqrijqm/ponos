@@ -7,6 +7,7 @@ import ProductGrid from "@/components/ProductGrid";
 import { Ponuda2Gate } from "@/components/Ponuda2Gate";
 import CalculatorCta from "@/components/CalculatorCta";
 import QuoteCta from "@/components/QuoteCta";
+import SpecsAccordion from "@/components/mobile/SpecsAccordion";
 export function generateStaticParams() {
   return catalog.map((p) => ({ code: p.code }));
 }
@@ -59,6 +60,9 @@ export default async function Page({
             <span className="eyebrow">{p.brand}</span>
             <h1>{p.name}</h1>
             <p className="lead">{p.collection}</p>
+            {/* Isti podaci dvaput: sklopljeni redovi na telefonu, tabela na
+                sirokom ekranu. CSS pokazuje tacno jedno od dva. */}
+            <SpecsAccordion item={p} />
             <dl>
               <div>
                 <dt>Šifra</dt>
@@ -96,7 +100,7 @@ export default async function Page({
         {pricingFor(p).areaBased && <CalculatorCta item={p} />}
         <section className="catalog-section">
           <h2>Slični artikli</h2>
-          <ProductGrid items={related} />
+          <ProductGrid items={related} rail />
         </section>
       </main>
       <Footer />

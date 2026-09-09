@@ -5964,3 +5964,839 @@ html.menu-open body {
     font-size: 10px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILNI RASPORED (< 768px)
+
+   Jedan sloj na kraju fajla, po ugledu na studiodisenos.com: natpis pa
+   obostrano poravnat pasus, vodoravne trake umjesto mreza, naizmjenicno
+   svijetle i tamne sekcije, tekstualni linkovi sa podvlakom.
+
+   Sirok ekran se ovim ne dira — sve je unutar media querya, a nove `.m-*`
+   sekcije su na sirokom ekranu ugasene.
+
+   Preslikan je RASPORED i PONASANJE, ne izgled: boje, font i slike ostaju
+   nase (krem, #8b7e6e, Comfortaa).
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Nove sekcije postoje samo na telefonu. */
+.m-band,
+.m-cta-band,
+.m-foot,
+.m-acc {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  :root {
+    /* Tamna podloga za naizmjenicne sekcije — topla, ne neutralno crna. */
+    --m-dark: #241d18;
+    --m-gutter: 26px;
+    /* Razmak izmedju blokova: sekcije ne smiju biti zbijene. */
+    --m-space: 82px;
+  }
+
+  /* ── 1. ZAGLAVLJE ─────────────────────────────────────────────
+     Ostaje samo znak lijevo i hamburger desno. Navigacija, dugme za
+     ponudu i korpa izlaze — korpa se seli u meni (MobileMenu).        */
+
+  header.site-header,
+  header.home-sticky-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 120;
+    height: 64px;
+    padding: 0 var(--m-gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+  }
+  header.site-header {
+    background: #f5f3eef2;
+    border-bottom: 1px solid rgba(59, 42, 33, .08);
+  }
+  header nav,
+  header .header-cta,
+  header > .nav-basket {
+    display: none;
+  }
+  header .brand-image img {
+    width: 132px;
+    height: auto;
+  }
+  header .menu {
+    margin-left: auto;
+  }
+  /* Fiksno zaglavlje bi inace stajalo preko vrha unutrasnjih stranica. */
+  .page-hero {
+    padding-top: 108px;
+  }
+
+  /* ── 2. TEKSTUALNI BLOKOVI ────────────────────────────────────
+     Natpis iznad, pasus obostrano poravnat, sirok bocni prostor i
+     mnogo vazduha iznad i ispod.                                     */
+
+  .eyebrow,
+  .ph-label,
+  .showcase-brand,
+  .footer-contact-eyebrow,
+  .m-label {
+    display: block;
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--brand-muted);
+  }
+  .m-label-light {
+    color: rgba(245, 243, 238, .62);
+  }
+
+  main section {
+    padding-left: var(--m-gutter);
+    padding-right: var(--m-gutter);
+  }
+  main section > p,
+  main section article > p,
+  main .ph-lead,
+  main .decking-story p,
+  main .spc-story p,
+  main .about-intro article p,
+  main .installation article p,
+  main .service-story article p,
+  main .recognition-head p,
+  main .editorial-copy p,
+  main .editorial-split p {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    font-size: 14px;
+    line-height: 1.62;
+  }
+  /* Nista u pasusima nije centrirano — ni naslovi ni natpisi nad njima. */
+  main section,
+  main section h1,
+  main section h2,
+  main section h3,
+  main section p,
+  main .about-cta,
+  main .editorial-copy,
+  main .catalog-empty,
+  main .contact-form {
+    text-align: left;
+  }
+  /* Razmak izmedju natpisa i teksta. */
+  main .eyebrow + h2,
+  main .ph-label + h1,
+  main .eyebrow + h1 {
+    margin-top: 22px;
+  }
+  .about-intro,
+  .service-story,
+  .installation,
+  .recognition,
+  .about-cta,
+  .calculator-section,
+  .catalog-section,
+  .editorial-copy,
+  .editorial-split,
+  .flooring-editorial,
+  .contact-page {
+    padding-top: var(--m-space);
+    padding-bottom: var(--m-space);
+  }
+
+  /* Sekundarni linkovi su tekst sa podvlakom, ne dugme. */
+  .recognition-link,
+  .about-cta a:not(.cta-dot),
+  .catalog-empty a,
+  .m-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--brand-brown);
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+
+  /* ── 3. VODORAVNE TRAKE (scroll-snap) ─────────────────────────
+     Umjesto mreze: prevlacenje prstom, bez strelica. Prva i zadnja
+     kartica su odsjecene na ivici, pa se vidi da ima jos.            */
+
+  .m-band {
+    display: block;
+    padding: var(--m-space) 0;
+  }
+  .m-band-head {
+    padding: 0 var(--m-gutter);
+    margin-bottom: 34px;
+  }
+  .m-heading {
+    margin: 22px 0 0;
+    font-family: var(--font-newsreader), serif;
+    font-size: 27px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -.02em;
+  }
+  .m-rail,
+  .panel-gallery {
+    display: flex;
+    gap: 14px;
+    margin: 0;
+    padding: 0 var(--m-gutter);
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    /* Traka nosi svoj scroll; bez ovoga se vidi sistemska sipka. */
+    scrollbar-width: none;
+  }
+  .m-rail::-webkit-scrollbar,
+  .panel-gallery::-webkit-scrollbar {
+    display: none;
+  }
+  .m-rail-item,
+  .panel-gallery figure {
+    flex: 0 0 auto;
+    /* 72vw: zadnja kartica ostaje zarezana na ivici i poslije snapa. */
+    width: 72vw;
+    margin: 0;
+    scroll-snap-align: start;
+  }
+  .m-rail-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .m-rail-media {
+    position: relative;
+    display: block;
+    /* Uspravna orijentacija, kao na referenci. */
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--cream-tint);
+  }
+  .m-rail-media img {
+    object-fit: cover;
+  }
+  .m-rail-caption {
+    display: block;
+    margin-top: 14px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--brand-brown);
+  }
+  /* Galerija dekora ide istom trakom. */
+  .panel-gallery {
+    padding-top: 8px;
+  }
+  .panel-gallery figure img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+  .catalog-section > h2 {
+    margin-bottom: 26px;
+    font-size: 20px;
+  }
+
+  /* ── 4. SLIKA PREKO CIJELE SIRINE SA TEKSTOM PREKO NJE ────────
+     Sekcije proizvoda: tekstura puni sirinu, tekst lezi u donjoj
+     trecini, bijel, sa podvucenim linkom ispod.                      */
+
+  main section.product-showcase {
+    position: relative;
+    padding: 0;
+    min-height: 92svh;
+    display: block;
+    isolation: isolate;
+  }
+  .product-showcase .showcase-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .product-showcase .showcase-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .product-showcase .showcase-panel {
+    position: relative;
+    z-index: 1;
+    min-height: 92svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 var(--m-gutter) 46px;
+    background: linear-gradient(
+      to bottom,
+      rgba(20, 15, 11, 0) 38%,
+      rgba(20, 15, 11, .58) 72%,
+      rgba(20, 15, 11, .78) 100%
+    );
+  }
+  .product-showcase .showcase-copy > * {
+    color: #fff;
+  }
+  .product-showcase .showcase-brand {
+    color: rgba(255, 255, 255, .72);
+  }
+  .product-showcase .showcase-copy h2 {
+    margin: 18px 0 14px;
+    font-size: 30px;
+    line-height: 1.1;
+    color: #fff;
+  }
+  .product-showcase .showcase-description {
+    text-align: justify;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, .88);
+  }
+  /* Sifra, tabela specifikacija, logo i mala fotografija sobe ne idu u
+     ovaj kadar — tekst preko slike mora ostati kratak. */
+  .product-showcase .showcase-code,
+  .product-showcase .showcase-specs,
+  .product-showcase .showcase-rule,
+  .product-showcase .showcase-foot {
+    display: none;
+  }
+  .product-showcase .showcase-copy .cta-dot,
+  .product-showcase .showcase-copy a {
+    align-self: flex-start;
+    margin-top: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+
+  /* ── 5. NAIZMJENICNO SVIJETLO / TAMNO ─────────────────────────
+     Tamne sekcije nose proces rada i „zasto mi".                     */
+
+  main .how.process-section,
+  main .service-story {
+    background: var(--m-dark);
+    color: rgba(245, 243, 238, .82);
+  }
+  main .how.process-section .eyebrow,
+  main .service-story .eyebrow {
+    color: rgba(245, 243, 238, .55);
+  }
+  main .how.process-section h2,
+  main .how.process-section h3,
+  main .service-story h2,
+  main .service-story h3,
+  main .how.process-section strong,
+  main .how.process-section b {
+    color: #fff;
+  }
+  main .service-story article p,
+  main .how.process-section .process-card-description {
+    color: rgba(245, 243, 238, .78);
+  }
+  main .service-story svg {
+    color: var(--brand-muted);
+  }
+  /* Razmak natpis → tekst je unutar tamnih sekcija veci. */
+  main .service-story > div {
+    margin-bottom: 62px;
+  }
+  main .service-story .service-columns {
+    display: grid;
+    gap: 58px;
+  }
+  main .service-story article h3 {
+    margin: 16px 0 12px;
+    font-size: 19px;
+  }
+
+  /* ── 6. ACCORDION ─────────────────────────────────────────────
+     Red sa nazivom i „+"; `<details>` nosi ponasanje, bez JS-a.      */
+
+  .m-acc {
+    display: block;
+    margin: 30px 0 34px;
+  }
+  .m-acc .m-label {
+    margin-bottom: 16px;
+  }
+  .m-acc-row {
+    border-top: 1px solid var(--brand-line);
+  }
+  .m-acc-row:last-of-type {
+    border-bottom: 1px solid var(--brand-line);
+  }
+  .m-acc-row summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 19px 0;
+    font-size: 14px;
+    color: var(--brand-brown);
+    cursor: pointer;
+    list-style: none;
+  }
+  /* Safari crta svoj trokut preko naseg znaka. */
+  .m-acc-row summary::-webkit-details-marker {
+    display: none;
+  }
+  .m-acc-row summary i {
+    position: relative;
+    flex: 0 0 auto;
+    width: 11px;
+    height: 11px;
+  }
+  .m-acc-row summary i::before,
+  .m-acc-row summary i::after {
+    content: "";
+    position: absolute;
+    background: var(--brand-brown);
+    transition: opacity 180ms ease;
+  }
+  .m-acc-row summary i::before {
+    top: 5px;
+    left: 0;
+    width: 11px;
+    height: 1px;
+  }
+  .m-acc-row summary i::after {
+    top: 0;
+    left: 5px;
+    width: 1px;
+    height: 11px;
+  }
+  /* Otvoren red: uspravna crta se gasi, pa „+" postaje „−". */
+  .m-acc-row[open] summary i::after {
+    opacity: 0;
+  }
+  .m-acc-row p {
+    margin: 0 0 20px;
+    padding-right: 24px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    text-align: justify;
+    color: var(--text-soft);
+  }
+  /* Tabela specifikacija i napomena ostaju samo na sirokom ekranu. */
+  .product-info dl,
+  .product-note {
+    display: none;
+  }
+  /* Spisak karakteristika na stranicama kategorija dobija istu tezinu. */
+  .spc-features ul {
+    padding-left: 0;
+    list-style: none;
+  }
+  .spc-features li {
+    padding: 14px 0;
+    border-top: 1px solid var(--brand-line);
+    font-size: 13.5px;
+  }
+
+  /* ── 7. IZJAVE (jedna odjednom, strelice u dnu) ───────────────── */
+
+  .m-quotes {
+    padding: var(--m-space) var(--m-gutter);
+    background: var(--cream-tint);
+  }
+  .m-quote {
+    margin: 30px 0 0;
+  }
+  .m-quote p {
+    margin: 0;
+    font-family: var(--font-newsreader), serif;
+    font-size: 19px;
+    line-height: 1.45;
+    text-align: justify;
+    color: var(--brand-brown);
+  }
+  .m-quote cite {
+    display: block;
+    margin-top: 22px;
+    font-size: 12px;
+    font-style: normal;
+    letter-spacing: .04em;
+    color: var(--text-soft);
+  }
+  .m-quote-nav {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-top: 52px;
+  }
+  .m-quote-nav button {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--brand-brown);
+    cursor: pointer;
+  }
+  .m-quote-count {
+    font-size: 11px;
+    letter-spacing: .16em;
+    color: var(--text-soft);
+  }
+
+  /* ── 8. TAMNA TRAKA IZNAD PODNOZJA ───────────────────────────── */
+
+  .m-cta-band {
+    display: block;
+    padding: 58px var(--m-gutter);
+    background: var(--m-dark);
+  }
+  .m-cta-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .m-cta-form input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0 0 10px;
+    border: 0;
+    /* Linija ispod, ne okvir. */
+    border-bottom: 1px solid rgba(245, 243, 238, .35);
+    border-radius: 0;
+    background: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  .m-cta-form input::placeholder {
+    color: rgba(245, 243, 238, .45);
+  }
+  .m-cta-form input:focus {
+    outline: none;
+    border-bottom-color: #fff;
+  }
+  .m-cta-form button {
+    flex: 0 0 auto;
+    padding: 0 0 10px;
+    border: 0;
+    background: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    cursor: pointer;
+  }
+  .m-cta-done {
+    margin: 22px 0 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    text-align: justify;
+    color: rgba(245, 243, 238, .78);
+  }
+
+  /* ── 9. PODNOZJE ─────────────────────────────────────────────── */
+
+  /* Sirok raspored podnozja se na telefonu ne prikazuje; `.m-foot` ga
+     zamjenjuje sa dvije kolone linkova, pasusom i kontaktom. */
+  footer.site-footer .footer-main {
+    display: none;
+  }
+  .m-foot {
+    display: block;
+    padding: 62px var(--m-gutter) 0;
+  }
+  .m-foot-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 34px 18px;
+  }
+  .m-foot-cols nav {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .m-foot-cols .m-label {
+    margin-bottom: 6px;
+  }
+  .m-foot-cols a {
+    font-size: 13.5px;
+    color: rgba(245, 243, 240, .82);
+    text-decoration: none;
+  }
+  .m-foot-copy {
+    margin: 52px 0 0;
+    font-size: 13px;
+    line-height: 1.62;
+    text-align: justify;
+    color: rgba(245, 243, 240, .6);
+  }
+  .m-foot-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 40px;
+    font-size: 13px;
+    font-style: normal;
+    color: rgba(245, 243, 240, .72);
+  }
+  .m-foot-contact a {
+    color: rgba(245, 243, 240, .88);
+    text-decoration: none;
+  }
+  footer.site-footer .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 46px;
+    padding: 22px var(--m-gutter) 30px;
+  }
+
+  /* ── 10. MREZA ARTIKALA: DVIJE KOLONE ────────────────────────── */
+
+  .catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px 14px;
+  }
+  .catalog-card {
+    padding: 0;
+  }
+  .catalog-image {
+    /* Isti odnos za svaku sliku, da red ne poskakuje. */
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+  .catalog-card h2 {
+    margin: 13px 0 5px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--brand-brown);
+  }
+  .catalog-card small {
+    font-size: 11px;
+    color: var(--text-soft);
+  }
+
+  /* ── KORPA U MENIJU ──────────────────────────────────────────── */
+
+  .menu-overlay-basket {
+    padding: 0 var(--m-gutter);
+    margin-top: 26px;
+  }
+  .menu-overlay-basket .nav-basket {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--brand-brown);
+  }
+  .menu-overlay-basket .nav-basket::after {
+    content: "Korpa";
+  }
+}
+
+/* ── Ispravke mobilnog sloja, prva runda ───────────────────────── */
+
+@media (max-width: 767px) {
+  /* Zaglavlje naslovne: providno preko snimka, puno poslije njega.
+     Bez toga tamni znak stoji nad tamnom sekcijom i ne vidi se. */
+  header.home-sticky-header.is-solid {
+    background: #f5f3eef2;
+    border-bottom: 1px solid rgba(59, 42, 33, .08);
+  }
+
+  /* Kartice procesa u tamnoj sekciji: podloga im je bila krem, pa je
+     bijeli naslov na njoj bio nevidljiv. Ostaje samo okvir. */
+  main .how.process-section .process-card,
+  main .how.process-section .process-card.is-active {
+    background: none;
+    border: 1px solid rgba(245, 243, 238, .16);
+    box-shadow: none;
+  }
+  main .how.process-section .process-card-copy {
+    background: none;
+  }
+  main .how.process-section .process-card b {
+    color: rgba(245, 243, 238, .5);
+  }
+  main .how.process-section .process-card strong {
+    color: #fff;
+  }
+  main .how.process-section .process-card-cta {
+    border-color: rgba(245, 243, 238, .5);
+    color: rgba(245, 243, 238, .92);
+  }
+}
+
+/* ── Ispravke mobilnog sloja, druga runda ──────────────────────── */
+
+@media (max-width: 767px) {
+  /*
+    Tekstura je punila samo gornjih 220px kadra: stariji mobilni raspored joj
+    daje fiksnu visinu, a kod `position: absolute` visina nadjacava `bottom: 0`
+    — pa `inset: 0` sam nije bio dovoljan.
+  */
+  main section.product-showcase .showcase-media {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+}
+
+/* ── Ispravke mobilnog sloja, treca runda ──────────────────────── */
+
+/* Kratak red i link u sekciji proizvoda postoje samo na telefonu — sirok
+   ekran na tom mjestu nosi tabelu specifikacija i logo marke. */
+.showcase-blurb,
+.showcase-more {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .product-showcase .showcase-blurb {
+    display: block;
+    margin: 0;
+    max-width: 30em;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: justify;
+    color: rgba(255, 255, 255, .88);
+  }
+  .product-showcase .showcase-more {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: 26px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+}
+
+/* ── Ispravke mobilnog sloja, cetvrta runda ────────────────────── */
+
+@media (max-width: 767px) {
+  /*
+    Kolekcija ispod naziva artikla bila je veca od samog naziva: stariji
+    `.catalog-link > small` nosi svoje velicine, pa ovdje ide selektor koji
+    ga nadjacava, a ne isti po tezini.
+  */
+  .catalog-grid .catalog-card .catalog-link > small {
+    margin-top: 4px;
+    font-size: 11px;
+    letter-spacing: .1em;
+    color: var(--text-soft);
+  }
+
+  /* Povezani artikli: mreza postaje traka kroz koju se prevlaci. */
+  .catalog-grid.is-rail {
+    display: flex;
+    gap: 14px;
+    padding: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .catalog-grid.is-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .catalog-grid.is-rail .catalog-card {
+    flex: 0 0 auto;
+    /* 62vw: zadnja kartica ostaje zarezana, pa se vidi da ima jos. */
+    width: 62vw;
+    scroll-snap-align: start;
+  }
+  .catalog-grid.is-rail .catalog-image {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* „Radno vrijeme" je natpis kao i svaki drugi iznad bloka. */
+  .hours b {
+    display: block;
+    margin-bottom: 14px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--brand-muted);
+  }
+  .hours {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 42px;
+  }
+
+  /* Naslov upita je stajao prilijepljen za prvo polje. */
+  .contact-form h2 {
+    margin-bottom: 34px;
+  }
+  .contact-form {
+    padding: 34px 22px 30px;
+  }
+}
+
+/* ── Ispravke mobilnog sloja, peta runda ───────────────────────────
+   Zasto `!important`: pri vrhu fajla stoji globalno pravilo
+   `p, li, label, input, small, .eyebrow, ... { font-size: var(--font-support)
+   !important }`. Ono gazi svaku velicinu koju ovdje postavimo, bez obzira na
+   tezinu selektora — pa se jedini nacin da mobilna tipografija dobije svoju
+   skalu poklapa sa nacinom na koji je ta skala i nametnuta.
+   ───────────────────────────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+  .eyebrow,
+  .ph-label {
+    font-size: 11px !important;
+  }
+  .catalog-grid .catalog-card .catalog-link > small {
+    font-size: 11px !important;
+  }
+  .m-acc-row p,
+  .m-cta-done,
+  .spc-features li {
+    font-size: 13.5px !important;
+  }
+  .m-quote p {
+    font-size: 19px !important;
+  }
+  .m-foot-copy,
+  .m-foot-contact,
+  .m-foot-contact a {
+    font-size: 13px !important;
+  }
+  .m-foot-cols a {
+    font-size: 13.5px !important;
+  }
+}

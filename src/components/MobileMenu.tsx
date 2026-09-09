@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 import { useQuote } from "./QuoteProvider";
+import BasketMenu from "./BasketMenu";
 
 /**
  * Meni preko cijelog ekrana. Ranije je to bila trakica koja se spustala ispod
@@ -98,6 +99,14 @@ export default function MobileMenu({
           </Link>
         ))}
       </nav>
+
+      {/*
+        Korpa je izasla iz zaglavlja — tamo su na telefonu ostali samo znak i
+        hamburger — pa svoje mjesto ima ovdje, kao red menija.
+      */}
+      <div className="menu-overlay-basket">
+        <BasketMenu />
+      </div>
 
       <div className="menu-overlay-foot">
         <button

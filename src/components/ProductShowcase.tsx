@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 /**
  * Detalj jednog artikla: tekst na jednoj polovini, tekstura preko cijele
@@ -23,6 +24,14 @@ export type ShowcaseProduct = {
   brandLogoAlt?: string;
   /** Dva reda teksta u dnu, kad marka nema logotip. */
   wordmark?: [string, string];
+  /*
+    Kratak red i link ispod njega nose sekciju na telefonu: tamo tekst lezi
+    preko slike, pa tabela specifikacija i logo ne idu s njim. Podaci su isti
+    kao u `specs` — samo sazeti u jednu recenicu.
+  */
+  blurb?: string;
+  href?: string;
+  hrefLabel?: string;
 };
 
 export const wickedHarvestOak: ShowcaseProduct = {
@@ -45,6 +54,10 @@ export const wickedHarvestOak: ShowcaseProduct = {
   roomAlt: "Dnevni boravak sa podom u riblja kost dezenu",
   brandLogo: "/images/product/logo-krono-original.png",
   brandLogoAlt: "Krono Original",
+  blurb:
+    "Kolekcija Herringbone 8 u riblja-kost formatu: laminat klase AC4/32, debljine 8 mm, sa 1clic2go pure+ sistemom spoja.",
+  href: "/proizvodi/laminati",
+  hrefLabel: "Pogledaj laminate",
 };
 
 export const miram: ShowcaseProduct = {
@@ -68,6 +81,10 @@ export const miram: ShowcaseProduct = {
   textureAlt: "SPC vinyl pod Miram, prirodna drvena tekstura",
   room: "/images/product/natural-floor-detail.webp",
   roomAlt: "Detalj daske SPC vinyl poda Miram",
+  blurb:
+    "Kolekcija Natural Floor: SPC vinyl debljine 4 mm, klase AC4/34, sa mikro V fugom i potpunom vodootpornošću.",
+  href: "/proizvodi/spc-vinyl-decking",
+  hrefLabel: "Pogledaj SPC vinyl",
 };
 
 export default function ProductShowcase({
@@ -91,6 +108,13 @@ export default function ProductShowcase({
           <h2 id={titleId}>{product.name}</h2>
           {product.code && <p className="showcase-code">Šifra proizvoda: {product.code}</p>}
           {product.description && <p className="showcase-description">{product.description}</p>}
+          {/* Oboje se vidi samo na telefonu — vidi globals.css. */}
+          {product.blurb && <p className="showcase-blurb">{product.blurb}</p>}
+          {product.href && (
+            <Link className="showcase-more" href={product.href}>
+              {product.hrefLabel ?? "Pogledaj ponudu"}
+            </Link>
+          )}
 
           <hr className="showcase-rule" />
 
