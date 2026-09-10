@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import IskustvoKadar from "./IskustvoKadar";
+import KadarRaste from "./KadarRaste";
 
 /**
  * Sekcija odmah ispod snimka, prije "Asortimana".
@@ -37,7 +37,11 @@ export default function Iskustvo() {
         </figure>
       </div>
 
-      <IskustvoKadar />
+      <KadarRaste
+        src="/images/iskustvo-soba.webp"
+        alt="Dnevni boravak sa podom iz ponude MT PONOS"
+        klasa="isk-kadar"
+      />
 
       <div className="isk-dno">
         <p className="isk-godina">
