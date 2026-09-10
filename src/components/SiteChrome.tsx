@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, CircleArrowOutUpRight } from "lucide-react";
 import { categories } from "@/data/catalog";
 import QuoteCta from "./QuoteCta";
 import BasketMenu from "./BasketMenu";
@@ -59,71 +59,75 @@ export function Header() {
     </header>
   );
 }
-function LegacyFooter() {
-  return (
-    <footer className="site-footer">
-      <nav className="footer-primary" aria-label="Navigacija u podnožju">
-        <Link href="/proizvodi">Proizvodi</Link>
-        <Link href="/o-nama">O nama</Link>
-      </nav>
-      <div className="footer-mark">
-        <Wordmark light />
-      </div>
-      <nav className="footer-secondary" aria-label="Korisni linkovi">
-        <Link href="/kontakt">Kontakt</Link>
-        <Link href="/vizualizator">Vizualizator</Link>
-      </nav>
-      <address className="footer-contact">
-        <span>MT Ponos d.o.o.</span>
-        <span>Banja Luka, RS</span>
-        <strong>Kontaktirajte nas</strong>
-        <a href="tel:+38751386386">T: &nbsp;+387 51 386 386</a>
-        <a href="mailto:info@mtponos.com">info@mtponos.com</a>
-      </address>
-      <small className="footer-copyright">
-        © {new Date().getFullYear()} MT PONOS. Sva prava zadržana.
-      </small>
-      <small className="footer-credit">
-        Koncept i izrada Studio BLink
-      </small>
-    </footer>
-  );
-}
 export function Footer() {
   return (
-    <>
-      {/* Iznad podnozja je stajala tamna traka sa poljem za email ("Ponuda na
-          email"). Izasla je cijela: adresa se cuvala samo lokalno na uredaju,
-          jer sajt nema posiljaoca poste iza sebe — pa je traka trazila nesto
-          sa cim nije imala sta da uradi. */}
-      <footer className="site-footer">
-      <div className="footer-main">
-        <nav className="footer-nav" aria-label="Navigacija u podnožju">
-          <Link href="/proizvodi">Proizvodi</Link>
-          <Link href="/o-nama">O nama</Link>
-          <Link href="/vizualizator">Vizualizator</Link>
-          <Link href="/kontakt">Kontakt</Link>
-        </nav>
-        <div className="footer-brand-column">
-          <Wordmark light />
-          <p>MT Ponos d.o.o.<br />Banja Luka, RS</p>
+    <footer className="site-footer">
+      {/*
+        Slog je iz predloska koji je Marija dala: znak na vrhu, pa red sa
+        lokacijom i kontaktom sitnim slogom, pa krupna serifna navigacija,
+        pa poziv na kontakt i mala kartica sa slikom. Crte izmedju blokova
+        nisu <hr> nego `border-top` na bloku koji dolazi — jedan element
+        manje po razmaku.
+
+        U predlosku ispod kartice stoje tri tackice, jer je tamo niz koji
+        se lista. Ovdje je jedna kartica, pa tackica nema.
+      */}
+      <div className="ft-vrh">
+        <Wordmark light />
+      </div>
+
+      <div className="ft-meta">
+        <div className="ft-kolona">
+          <span className="ft-natpis">Lokacija</span>
+          <address>
+            Put srpskih branilaca 47,
+            <br />
+            Derviši, 78000 Banja Luka,
+            <br />
+            Republika Srpska
+          </address>
         </div>
-        <address className="footer-contact-column">
-          <span className="footer-contact-eyebrow">KONTAKT</span>
-          <a className="footer-phone" href="tel:+38751386386">+387 51 386 386</a>
-          <a className="footer-email" href="mailto:info@mtponos.com">info@mtponos.com</a>
-          <div className="footer-hours">
-            <span>Pon–pet: 08:00–19:00</span>
-            <span>Subota: 08:00–16:00</span>
-          </div>
-        </address>
+        <div className="ft-kolona">
+          <span className="ft-natpis">Kontakt</span>
+          <a href="tel:+38751386386">+387 51 386 386</a>
+          <a href="mailto:info@mtponos.com">info@mtponos.com</a>
+        </div>
       </div>
-      <div className="footer-bottom">
-        <small>© 2026 MT PONOS. Sva prava zadržana.</small>
-        <small>Koncept i izrada Studio BLink</small>
+
+      <nav className="ft-nav" aria-label="Navigacija u podnožju">
+        <Link href="/">Početna</Link>
+        <Link href="/proizvodi">Proizvodi</Link>
+        <Link href="/vizualizator">Vizualizator</Link>
+        <Link href="/akcija">Akcija</Link>
+        <Link href="/o-nama">O nama</Link>
+      </nav>
+
+      <Link href="/kontakt" className="ft-poziv">
+        <span>Kontaktirajte nas</span>
+        <CircleArrowOutUpRight size={26} aria-hidden="true" />
+      </Link>
+
+      <Link href="/proizvodi/spc-vinyl-decking" className="ft-kartica">
+        <Image
+          src="/images/footer/decking-terasa.webp"
+          alt=""
+          width={320}
+          height={320}
+        />
+        <div>
+          <h3>Vanjski decking</h3>
+          <p>
+            Daske za terase i dvorišta. Ne trunu i ne cijepaju se — voda, mraz
+            i sunce ih ne diraju.
+          </p>
+        </div>
+      </Link>
+
+      <div className="ft-dno">
+        <span>© {new Date().getFullYear()} MT PONOS. Sva prava zadržana.</span>
+        <span>Koncept i izrada Studio BLink</span>
       </div>
-      </footer>
-    </>
+    </footer>
   );
 }
 /**

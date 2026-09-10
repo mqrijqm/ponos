@@ -567,129 +567,6 @@ header nav {
   }
 }
 
-/* Footer layout */
-footer.site-footer {
-  min-height: 0;
-  padding: 80px 48px 48px;
-  display: block;
-  /* Ista tamna koju na telefonu nose tamne trake (--m-dark). Bila je kafena
-     iz logotipa (#463c35) — ovo je dublje i podnozje sjeda kao dno stranice,
-     a ne kao jos jedna smedja sekcija. */
-  background: var(--ink-deep);
-  color: var(--cream);
-}
-.footer-main {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 48px 48px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 48px;
-  align-items: start;
-}
-.footer-nav {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-  font-family: var(--font-newsreader), serif;
-  font-size: 17px;
-  font-weight: 400;
-  letter-spacing: .08em;
-  line-height: 2.1;
-  text-transform: uppercase;
-}
-.footer-nav a,
-.footer-phone { transition: opacity 200ms ease; }
-.footer-nav a:hover,
-.footer-phone:hover { opacity: .7; }
-.footer-brand-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-footer.site-footer .footer-brand-column .brand.brand-image {
-  width: 220px;
-  height: auto;
-  aspect-ratio: auto;
-  margin: 0;
-}
-.footer-brand-column p {
-  margin: 24px 0 0;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  opacity: .6;
-}
-.footer-contact-column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-  font-style: normal;
-}
-.footer-contact-eyebrow {
-  margin-bottom: 16px;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 12px;
-  letter-spacing: .14em;
-  opacity: .5;
-}
-.footer-phone {
-  font-family: var(--font-newsreader), serif;
-  font-size: 26px;
-  line-height: 1.1;
-}
-.footer-email {
-  margin-top: 8px;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 15px;
-  opacity: .8;
-}
-.footer-hours {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 32px;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  opacity: .6;
-}
-.footer-bottom {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 24px 48px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid #ffffff14;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 13px;
-  opacity: .5;
-}
-.footer-bottom small { font-size: inherit; }
-@media (max-width: 900px) {
-  footer.site-footer { padding: 56px 24px 28px; }
-  .footer-main {
-    padding: 0 0 40px;
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-  .footer-brand-column { order: 1; }
-  footer.site-footer .footer-brand-column .brand.brand-image { width: 180px; }
-  .footer-nav { order: 2; align-items: center; width: 100%; text-align: center; font-size: 16px; }
-  .footer-contact-column { order: 3; align-items: center; text-align: center; }
-  .footer-phone { font-size: 22px; }
-  .footer-bottom { padding: 18px 0 0; flex-direction: column; gap: 8px; text-align: center; }
-}
-footer.site-footer .footer-main { display: grid; }
-footer.site-footer .footer-brand-column { display: flex; }
-footer.site-footer .footer-bottom { display: flex; }
-footer.site-footer .footer-main { display: grid; }
-footer.site-footer .footer-brand-column { display: flex; }
-footer.site-footer .footer-bottom { display: flex; }
 @media (prefers-reduced-motion: reduce) {
   .home-sticky-header {
     transition: none;
@@ -1331,34 +1208,6 @@ footer.site-footer .footer-bottom { display: flex; }
   border-top: 1px solid var(--l);
   padding-top: 20px;
 }
-footer {
-  background: var(--ink-deep);
-  color: var(--cream);
-  padding: 65px 7vw 24px;
-  display: grid;
-  grid-template-columns: 1.5fr 1.5fr repeat(3, 1fr);
-  gap: 35px;
-}
-footer > p {
-  font-size: 10px;
-  color: #999;
-  line-height: 1.7;
-}
-footer > div:not(.brand) {
-  display: grid;
-  align-content: start;
-  gap: 8px;
-  font-size: 9px;
-}
-.copyright {
-  grid-column: 1/-1;
-  border-top: 1px solid #444;
-  padding-top: 18px;
-  color: #888;
-}
-.copyright span {
-  float: right;
-}
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1513,9 +1362,6 @@ footer > div:not(.brand) {
   .trust {
     padding: 60px 6vw;
   }
-  footer {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 @media (max-width: 480px) {
   .header-cta {
@@ -1557,8 +1403,7 @@ footer > div:not(.brand) {
   .calculator {
     padding: 22px 17px;
   }
-  .how,
-  footer {
+  .how {
     grid-template-columns: 1fr;
   }
   .quote-modal {
@@ -1566,10 +1411,6 @@ footer > div:not(.brand) {
   }
   .form-row {
     grid-template-columns: 1fr;
-  }
-  .copyright span {
-    float: none;
-    display: block;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2603,12 +2444,6 @@ html.stats-scroll-locked body {
   object-fit: contain;
   object-position: left center;
 }
-footer .brand.brand-image {
-  width: 132px;
-  height: 116px;
-  align-self: start;
-  margin: 0;
-}
 header:has(.brand-image) {
   height: 88px;
 }
@@ -2623,10 +2458,6 @@ header:has(.brand-image) {
   }
   header:has(.brand-image) {
     height: 68px;
-  }
-  footer .brand.brand-image {
-    width: 110px;
-    height: 96px;
   }
 }
 .awards-showcase {
@@ -2892,117 +2723,6 @@ header:has(.brand-image) {
   width: 21px;
   height: 21px;
   flex: 0 0 auto;
-}
-
-/* Editorial footer */
-footer.site-footer {
-  min-height: min(620px, 68vh);
-  padding: clamp(40px, 5vw, 70px) 4vw 28px;
-  background: var(--ink-deep);
-  color: var(--cream);
-  display: grid;
-  grid-template-columns: 1fr minmax(260px, 1.2fr) 1fr;
-  grid-template-rows: auto 1fr auto;
-  gap: 26px 6vw;
-  position: relative;
-}
-.footer-primary,
-.footer-secondary {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(12px, .85vw, 15px);
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-.footer-secondary {
-  align-items: flex-end;
-  text-align: right;
-}
-.footer-primary a,
-.footer-secondary a {
-  transition: color 180ms ease, transform 180ms ease;
-}
-.footer-primary a:hover,
-.footer-secondary a:hover {
-  color: #fff;
-  transform: translateX(4px);
-}
-.footer-secondary a:hover {
-  transform: translateX(-4px);
-}
-.footer-mark {
-  grid-column: 2;
-  grid-row: 1 / 3;
-  display: grid;
-  place-items: center;
-}
-footer.site-footer .footer-mark .brand.brand-image {
-  width: clamp(180px, 19vw, 290px);
-  height: auto;
-  aspect-ratio: 233 / 204;
-  margin: 0;
-}
-.footer-contact {
-  align-self: end;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  color: var(--brand-line);
-  font-style: normal;
-  font-size: clamp(14px, 1.05vw, 18px);
-  line-height: 1.45;
-}
-.footer-contact strong {
-  margin-top: 24px;
-  font-weight: 500;
-}
-.footer-copyright,
-.footer-credit {
-  align-self: end;
-  color: rgba(245, 243, 240, .55);
-  font-size: clamp(11px, 0.85vw, 14px);
-}
-.footer-copyright {
-  grid-column: 1 / 3;
-}
-.footer-credit {
-  grid-column: 3;
-  text-align: right;
-}
-@media (max-width: 760px) {
-  footer.site-footer {
-    min-height: 570px;
-    padding: 40px 6vw 22px;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto 1fr auto auto;
-    gap: 25px 18px;
-  }
-  .footer-primary,
-  .footer-secondary {
-    font-size: 19px;
-  }
-  .footer-mark {
-    grid-column: 1 / 3;
-    grid-row: 2;
-    padding: 10px 0;
-  }
-  footer.site-footer .footer-mark .brand.brand-image {
-    width: 150px;
-    height: auto;
-  }
-  .footer-contact {
-    grid-column: 1 / 3;
-    grid-row: 3;
-    font-size: 14px;
-  }
-  .footer-copyright,
-  .footer-credit {
-    grid-column: 1 / 3;
-    text-align: left;
-  }
 }
 
 .flooring-editorial {
@@ -3354,7 +3074,7 @@ footer.site-footer .footer-mark .brand.brand-image {
 p, li, label, input, select, textarea, small, figcaption, blockquote,
 .eyebrow, .crumb, .phone, .hero-facts span, .hero-facts b,
 .product p, .product small, .selected span, .selected p,
-.panel-title span, .privacy-note, .footer-copyright, .footer-credit,
+.panel-title span, .privacy-note,
 .hours span, .locations small, .home-hero-copy p {
   font-size: var(--font-support) !important;
 }
@@ -3574,33 +3294,6 @@ main > section:not(.home-hero) {
 }
 @media (prefers-reduced-motion: reduce) {
   .process-accordion, .process-card, .process-card-media, .process-card-description { transition-duration: .01ms !important; }
-}
-
-/* Footer layout overrides legacy footer rules. */
-footer.site-footer { min-height: 0; padding: 80px 48px 48px; display: block; }
-.footer-main { max-width: 1280px; margin: 0 auto; padding: 0 48px 48px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; align-items: start; }
-.footer-nav { display: flex; flex-direction: column; align-items: flex-start; gap: 0; color: var(--cream); font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 400; letter-spacing: .08em; line-height: 2.4; text-transform: uppercase; }
-.footer-nav a, .footer-phone { transition: opacity 200ms ease; }
-.footer-nav a:hover, .footer-phone:hover { opacity: .7; }
-.footer-brand-column { display: flex; flex-direction: column; align-items: center; text-align: center; }
-footer.site-footer .footer-brand-column .brand.brand-image { width: 220px; height: auto; aspect-ratio: auto; margin: 0 auto; }
-.footer-brand-column p { margin: 24px 0 0; color: rgba(245, 243, 240, .62); font-family: var(--font-manrope), sans-serif; font-size: 14px; line-height: 1.6; }
-.footer-contact-column { display: flex; flex-direction: column; align-items: flex-end; text-align: right; font-style: normal; }
-.footer-contact-eyebrow { margin-bottom: 16px; color: rgba(245, 243, 240, .55); font-family: var(--font-manrope), sans-serif; font-size: 12px; letter-spacing: .14em; }
-.footer-phone { color: var(--cream); font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 1.2; }
-.footer-email { margin-top: 8px; color: var(--cream); font-family: var(--font-manrope), sans-serif; font-size: 15px; }
-.footer-hours { display: flex; flex-direction: column; gap: 2px; margin-top: 32px; color: rgba(245, 243, 240, .62); font-family: var(--font-manrope), sans-serif; font-size: 14px; line-height: 1.6; }
-.footer-bottom { max-width: 1280px; margin: 0 auto; padding: 24px 48px 0; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(245, 243, 240, .18); color: rgba(245, 243, 240, .55); font-family: var(--font-manrope), sans-serif; font-size: 13px; }
-.footer-bottom small { font-size: inherit; }
-@media (max-width: 900px) {
-  footer.site-footer { padding: 56px 24px 28px; }
-  .footer-main { padding: 0 0 40px; grid-template-columns: 1fr; gap: 40px; }
-  .footer-brand-column { order: 1; }
-  footer.site-footer .footer-brand-column .brand.brand-image { width: 180px; margin: 0 auto; }
-  .footer-nav { order: 2; align-items: center; width: 100%; text-align: center; font-size: 16px; }
-  .footer-contact-column { order: 3; align-items: center; text-align: center; }
-  .footer-phone { font-size: 22px; }
-  .footer-bottom { padding: 18px 0 0; flex-direction: column; gap: 8px; text-align: center; }
 }
 
 /* ---------- Navigacija: padajuci meni za Proizvode ---------- */
@@ -4956,27 +4649,6 @@ main > section.editorial-statement {
   }
 }
 
-/* ═══ Footer: topli off-white prelazi u cisto bijelo ═══ */
-footer.site-footer,
-footer.site-footer .footer-nav,
-footer.site-footer .footer-phone,
-footer.site-footer .footer-email {
-  color: #ffffff;
-}
-footer.site-footer .footer-brand-column p,
-footer.site-footer .footer-hours {
-  color: rgba(255, 255, 255, .62);
-}
-footer.site-footer .footer-contact-eyebrow,
-footer.site-footer .footer-bottom,
-footer.site-footer .footer-credit,
-footer.site-footer .footer-copyright {
-  color: rgba(255, 255, 255, .55);
-}
-footer.site-footer .footer-bottom {
-  border-top-color: rgba(255, 255, 255, .18);
-}
-
 /* ═══ Traka pločica: flex red umjesto apsolutnih grupa ═══
    Sedam pločica ravnomjerno raspoređenih preko cijele sirine.
    Grupe su `display: contents` — postoje samo u markupu, a pločice iz
@@ -6148,7 +5820,6 @@ html.menu-open body {
   .eyebrow,
   .ph-label,
   .showcase-brand,
-  .footer-contact-eyebrow,
   .m-label {
     display: block;
     font-family: var(--font-manrope), Arial, sans-serif;
@@ -6618,19 +6289,6 @@ html.menu-open body {
     line-height: 1.6;
     text-align: justify;
     color: rgba(245, 243, 238, .78);
-  }
-
-  /* ── 9. PODNOZJE ─────────────────────────────────────────────── */
-
-  /* Podnozje na telefonu je isto ono koje nosi i sirok ekran: dvije kolone
-     linkova, pasus i kontakt su izbaceni. Ostaje samo raspored posljednjeg
-     reda, da copyright i kredit stanu jedan pod drugi. */
-  footer.site-footer .footer-bottom {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 46px;
-    padding: 22px var(--m-gutter) 30px;
   }
 
   /* ── 10. MREZA ARTIKALA: DVIJE KOLONE ────────────────────────── */
@@ -8449,4 +8107,177 @@ main .quality-statement .qs-lede {
 /* Naglasene rijeci u izjavi ne izlaze iz boje — nosila ih je smedja. */
 .editorial-statement .es-word-accent {
   color: #8b7e6e !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PODNOZJE
+   Slog je iz predloska: znak na vrhu, red sa lokacijom i kontaktom
+   sitnim slogom, krupna serifna navigacija sa samo prvim slovom
+   velikim, poziv na kontakt i mala kartica sa slikom.
+
+   Crte izmedju blokova su `border-top` na bloku koji dolazi, ne <hr>.
+
+   Ranije je podnozje imalo pet blokova pravila koja su se pisala jedno
+   preko drugog (dva "Footer layout", "Editorial footer", blok sa
+   bojama i mobilni ostatak). Sada je jedno mjesto.
+   ═══════════════════════════════════════════════════════════════════ */
+footer.site-footer {
+  display: block;
+  min-height: 0;
+  padding: 28px var(--page-gutter) 30px;
+  background: var(--ink-deep);
+  color: var(--cream);
+}
+.ft-vrh {
+  padding-bottom: 20px;
+}
+/*
+  Znak je sirok koliko mu se kaze, visok koliko ispadne. Zatecena pravila
+  daju `.brand-image` fiksnu visinu i slici `height: 100%` — bez ovoga
+  slika ostane bez visine i znak se ne vidi.
+*/
+footer.site-footer .ft-vrh .brand.brand-image {
+  width: 128px;
+  height: auto;
+  margin: 0;
+  aspect-ratio: auto;
+}
+footer.site-footer .ft-vrh .brand-image img {
+  height: auto;
+}
+
+/* ─── Lokacija i kontakt: sitan sans u dvije kolone ─── */
+.ft-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px 0 28px;
+  border-top: 1px solid #ffffff29;
+}
+.ft-kolona {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+/* Natpis je serif, sadrzaj ispod njega sans — kao u predlosku. */
+.ft-natpis {
+  margin-bottom: 11px;
+  font-family: var(--font-newsreader), serif;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.66;
+}
+.ft-kolona address,
+.ft-kolona a {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.6;
+}
+.ft-kolona a {
+  transition: opacity 200ms ease;
+}
+.ft-kolona a:hover {
+  opacity: 0.7;
+}
+
+/* ─── Navigacija: krupan serif, samo prvo slovo veliko ─── */
+.ft-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px 0 28px;
+  border-top: 1px solid #ffffff29;
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(32px, 10.4vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+}
+.ft-nav a {
+  transition: opacity 200ms ease;
+}
+.ft-nav a:hover {
+  opacity: 0.62;
+}
+
+/*
+  U predlosku izmedju navigacije i poziva stoji prazan prostor, jer je to
+  meni preko cijelog ekrana i donji dio je gurnut na dno. Ovdje je to
+  obican razmak — podnozje nema visinu ekrana da je puni.
+*/
+.ft-poziv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 34px;
+  padding: 24px 0 22px;
+  border-top: 1px solid #ffffff29;
+  color: inherit;
+  font-family: var(--font-newsreader), serif;
+  font-size: clamp(26px, 8.6vw, 40px);
+  line-height: 1.05;
+  text-decoration: none;
+  transition: opacity 200ms ease;
+}
+.ft-poziv:hover {
+  opacity: 0.75;
+}
+.ft-poziv svg {
+  flex: 0 0 auto;
+  stroke-width: 1.3;
+}
+
+/* ─── Kartica: slika mala i zgurana uz tekst ─── */
+.ft-kartica {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 13px;
+  /* Slika ide od vrha do dna kartice, kao u predlosku — ne stoji kao
+     kvadratic uz prvi red teksta. */
+  align-items: stretch;
+  padding: 10px;
+  border: 1px solid #ffffff29;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 200ms ease;
+}
+.ft-kartica:hover {
+  border-color: #ffffff52;
+}
+.ft-kartica img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 76px;
+  object-fit: cover;
+}
+.ft-kartica h3 {
+  margin: 3px 0 7px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+}
+/*
+  Pravilo "supporting copy" gore nosi `font-size: ... !important` na svaki
+  <p> na sajtu. Ovdje je slog kartice sitniji od toga, pa mora istom
+  tezinom i jacom specificnoscu.
+*/
+footer.site-footer .ft-kartica p {
+  margin: 0;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px !important;
+  line-height: 1.45;
+  opacity: 0.72;
+}
+
+.ft-dno {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 28px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  opacity: 0.42;
 }
