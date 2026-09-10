@@ -8158,7 +8158,7 @@ footer.site-footer .ft-kartica p {
   object-fit: cover;
 }
 .isk-kadar {
-  width: calc(32% + 42% * var(--kr));
+  width: calc(26% + 48% * var(--kr));
   margin: clamp(96px, 28vw, 190px) auto;
 }
 
@@ -8225,11 +8225,11 @@ footer.site-footer .ft-kartica p {
    ovdje je slika glavna stvar, pa se penje skoro do ivica ekrana.
    ═══════════════════════════════════════════════════════════════════ */
 .predah {
-  padding: clamp(56px, 16vw, 120px) 0 clamp(46px, 13vw, 100px);
+  padding: clamp(56px, 16vw, 120px) 0 0;
   background: var(--cream-tint);
 }
 .pr-kadar {
-  width: calc(42% + 52% * var(--kr));
+  width: calc(26% + 50% * var(--kr));
   margin: 0 auto;
 }
 /*
@@ -8255,5 +8255,102 @@ footer.site-footer .ft-kartica p {
 .pr-naslov span {
   font-size: clamp(34px, 12vw, 68px);
   letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PREGLED LAMINATA — PET BLOKOVA PREPOLOVLJENIH NA DVOJE
+   Nastavak predaha, na istoj podlozi: tacka kao predah, pa pet blokova
+   u kojima je dekor lijevo a broj i kolekcija desno, pa ime grupe.
+
+   Blokovi ulaze jedan za drugim. Svih pet stane na ekran odjednom, pa
+   ulazak u vidno polje sam po sebi ne bi dao red — zastoj po mjestu u
+   nizu upisuje komponenta, u `style`, jer zavisi od rednog broja.
+   ═══════════════════════════════════════════════════════════════════ */
+.pregled {
+  padding: 0 var(--page-gutter) clamp(46px, 13vw, 100px);
+  background: var(--cream-tint);
+}
+.pg-tacka {
+  display: block;
+  width: 7px;
+  height: 7px;
+  margin: clamp(58px, 17vw, 120px) auto;
+  border-radius: 50%;
+  background: var(--brand-brown);
+}
+
+.pg-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pg-blok {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 560ms ease, transform 560ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.pg-blok.je-tu {
+  opacity: 1;
+  transform: none;
+}
+.pg-blok a {
+  display: grid;
+  /* Prepolovljeno: dekor lijevo, natpis desno, bez razmaka izmedju. */
+  grid-template-columns: 1fr 1fr;
+  color: inherit;
+  text-decoration: none;
+}
+.pg-slika {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1.7 / 1;
+  background: var(--cream);
+}
+.pg-slika img {
+  object-fit: cover;
+}
+.pg-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  background: var(--cream);
+}
+/* Broj nosi kratku crtu pod sobom, kao u predlosku — zato `align-self`,
+   da se crta zaustavi na sirini broja a ne cijele kolone. */
+.pg-info b {
+  align-self: flex-start;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+}
+.pg-info > span {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.pg-naslov {
+  margin: clamp(40px, 11vw, 76px) 0 0;
+  color: var(--brand-brown);
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(34px, 12vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1;
+  text-align: center;
   text-transform: uppercase;
 }

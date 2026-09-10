@@ -14,6 +14,7 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import Asortiman from "./landing/Asortiman";
 import Iskustvo from "./landing/Iskustvo";
 import Predah from "./landing/Predah";
+import PregledLaminata from "./landing/PregledLaminata";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
 import OvalDugme from "./landing/OvalDugme";
@@ -214,6 +215,7 @@ export default function SitePage() {
         */}
         <Iskustvo />
         <Predah />
+        <PregledLaminata />
         <Asortiman />
         {/* Sekcija o kvalitetu je bila pri dnu, iza dva prikaza proizvoda i
             klizaca; sada stoji odmah iza ponude. */}
