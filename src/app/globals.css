@@ -8128,49 +8128,33 @@ footer.site-footer {
   background: var(--ink-deep);
   color: var(--cream);
 }
-.ft-vrh {
-  padding-bottom: 20px;
-}
-/*
-  Znak je sirok koliko mu se kaze, visok koliko ispadne. Zatecena pravila
-  daju `.brand-image` fiksnu visinu i slici `height: 100%` — bez ovoga
-  slika ostane bez visine i znak se ne vidi.
-*/
-footer.site-footer .ft-vrh .brand.brand-image {
-  width: 128px;
-  height: auto;
-  margin: 0;
-  aspect-ratio: auto;
-}
-footer.site-footer .ft-vrh .brand-image img {
-  height: auto;
-}
-
 /* ─── Lokacija i kontakt: sitan sans u dvije kolone ─── */
+/* Prvi blok u podnozju — nema crte iznad sebe, sama tamna podloga
+   odvaja podnozje od stranice. */
 .ft-meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  padding: 20px 0 28px;
-  border-top: 1px solid #ffffff29;
+  padding: 4px 0 26px;
 }
 .ft-kolona {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
-/* Natpis je serif, sadrzaj ispod njega sans — kao u predlosku. */
 .ft-natpis {
-  margin-bottom: 11px;
-  font-family: var(--font-newsreader), serif;
-  font-size: 14px;
+  margin-bottom: 12px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
   line-height: 1;
-  opacity: 0.66;
+  text-transform: uppercase;
+  opacity: 0.6;
 }
 .ft-kolona address,
 .ft-kolona a {
   font-family: var(--font-manrope), sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
   line-height: 1.6;
 }
@@ -8189,8 +8173,8 @@ footer.site-footer .ft-vrh .brand-image img {
   padding: 24px 0 28px;
   border-top: 1px solid #ffffff29;
   font-family: var(--font-newsreader), serif;
-  font-size: clamp(32px, 10.4vw, 46px);
-  line-height: 1.1;
+  font-size: clamp(25px, 7.7vw, 34px);
+  line-height: 1.18;
   letter-spacing: -0.012em;
 }
 .ft-nav a {
@@ -8205,27 +8189,21 @@ footer.site-footer .ft-vrh .brand-image img {
   meni preko cijelog ekrana i donji dio je gurnut na dno. Ovdje je to
   obican razmak — podnozje nema visinu ekrana da je puni.
 */
+/* Natpis ide u dva reda, pa moze biti krupniji od navigacije iznad. */
 .ft-poziv {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  display: block;
   margin-top: 34px;
   padding: 24px 0 22px;
   border-top: 1px solid #ffffff29;
   color: inherit;
   font-family: var(--font-newsreader), serif;
-  font-size: clamp(26px, 8.6vw, 40px);
-  line-height: 1.05;
+  font-size: clamp(30px, 9.6vw, 44px);
+  line-height: 1.06;
   text-decoration: none;
   transition: opacity 200ms ease;
 }
 .ft-poziv:hover {
   opacity: 0.75;
-}
-.ft-poziv svg {
-  flex: 0 0 auto;
-  stroke-width: 1.3;
 }
 
 /* ─── Kartica: slika mala i zgurana uz tekst ─── */

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronDown, CircleArrowOutUpRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { categories } from "@/data/catalog";
 import QuoteCta from "./QuoteCta";
 import BasketMenu from "./BasketMenu";
@@ -63,19 +63,15 @@ export function Footer() {
   return (
     <footer className="site-footer">
       {/*
-        Slog je iz predloska koji je Marija dala: znak na vrhu, pa red sa
-        lokacijom i kontaktom sitnim slogom, pa krupna serifna navigacija,
-        pa poziv na kontakt i mala kartica sa slikom. Crte izmedju blokova
+        Slog je iz predloska koji je Marija dala: red sa lokacijom i
+        kontaktom sitnim verzalom, pa serifna navigacija, pa poziv na
+        kontakt u dva reda i mala kartica sa slikom. Crte izmedju blokova
         nisu <hr> nego `border-top` na bloku koji dolazi — jedan element
         manje po razmaku.
 
         U predlosku ispod kartice stoje tri tackice, jer je tamo niz koji
         se lista. Ovdje je jedna kartica, pa tackica nema.
       */}
-      <div className="ft-vrh">
-        <Wordmark light />
-      </div>
-
       <div className="ft-meta">
         <div className="ft-kolona">
           <span className="ft-natpis">Lokacija</span>
@@ -95,7 +91,6 @@ export function Footer() {
       </div>
 
       <nav className="ft-nav" aria-label="Navigacija u podnožju">
-        <Link href="/">Početna</Link>
         <Link href="/proizvodi">Proizvodi</Link>
         <Link href="/vizualizator">Vizualizator</Link>
         <Link href="/akcija">Akcija</Link>
@@ -103,8 +98,9 @@ export function Footer() {
       </nav>
 
       <Link href="/kontakt" className="ft-poziv">
-        <span>Kontaktirajte nas</span>
-        <CircleArrowOutUpRight size={26} aria-hidden="true" />
+        Kontaktirajte
+        <br />
+        nas
       </Link>
 
       <Link href="/proizvodi/spc-vinyl-decking" className="ft-kartica">
