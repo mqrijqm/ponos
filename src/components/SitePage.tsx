@@ -219,8 +219,92 @@ export default function SitePage() {
         */}
         <CategoryCarousel />
         {/* Sekcija o kvalitetu je bila pri dnu, iza dva prikaza proizvoda i
-            klizaca; sada stoji odmah iza ponude, prije "Kako funkcionise". */}
+            klizaca; sada stoji odmah iza ponude. */}
         <QualityPage />
+        {/*
+          Racunica ide odmah iza kvaliteta: popis 01-03 zavrsava "strucnom
+          podrskom", a prvo sto ta podrska radi jeste da izracuna koliko poda
+          treba. Traka nosi naslov kalkulatora koji stoji odmah ispod nje —
+          natpis "Precizniji upit" i pasus o dimenzijama su izasli, bili su
+          tri reda teksta ispred polja koja to isto traze.
+        */}
+        <Traka tekst="Izračunajte potrebnu količinu" />
+        <section id="kalkulator" className="calculator-section">
+          <Calculator
+            item={calcItem}
+            showPicker
+            onItemChange={setCalcItem}
+            onRequestQuote={(result) => {
+              track("calculator_completed");
+              openQuote(calcItem, result);
+            }}
+          />
+        </section>
+        {/*
+          Snimak preko cijele sirine, odmah poslije racunice. Bez natpisa i
+          bez dugmeta: stranica je do ovdje vec sve rekla, ovo je predah.
+
+          `muted` i `playsInline` nisu ukras — bez njih iOS ne pusta snimak
+          sam. `poster` drzi mjesto dok fajl ne stigne, da se stranica ne
+          trza ispod prsta.
+        */}
+        <section className="video-traka is-fullbleed" aria-label="WPC decking na terasi">
+          <video
+            className="video-traka-snimak"
+            poster="/video/decking-poster.webp"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+          >
+            <source src="/video/decking.webm" type="video/webm" />
+            <source src="/video/decking.mp4" type="video/mp4" />
+          </video>
+        </section>
+        <section className="how legacy-how">
+          <div>
+            <span className="eyebrow">KAKO FUNKCIONIŠE</span>
+          </div>
+          {[
+            [
+              "1.",
+              "Izmjerite prostor",
+              "Izmjerite dužinu i širinu prostorije za informativni proračun.",
+            ],
+            [
+              "2.",
+              "Uporedite artikle",
+              "Pregledajte dekore, kolekcije i tehničke karakteristike.",
+            ],
+            [
+              "3.",
+              "Zatražite ponudu",
+              "Pošaljite izabrani proizvod i potrebnu količinu našem prodajnom timu.",
+            ],
+          ].map((x) => (
+            <article key={x[0]}>
+              <b>{x[0]}</b>
+              <h3>{x[1]}</h3>
+              <p>{x[2]}</p>
+            </article>
+          ))}
+        </section>
+        {/*
+          Ovdje su stajala dva prikaza artikla — Wicked Harvest Oak i Miram —
+          jedan uz drugi, sa WPC-om izmedju. Tri puna kadra proizvoda zaredom
+          na telefonu su bila duza od ostatka stranice; ostaje WPC, koji nosi
+          izbor boje i time radi nesto sto kartica u traci ne moze.
+
+          Komponenta `ProductShowcase` je i dalje u kodu, samo je naslovna ne
+          zove.
+        */}
+        <WpcDeckingSection />
+        {/*
+          "Kako se odluciti" je bilo odmah iza kvaliteta, prije racunice; sada
+          zatvara stranicu zajedno sa izjavama — tri koraka i rijec o firmi
+          stoje na kraju, kad je ponuda vec vidjena.
+        */}
         <section className="how process-section">
           <div className="how-heading">
             <span className="eyebrow">KAKO SE ODLUČITI ZA KUPOVINU?</span>
@@ -309,83 +393,6 @@ export default function SitePage() {
             })}
           </div>
         </section>
-        {/*
-          Traka nosi naslov kalkulatora koji stoji odmah ispod nje. Natpis
-          "Precizniji upit", isti taj naslov i pasus o dimenzijama su izasli —
-          bili su tri reda teksta ispred polja koja to isto traze.
-        */}
-        <Traka tekst="Izračunajte potrebnu količinu" />
-        <section id="kalkulator" className="calculator-section">
-          <Calculator
-            item={calcItem}
-            showPicker
-            onItemChange={setCalcItem}
-            onRequestQuote={(result) => {
-              track("calculator_completed");
-              openQuote(calcItem, result);
-            }}
-          />
-        </section>
-        {/*
-          Snimak preko cijele sirine, odmah poslije racunice. Bez natpisa i
-          bez dugmeta: stranica je do ovdje vec sve rekla, ovo je predah.
-
-          `muted` i `playsInline` nisu ukras — bez njih iOS ne pusta snimak
-          sam. `poster` drzi mjesto dok fajl ne stigne, da se stranica ne
-          trza ispod prsta.
-        */}
-        <section className="video-traka is-fullbleed" aria-label="WPC decking na terasi">
-          <video
-            className="video-traka-snimak"
-            poster="/video/decking-poster.webp"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="none"
-          >
-            <source src="/video/decking.webm" type="video/webm" />
-            <source src="/video/decking.mp4" type="video/mp4" />
-          </video>
-        </section>
-        <section className="how legacy-how">
-          <div>
-            <span className="eyebrow">KAKO FUNKCIONIŠE</span>
-          </div>
-          {[
-            [
-              "1.",
-              "Izmjerite prostor",
-              "Izmjerite dužinu i širinu prostorije za informativni proračun.",
-            ],
-            [
-              "2.",
-              "Uporedite artikle",
-              "Pregledajte dekore, kolekcije i tehničke karakteristike.",
-            ],
-            [
-              "3.",
-              "Zatražite ponudu",
-              "Pošaljite izabrani proizvod i potrebnu količinu našem prodajnom timu.",
-            ],
-          ].map((x) => (
-            <article key={x[0]}>
-              <b>{x[0]}</b>
-              <h3>{x[1]}</h3>
-              <p>{x[2]}</p>
-            </article>
-          ))}
-        </section>
-        {/*
-          Ovdje su stajala dva prikaza artikla — Wicked Harvest Oak i Miram —
-          jedan uz drugi, sa WPC-om izmedju. Tri puna kadra proizvoda zaredom
-          na telefonu su bila duza od ostatka stranice; ostaje WPC, koji nosi
-          izbor boje i time radi nesto sto kartica u traci ne moze.
-
-          Komponenta `ProductShowcase` je i dalje u kodu, samo je naslovna ne
-          zove.
-        */}
-        <WpcDeckingSection />
         <StatementSlider />
         {/*
           Stranicu zatvara traka detalja. Iznad plocica su stajali natpis
