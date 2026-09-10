@@ -14,10 +14,13 @@
   --desc: 13px;
   --price: 16px;
 
-  --orange: #e66c2c;
-  --dark: var(--ink-black);
-  --grey: #888888;
-  --body: #666666;
+  /* Zasad sav tekst na sajtu ide u istu tamnu; cijena, natpis i pasus su
+     ovdje imali svoje tonove. Znak akcije (--blue, --red) ostaje: bijel
+     je slog na punoj povrsini, ne tekst na svijetloj podlozi. */
+  --orange: var(--ink);
+  --dark: var(--ink);
+  --grey: var(--ink);
+  --body: var(--ink);
   --blue: #2563eb;
   --red: #dc2626;
 

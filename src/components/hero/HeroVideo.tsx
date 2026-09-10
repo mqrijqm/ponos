@@ -199,7 +199,9 @@ export default function HeroVideo() {
           {/* Zatamnjenje pri dnu: bijeli natpis pada preko svijetlog panela. */}
           <div className="hv-scrim" aria-hidden="true" />
           <div className="hv-overlay">
-            <h1 className="hv-title">PONOS PROSTORA</h1>
+            <h1 className="hv-title">
+              Ponos <em>prostora</em>
+            </h1>
             <OvalDugme
               natpis="Pogledaj ponudu"
               className="hv-cta"

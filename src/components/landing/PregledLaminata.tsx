@@ -54,8 +54,12 @@ export default function PregledLaminata() {
 
   return (
     <section className="pregled is-fullbleed" aria-labelledby="pregled-naslov">
-      {/* Tacka je predah izmedju dvije rijeci gore i niza ispod. */}
-      <span className="pg-tacka" aria-hidden="true" />
+      {/* Tri tacke su predah izmedju dvije rijeci gore i niza ispod. */}
+      <span className="pg-tacka" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
 
       <ol className="pg-lista" ref={ref}>
         {laminati.map((p, i) => (
