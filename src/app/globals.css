@@ -7,6 +7,7 @@
   --brand-deep: var(--brand-brown);  /* dugmici, akcenti, brojevi — puna smedja povrsina */
   --brand-wood: #d4a574;         /* akcent (tacke, hover) — NE za linije */
   --brand-line: #e7e1d8;         /* sve horizontalne linije i separatori */
+  --crta-jaca: rgba(59, 42, 33, .3); /* okviri koji moraju da se vide na kremu */
   --brand-muted: var(--ink);     /* sekundarni tekst — zasad ista tamna */
   --brand-beige: #c8bba4;        /* veliki naslov u herou */
   --cream: #fffbf5;              /* svaka krem pozadina + svijetli tekst na tamnom */
@@ -8329,18 +8330,22 @@ main > section.pregled {
   opacity: 1;
   transform: none;
 }
-/* Tanka crta obilazi blok, i jos jedna stoji na sredini, izmedju dekora i
-   natpisa. Crta je ista koja po sajtu razdvaja sekcije. */
+/*
+  Okvir nosi samo desna polovina — dekor stoji uz njega, ne u njemu, sa
+  razmakom izmedju slike i crte. Okvir je i nizi od slike za dlaku, pa se
+  vidi da su dvije stvari jedna do druge a ne jedna kutija.
+
+  Crta je jaca od one koja po sajtu razdvaja sekcije: na ovoj podlozi se
+  `--brand-line` gubila.
+*/
 .pg-blok a {
   display: grid;
-  /* Prepolovljeno: dekor lijevo, natpis desno, bez razmaka izmedju. */
+  /* Prepolovljeno: dekor lijevo, natpis desno, razmak izmedju. */
   grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--brand-line);
+  column-gap: 12px;
+  align-items: center;
   color: inherit;
   text-decoration: none;
-}
-.pg-info {
-  border-left: 1px solid var(--brand-line);
 }
 .pg-slika {
   position: relative;
@@ -8358,32 +8363,39 @@ main > section.pregled {
   odvaja, kao u predlosku.
 */
 .pg-info {
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 8px;
+  margin: 6px 0;
   padding: 0 14px;
+  border: 1px solid var(--crta-jaca);
   background: none;
 }
-/* Broj nosi kratku crtu pod sobom, kao u predlosku — zato `align-self`,
-   da se crta zaustavi na sirini broja a ne cijele kolone. */
-.pg-info b {
-  align-self: flex-start;
-  padding-bottom: 3px;
-  border-bottom: 1px solid currentColor;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: var(--sitni-sans);
-  font-weight: 400;
-  letter-spacing: normal;
-  opacity: 0.6;
-}
+/*
+  Broj i ime kolekcije nose isti slog: isti stepen, isti razmak slova,
+  ista tezina, ista providnost. Razlikuju ih samo cifre i verzal.
+
+  Broj ima kratku crtu pod sobom, kao u predlosku — zato `align-self`, da
+  se crta zaustavi na sirini broja a ne cijele kolone.
+*/
+.pg-info b,
 .pg-info > span {
   font-family: var(--font-manrope), sans-serif;
   font-size: var(--sitni-sans);
+  font-weight: 400;
   letter-spacing: 0.1em;
   line-height: 1.3;
+  opacity: 0.72;
+}
+.pg-info b {
+  align-self: flex-start;
+  padding-bottom: 4px;
+  border-bottom: 1px solid currentColor;
+}
+.pg-info > span {
   text-transform: uppercase;
-  opacity: 0.55;
 }
 
 .pg-naslov {
