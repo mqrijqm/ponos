@@ -6,37 +6,26 @@ import { categories } from "@/data/catalog";
 /**
  * Sekcija "Asortiman" — prvo sto stoji ispod snimka.
  *
- * Slog je iz predloska (muzejska stranica sa remek-djelima): natpis i
- * krupno ime sekcije na sredini, pa razmaknuta mreza u kojoj su stavke
- * namjerno razbacane po dvije kolone, a svaka treca ide sira, uvucena
- * zdesna. Raspored nosi CSS (`.as-mreza`), preko `nth-child`.
+ * Slog je iz predloska (muzejska stranica sa remek-djelima): natpis i ime
+ * sekcije na sredini, pa razmaknuta mreza u kojoj su stavke namjerno
+ * razbacane po dvije kolone, a svaka treca ide sira, uvucena zdesna.
+ * Raspored nosi CSS (`.as-mreza`), preko `nth-child`.
  *
- * Iznad slike ne stoji nista. Ime grupe je pisano preko slike, tako da ga
- * ivica slike sijece na pola — pola na kadru, pola na podlozi. Ispod slike
- * ostaje jedan red: mjera po kojoj se grupa pamti.
+ * Svaka stavka ide redom kao u predlosku: ime grupe, kurzivni red ispod
+ * njega, pa slika, pa jos jedan red ispod slike. Preko same slike ne stoji
+ * nista.
  */
 
 /*
-  Dvije stvari kojih u katalogu nema.
+  Red ispod slike; jedina stvar koje u katalogu nema. U predlosku je na tom
+  mjestu godina nastanka slike, kod nas mjera po kojoj se grupa pamti.
 
-  `rijec` je ime preko slike — jedna rijec, ne puni naziv grupe: pisani rez
-  se na dvije rijeci raspadne, a i pola te rijeci lezi na podlozi, pa mora
-  biti kratka. Puni naziv nosi `aria-label` veze, da se ne izgubi za citac
-  ekrana i za pretragu.
-
-  `detalj` je red ispod slike. U predlosku je na tom mjestu godina nastanka
-  slike; kod nas mjera po kojoj se grupa pamti.
+  Najvise tri rijeci — duze od toga se lomi u dva reda i razbija ritam
+  mreze, jer stavke u istom redu ne pocinju na istoj visini.
 */
-const rijec: Record<string, string> = {
-  laminati: "Laminat",
-  "spc-vinyl-decking": "Decking",
-  parketi: "Parket",
-  "zidni-paneli": "Paneli",
-  lajsne: "Lajsne",
-};
 const detalj: Record<string, string> = {
   laminati: "8 – 12 mm",
-  "spc-vinyl-decking": "SPC vinyl i WPC",
+  "spc-vinyl-decking": "SPC i WPC",
   parketi: "Tarkett, po narudžbi",
   "zidni-paneli": "2750 × 615 mm",
   lajsne: "PVC i MDF",
@@ -66,17 +55,16 @@ export default function Asortiman() {
 
         {categories.map((c) => (
           <article className="as-stavka" key={c.slug}>
-            <Link href={`/proizvodi/${c.slug}`} aria-label={c.title}>
-              <span className="as-okvir">
-                <span className="as-slika">
-                  <Image
-                    src={c.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 767px) 45vw, 320px"
-                  />
-                </span>
-                <span className="as-rijec">{rijec[c.slug]}</span>
+            <Link href={`/proizvodi/${c.slug}`}>
+              <h3>{c.title}</h3>
+              <span className="as-podnaslov">{c.kicker}</span>
+              <span className="as-slika">
+                <Image
+                  src={c.image}
+                  alt={`${c.title} — iz ponude MT PONOS`}
+                  fill
+                  sizes="(max-width: 767px) 45vw, 320px"
+                />
               </span>
               <span className="as-detalj">{detalj[c.slug]}</span>
             </Link>
