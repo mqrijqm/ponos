@@ -8332,8 +8332,7 @@ main > section.pregled {
 }
 /*
   Okvir nosi samo desna polovina — dekor stoji uz njega, ne u njemu, sa
-  razmakom izmedju slike i crte. Okvir je i nizi od slike za dlaku, pa se
-  vidi da su dvije stvari jedna do druge a ne jedna kutija.
+  razmakom izmedju slike i crte.
 
   Crta je jaca od one koja po sajtu razdvaja sekcije: na ovoj podlozi se
   `--brand-line` gubila.
@@ -8343,15 +8342,18 @@ main > section.pregled {
   /* Prepolovljeno: dekor lijevo, natpis desno, razmak izmedju. */
   grid-template-columns: 1fr 1fr;
   column-gap: 12px;
-  align-items: center;
+  align-items: stretch;
   color: inherit;
   text-decoration: none;
 }
+/* Slika i okvir su iste mjere: obje polovine su siroke pola bloka i
+   jednako visoke, pa red stoji kao dvije jednake plocice. */
 .pg-slika {
   position: relative;
   display: block;
   overflow: hidden;
-  aspect-ratio: 1.7 / 1;
+  aspect-ratio: 1.9 / 1;
+  margin: 6px 0;
   background: var(--cream-tint);
 }
 .pg-slika img {
@@ -8363,7 +8365,6 @@ main > section.pregled {
   odvaja, kao u predlosku.
 */
 .pg-info {
-  align-self: stretch;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8395,18 +8396,6 @@ main > section.pregled {
   border-bottom: 1px solid currentColor;
 }
 .pg-info > span {
-  text-transform: uppercase;
-}
-
-.pg-naslov {
-  margin: clamp(56px, 15vw, 104px) 0 0;
-  color: var(--ink);
-  font-family: var(--font-playfair), serif;
-  font-size: var(--naslov-serif);
-  font-weight: 400;
-  letter-spacing: var(--naslov-serif-ls);
-  line-height: 1;
-  text-align: center;
   text-transform: uppercase;
 }
 

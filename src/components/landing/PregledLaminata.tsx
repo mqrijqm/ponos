@@ -57,7 +57,7 @@ export default function PregledLaminata() {
   }, []);
 
   return (
-    <section className="pregled is-fullbleed" aria-labelledby="pregled-naslov">
+    <section className="pregled is-fullbleed" aria-label="Izdvojeni laminati">
       {/* Tri tacke su predah izmedju dvije rijeci gore i niza ispod. */}
       <span className="pg-tacka" aria-hidden="true">
         <i />
@@ -89,10 +89,6 @@ export default function PregledLaminata() {
           </li>
         ))}
       </ol>
-
-      <h2 id="pregled-naslov" className="pg-naslov">
-        Laminati
-      </h2>
     </section>
   );
 }
