@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { CatalogItem } from "@/data/catalog";
 import Calculator, { calculableItems } from "./Calculator";
 import { useQuote } from "./QuoteProvider";
@@ -18,7 +18,6 @@ import CategoryCarousel from "./mobile/CategoryCarousel";
 import LandingUvod from "./landing/LandingUvod";
 import OvalDugme from "./landing/OvalDugme";
 import Traka from "./landing/Traka";
-import HomeHeroReveal from "./HomeHeroReveal";
 import MobileMenu from "./MobileMenu";
 import StatementSlider from "./mobile/StatementSlider";
 
@@ -86,49 +85,6 @@ const processSteps: ProcessStep[] = [
     alt: "Sto u salonu podova sa uzorcima, blokom i tabletom",
   },
 ];
-
-function HeroDetail({ slot, className = "" }: { slot: number; className?: string }) {
-  const [imageIndex, setImageIndex] = useState(slot);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let timer: ReturnType<typeof setTimeout>;
-    const rotate = () => {
-      timer = setTimeout(() => {
-        setImageIndex((current) => {
-          const offset = 1 + Math.floor(Math.random() * (heroDetails.length - 1));
-          return (current + offset) % heroDetails.length;
-        });
-        rotate();
-      }, 1100 + slot * 160 + Math.random() * 550);
-    };
-    rotate();
-    return () => clearTimeout(timer);
-  }, [slot]);
-
-  return (
-    <div className={`detail-tile ${className}`.trim()}>
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={imageIndex}
-          className="detail-tile-frame"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.42, ease: "easeOut" }}
-        >
-          <Image
-            src={heroDetails[imageIndex]}
-            alt={heroDetailAlts[imageIndex]}
-            fill
-            sizes="(max-width: 767px) 132px, 12vw"
-          />
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-}
 
 export default function SitePage() {
   const [menu, setMenu] = useState(false);
@@ -370,6 +326,28 @@ export default function SitePage() {
             }}
           />
         </section>
+        {/*
+          Snimak preko cijele sirine, odmah poslije racunice. Bez natpisa i
+          bez dugmeta: stranica je do ovdje vec sve rekla, ovo je predah.
+
+          `muted` i `playsInline` nisu ukras — bez njih iOS ne pusta snimak
+          sam. `poster` drzi mjesto dok fajl ne stigne, da se stranica ne
+          trza ispod prsta.
+        */}
+        <section className="video-traka is-fullbleed" aria-label="WPC decking na terasi">
+          <video
+            className="video-traka-snimak"
+            poster="/video/decking-poster.webp"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+          >
+            <source src="/video/decking.webm" type="video/webm" />
+            <source src="/video/decking.mp4" type="video/mp4" />
+          </video>
+        </section>
         <section className="how legacy-how">
           <div>
             <span className="eyebrow">KAKO FUNKCIONIŠE</span>
@@ -410,41 +388,38 @@ export default function SitePage() {
         <WpcDeckingSection />
         <StatementSlider />
         {/*
-          "Na jednom mjestu" zatvara stranicu, tik iznad podnozja. Bila je
-          prva sekcija ispod heroja; sada je zadnja, pa se plocice i natpis
-          sastavljaju kao zavrsna rijec. Okidac je isti — sekcija krece kad
-          udje u kadar (HomeHeroReveal), sto na dnu radi jednako kao na vrhu.
+          Stranicu zatvara traka detalja. Iznad plocica su stajali natpis
+          "Na jednom mjestu", recenica o asortimanu i jos jedan "PONOS
+          PROSTORA" — isti onaj koji vec stoji preko snimka na vrhu. Tri
+          natpisa u sekciji koja nema sta da kaze osim da pokaze materijal.
+
+          Ostaju slike, ali se sada vrte same, u krug, kao traka artikala
+          ispod heroja. Nema ni okidaca na scroll ni nasumicnog smjenjivanja
+          po plocici: traka ide i kad se do nje dodje i kad se prodje pored.
         */}
-        <HomeHeroReveal>
-          <div className="home-hero-top">
-            <div className="home-hero-copy">
-              <strong>NA JEDNOM MJESTU</strong>
-              <p>Laminat, podne obloge, parket, vinil podovi &amp; zidni paneli.</p>
+        <section className="detalji is-fullbleed" aria-label="Detalji podnih obloga">
+          <div className="detalji-traka">
+            {/*
+              Spisak dva puta: kad prvi krug izadje, drugi je vec na njegovom
+              mjestu. Kopija je samo slika — za citac ekrana je nema, inace bi
+              svaki detalj bio naveden dvaput.
+            */}
+            <div className="detalji-plocice">
+              {[0, 1].map((krug) =>
+                heroDetails.map((src, i) => (
+                  <span className="detalji-plocica" key={`${krug}-${src}`}>
+                    <Image
+                      src={src}
+                      alt={krug === 1 ? "" : heroDetailAlts[i]}
+                      fill
+                      sizes="(max-width: 767px) 42vw, 200px"
+                    />
+                  </span>
+                )),
+              )}
             </div>
           </div>
-          <div className="home-hero-panel">
-            <div className="detail-strip">
-              <div className="detail-group">
-                <HeroDetail slot={0} />
-                <HeroDetail slot={1} />
-              </div>
-              <HeroDetail slot={2} />
-              <HeroDetail slot={3} />
-              <HeroDetail slot={4} />
-              <div className="detail-group">
-                <HeroDetail slot={5} />
-                <HeroDetail slot={6} />
-              </div>
-            </div>
-            {/* h2, ne h1: isti natpis nosi hero na vrhu, a dva h1 sa istim
-                tekstom su jedan naslov previse. Izgled se ne mijenja —
-                stilovi idu po klasi. */}
-            <h2 className="home-hero-title">
-              <span>PONOS</span>
-              <b>PROSTORA</b>
-            </h2>
-          </div>
-        </HomeHeroReveal>
+        </section>
       </main>
       <Footer />
     </>

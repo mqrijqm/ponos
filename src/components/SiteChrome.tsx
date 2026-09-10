@@ -5,7 +5,6 @@ import { categories } from "@/data/catalog";
 import QuoteCta from "./QuoteCta";
 import BasketMenu from "./BasketMenu";
 import { MobileMenuButton } from "./MobileMenu";
-import QuoteBand from "./mobile/QuoteBand";
 
 /** Padajuci meni za "Proizvodi" — bez JS-a, otvara se na hover i na fokus. */
 export function ProductsNav() {
@@ -93,9 +92,10 @@ function LegacyFooter() {
 export function Footer() {
   return (
     <>
-      {/* Traka stoji iznad podnozja na svakoj stranici; vidi se samo na
-          telefonu, sirok ekran je ne prikazuje (globals.css). */}
-      <QuoteBand />
+      {/* Iznad podnozja je stajala tamna traka sa poljem za email ("Ponuda na
+          email"). Izasla je cijela: adresa se cuvala samo lokalno na uredaju,
+          jer sajt nema posiljaoca poste iza sebe — pa je traka trazila nesto
+          sa cim nije imala sta da uradi. */}
       <footer className="site-footer">
       <div className="footer-main">
         <nav className="footer-nav" aria-label="Navigacija u podnožju">

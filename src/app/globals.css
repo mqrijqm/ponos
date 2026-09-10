@@ -8366,3 +8366,76 @@ main .how.process-section .process-card.is-active {
     padding-inline: 8vw;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TRAKA DETALJA NA DNU
+   Zamijenila je sekciju "Na jednom mjestu": tri natpisa i sedam plocica
+   koje su se nasumicno smjenjivale u mjestu. Ostale su slike, kao traka
+   koja ide sama — isti mehanizam kao traka artikala ispod heroja.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.detalji {
+  padding: clamp(40px, 10vw, 72px) 0;
+  background: #fff;
+}
+.detalji-traka {
+  overflow: hidden;
+}
+/*
+  Spisak ide dva puta, a pomjeranje staje tacno na duzinu jednog kruga
+  (`-50%` je pola dvostruke trake, plus pola razmaka izmedju dva kruga).
+  Kad prvi krug izadje, drugi je piksel u piksel na njegovom mjestu.
+*/
+.detalji-plocice {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation: detalji-klizi 56s linear infinite;
+}
+@keyframes detalji-klizi {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 5px));
+  }
+}
+.detalji-plocica {
+  position: relative;
+  flex: 0 0 auto;
+  width: 42vw;
+  max-width: 220px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--cream-tint);
+}
+.detalji-plocica img {
+  object-fit: cover;
+}
+@media (prefers-reduced-motion: reduce) {
+  .detalji-plocice {
+    animation: none;
+  }
+  /* Kad traka stoji, mora se moci pomjeriti rukom. */
+  .detalji-traka {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SNIMAK PREKO CIJELE SIRINE
+   Stoji poslije racunice, bez natpisa i bez dugmeta. Kadar je 1280×570
+   — donji dio izvornog snimka je odsjecen jer je nosio vodeni zig.
+   ═══════════════════════════════════════════════════════════════════ */
+main > section.video-traka {
+  padding: 0;
+  background: var(--ink-black);
+  line-height: 0;
+}
+.video-traka-snimak {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1280 / 570;
+  object-fit: cover;
+}
