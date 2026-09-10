@@ -8079,3 +8079,85 @@ main .how.process-section .process-card.is-active {
     width: 32px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TELEFON: DVIJE SEKCIJE KOJE SE CITAJU KAO JEDNA
+   Godine u sekciji o kvalitetu i natpis "Kako se odluciti" stoje isto —
+   traka izmedju dvije crte, preko cijele sirine. Ispod svake ide popis:
+   tamo brojevi i naslovi, ovdje kartice. Da bi se citali kao jedan
+   sistem, sav taj sitni verzalni tekst ima istu mjeru i istu tezinu.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* Slike u otvorenoj stavci: jedva zaobljene, da ugao ostane ostar. */
+  .quality-split .quality-panel-inner > img {
+    border-radius: 4px;
+  }
+  /*
+    Jedna mjera za sve sitne natpise: godine, brojeve 01-03 i naslove
+    stavki. Bili su 10px/600 i 13px/400 — razlika premala da bude namjera,
+    a dovoljna da red ne stoji.
+  */
+  .quality-statement .qs-kicker,
+  .quality-accordion .quality-number,
+  .quality-accordion .quality-trigger-copy strong,
+  main .how.process-section .how-heading .eyebrow {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  /* Broj i naslov u istoj stavci: broj je blijedji, naslov nosi. */
+  .quality-accordion .quality-number {
+    color: var(--brand-muted);
+  }
+  .quality-accordion .quality-trigger-copy strong {
+    color: var(--brand-brown);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   "KAKO SE ODLUCITI ZA KUPOVINU?" NA TELEFONU
+   Natpis dobija istu traku kao godine iznad. Kartice su bile tri
+   jednaka bloka sa punom slikom i natpisom — nista se nije otvaralo, a
+   opis koraka se nigdje nije vidio.
+
+   Sada: zatvorena kartica pokazuje traku slike, tek toliko da se zna
+   sta je iza; otvorena pusti sliku u punu mjeru i ispod naslova doda
+   opis. Bez dugmeta u kartici — kartica je sama sebi dugme.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  main .how.process-section .how-heading {
+    margin: 0 calc(var(--page-gutter) * -1) clamp(30px, 8vw, 44px);
+    padding: 13px var(--page-gutter);
+    border-top: 1px solid var(--brand-line);
+    border-bottom: 1px solid var(--brand-line);
+    justify-content: center;
+    text-align: center;
+  }
+  /* Zatvorena: samo traka slike. */
+  main .how.process-section .process-card:not(.is-active) .process-card-media {
+    aspect-ratio: auto;
+    height: 88px;
+  }
+  main .how.process-section .process-card.is-active .process-card-media {
+    aspect-ratio: 4 / 3;
+    height: auto;
+  }
+  /* Opis ide u novi red ispod broja i naslova, pa red mora smjeti da se
+     prelomi — zatecena pravila ga drze u jednom redu. */
+  main .how.process-section .process-card-copy,
+  main .how.process-section .process-card:not(.is-active) .process-card-copy {
+    flex-wrap: wrap;
+  }
+  main .how.process-section .process-card.is-active .process-card-description {
+    display: block;
+    width: 100%;
+    margin: 10px 0 0;
+    max-width: none;
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-soft);
+  }
+}

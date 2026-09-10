@@ -261,7 +261,7 @@ export default function SitePage() {
         <QualityPage />
         <section className="how process-section">
           <div className="how-heading">
-            <span className="eyebrow">KAKO FUNKCIONIŠE</span>
+            <span className="eyebrow">KAKO SE ODLUČITI ZA KUPOVINU?</span>
             {/* Isto dugme kao na herou, samo smedje — vodi na isto mjesto. */}
             <OvalDugme
               natpis="Pogledaj ponudu"
@@ -274,11 +274,28 @@ export default function SitePage() {
           <div className="process-accordion">
             {processSteps.map((step, index) => {
               const isActive = index === activeProcessStep;
-              // Kartica se otvara na hover i fokus; klik je vodi dalje.
+              /*
+                Sirok ekran: kartica se otvara pod misem i na fokus, klik vodi
+                dalje. Telefon nema misa, pa se otvara dodirom — prvi dodir
+                otvara, drugi vodi. Hover i fokus se tamo ne slusaju: dodir
+                usput da i fokus, pa bi se kartica otvorila prije nego sto
+                klik stigne i prvi dodir bi vec odveo sa stranice.
+              */
+              const uzak = () => window.matchMedia("(max-width: 900px)").matches;
+              const otvoriPrvim = (dogadjaj: { preventDefault: () => void }) => {
+                if (isActive || !uzak()) return false;
+                dogadjaj.preventDefault();
+                setActiveProcessStep(index);
+                return true;
+              };
               const shared = {
                 className: `process-card${isActive ? " is-active" : ""}`,
-                onFocus: () => setActiveProcessStep(index),
-                onMouseEnter: () => setActiveProcessStep(index),
+                onFocus: () => {
+                  if (!uzak()) setActiveProcessStep(index);
+                },
+                onMouseEnter: () => {
+                  if (!uzak()) setActiveProcessStep(index);
+                },
                 transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
                 "aria-expanded": isActive,
               };
@@ -297,8 +314,13 @@ export default function SitePage() {
                   ? motion.a
                   : MotionLink;
               const target = step.href
-                ? { href: step.href }
-                : { type: "button" as const, onClick: () => openQuote() };
+                ? { href: step.href, onClick: otvoriPrvim }
+                : {
+                    type: "button" as const,
+                    onClick: (dogadjaj: React.MouseEvent) => {
+                      if (!otvoriPrvim(dogadjaj)) openQuote();
+                    },
+                  };
               return (
                 <Card key={step.number} {...shared} {...target}>
                   {step.image && (
