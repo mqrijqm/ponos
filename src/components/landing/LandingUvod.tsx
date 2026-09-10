@@ -17,10 +17,29 @@ import { catalog, productImage } from "@/data/catalog";
  */
 
 /*
-  Cijeli katalog, redom kako stoji i na /proizvodi. Traka ih nosi sve — nema
-  izbora "prvih koliko", pa nema ni spiska koji treba odrzavati uz katalog.
+  Dio artikala ima zvanicnu fotografiju koja je izrez na bijelom: proizvod
+  lebdi u sredini, a gore i dole ostane prazno. U traci, gdje kartice stoje
+  jedna uz drugu, to se vidi kao rupa u nizu — susjedna slika ispuni kvadrat,
+  ova ne. Zato ih traka preskace; na /proizvodi i na stranici artikla ostaju,
+  tamo kartica ima natpis i prazno oko izreza ne smeta.
+
+  Spisak je po `code`, ne po kategoriji: nije stvar toga sta je artikal nego
+  kako je slikan. Kad stigne fotografija koja ispuni kvadrat, izbaci kod
+  odavde i artikal se sam vrati u traku.
 */
-const artikli = catalog;
+const izrezNaBijelom = new Set([
+  "INDO-154",
+  "INDO-40",
+  "INDO-09",
+  "INDO-220",
+  "WPC-A",
+  "WPC-G",
+  "WPC-SH",
+  "WPC-SS",
+  "MDF-W60-S",
+]);
+
+const artikli = catalog.filter((p) => !izrezNaBijelom.has(p.code));
 
 export default function LandingUvod() {
   return (
