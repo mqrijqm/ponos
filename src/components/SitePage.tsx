@@ -13,6 +13,7 @@ import QualityPage from "./QualityPage";
 import WpcDeckingSection from "./WpcDeckingSection";
 import Asortiman from "./landing/Asortiman";
 import Iskustvo from "./landing/Iskustvo";
+import Predah from "./landing/Predah";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
 import OvalDugme from "./landing/OvalDugme";
@@ -212,6 +213,7 @@ export default function SitePage() {
           malo teksta, sa mnogo vazduha — pa tek onda u ponudu.
         */}
         <Iskustvo />
+        <Predah />
         <Asortiman />
         {/* Sekcija o kvalitetu je bila pri dnu, iza dva prikaza proizvoda i
             klizaca; sada stoji odmah iza ponude. */}

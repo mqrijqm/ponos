@@ -8210,3 +8210,29 @@ footer.site-footer .ft-kartica p {
   line-height: 1.55;
   opacity: 0.76;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PREDAH — JEDAN KADAR IZMEDJU ISKUSTVA I PONUDE
+   Podloga je nijansu tamnija od kreme (`--cream-tint`, ista koja stoji
+   ispod slika i kartica po sajtu), da se blok vidi kao svoj a ne kao
+   prazan razmak. Kadar ide preko cijele sirine ekrana — bez gutera, jer
+   je slika ovdje jedini sadrzaj i nema se sa cim poravnati.
+   ═══════════════════════════════════════════════════════════════════ */
+.predah {
+  padding: clamp(46px, 13vw, 96px) 0;
+  background: var(--cream-tint);
+}
+.predah img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Uspravan kadar: polozen bi na telefonu bio traka od 220px i ne bi se
+     citao kao velika slika. */
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+@media (min-width: 768px) {
+  .predah img {
+    aspect-ratio: 16 / 9;
+  }
+}
