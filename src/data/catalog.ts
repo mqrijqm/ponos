@@ -352,14 +352,14 @@ export const categories = [
     title: "SPC Vinyl i WPC Decking",
     kicker: "Za enterijer i eksterijer",
     desc: "Vodootporni SPC podovi za enterijer i postojane WPC decking daske za terase i ograde.",
-    image: "/images/official-products/spc_decking/miram.jpg",
+    image: "/images/kategorije/decking-terasa-plocice.webp",
   },
   {
     slug: "parketi",
     title: "Tarkett parketi",
     kicker: "100% drveni pod",
     desc: "Višeslojni gotovi parketi po narudžbi, spremni za korišćenje odmah nakon ugradnje.",
-    image: "/images/official-products/parket/parket.jpg",
+    image: "/images/kategorije/parket-hrast.webp",
   },
   {
     slug: "zidni-paneli",

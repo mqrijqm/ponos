@@ -7,28 +7,47 @@ import { categories } from "@/data/catalog";
  * Sekcija "Asortiman" — prvo sto stoji ispod snimka.
  *
  * Slog je iz predloska (muzejska stranica sa remek-djelima): natpis i
- * krupno ime sekcije na sredini, pa razmaknuta mreza u kojoj svaka stavka
- * nosi ime, kurzivni podnaslov, sliku i jos jedan kurzivni red ispod nje.
+ * krupno ime sekcije na sredini, pa razmaknuta mreza u kojoj su stavke
+ * namjerno razbacane po dvije kolone, a svaka treca ide sira, uvucena
+ * zdesna. Raspored nosi CSS (`.as-mreza`), preko `nth-child`.
  *
- * Mreza nije niz jednakih kartica: stavke su namjerno razbacane po dvije
- * kolone i jedna po redu ide sira, uvucena zdesna. Raspored nosi CSS
- * (`.as-mreza`), preko `nth-child` — ovdje je samo spisak.
- *
- * Kategorije se ne prepisuju nego uzimaju iz kataloga; ovdje stoji samo
- * ono cega u katalogu nema — kratak red ispod slike. U predlosku je na tom
- * mjestu godina nastanka; kod nas mjera po kojoj se kategorija pamti.
+ * Iznad slike ne stoji nista. Ime grupe je pisano preko slike, tako da ga
+ * ivica slike sijece na pola — pola na kadru, pola na podlozi. Ispod slike
+ * ostaje jedan red: mjera po kojoj se grupa pamti.
  */
+
+/*
+  Dvije stvari kojih u katalogu nema.
+
+  `rijec` je ime preko slike — jedna rijec, ne puni naziv grupe: pisani rez
+  se na dvije rijeci raspadne, a i pola te rijeci lezi na podlozi, pa mora
+  biti kratka. Puni naziv nosi `aria-label` veze, da se ne izgubi za citac
+  ekrana i za pretragu.
+
+  `detalj` je red ispod slike. U predlosku je na tom mjestu godina nastanka
+  slike; kod nas mjera po kojoj se grupa pamti.
+*/
+const rijec: Record<string, string> = {
+  laminati: "Laminat",
+  "spc-vinyl-decking": "Decking",
+  parketi: "Parket",
+  "zidni-paneli": "Paneli",
+  lajsne: "Lajsne",
+};
 const detalj: Record<string, string> = {
   laminati: "8 – 12 mm",
-  "spc-vinyl-decking": "unutra i napolju",
-  parketi: "po narudžbi",
+  "spc-vinyl-decking": "SPC vinyl i WPC",
+  parketi: "Tarkett, po narudžbi",
   "zidni-paneli": "2750 × 615 mm",
-  lajsne: "2,4 – 2,5 m",
+  lajsne: "PVC i MDF",
 };
 
 export default function Asortiman() {
   return (
-    <section className="asortiman is-fullbleed" aria-labelledby="asortiman-naslov">
+    <section
+      className="asortiman is-fullbleed"
+      aria-labelledby="asortiman-naslov"
+    >
       <p className="as-natpis">Ponuda artikala</p>
       <h2 id="asortiman-naslov" className="as-naslov">
         Asortiman
@@ -47,16 +66,17 @@ export default function Asortiman() {
 
         {categories.map((c) => (
           <article className="as-stavka" key={c.slug}>
-            <Link href={`/proizvodi/${c.slug}`}>
-              <h3>{c.title}</h3>
-              <span className="as-podnaslov">{c.kicker}</span>
-              <span className="as-slika">
-                <Image
-                  src={c.image}
-                  alt={`${c.title} — iz ponude MT PONOS`}
-                  fill
-                  sizes="(max-width: 767px) 45vw, 320px"
-                />
+            <Link href={`/proizvodi/${c.slug}`} aria-label={c.title}>
+              <span className="as-okvir">
+                <span className="as-slika">
+                  <Image
+                    src={c.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 767px) 45vw, 320px"
+                  />
+                </span>
+                <span className="as-rijec">{rijec[c.slug]}</span>
               </span>
               <span className="as-detalj">{detalj[c.slug]}</span>
             </Link>

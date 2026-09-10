@@ -5799,7 +5799,6 @@ html.menu-open body {
     line-height: 1.15;
     letter-spacing: -.02em;
   }
-  .m-rail,
   .panel-gallery {
     display: flex;
     gap: 14px;
@@ -5812,42 +5811,15 @@ html.menu-open body {
     /* Traka nosi svoj scroll; bez ovoga se vidi sistemska sipka. */
     scrollbar-width: none;
   }
-  .m-rail::-webkit-scrollbar,
   .panel-gallery::-webkit-scrollbar {
     display: none;
   }
-  .m-rail-item,
   .panel-gallery figure {
     flex: 0 0 auto;
     /* 72vw: zadnja kartica ostaje zarezana na ivici i poslije snapa. */
     width: 72vw;
     margin: 0;
     scroll-snap-align: start;
-  }
-  .m-rail-item a {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
-  .m-rail-media {
-    position: relative;
-    display: block;
-    /* Uspravna orijentacija, kao na referenci. */
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    background: var(--cream-tint);
-  }
-  .m-rail-media img {
-    object-fit: cover;
-  }
-  .m-rail-caption {
-    display: block;
-    margin-top: 14px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--brand-brown);
   }
   /* Galerija dekora ide istom trakom. */
   .panel-gallery {
@@ -7506,37 +7478,9 @@ main .how.process-section .process-card.is-active {
   main .qs-kicker,
   main .quality-number,
   main .quality-trigger-copy strong,
-  main .quality-stat span,
-  main .m-rail-caption {
+  main .quality-stat span {
     color: var(--naslov-smedji) !important;
   }
-}
-
-/*
-  Znak akcije preko kartice sa laminatima. Kartica je vec `position:
-  relative` nosac slike, pa znak sjeda u njen gornji lijevi ugao — kao na
-  predlosku, malo uvucen od ivice slike.
-*/
-.m-rail-item {
-  position: relative;
-}
-.m-rail-akcija {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  z-index: 2;
-  display: block;
-  width: 48%;
-  min-width: 140px;
-  line-height: 0;
-}
-.m-rail-akcija img {
-  width: 100%;
-  height: auto;
-}
-.m-rail-akcija:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -8026,30 +7970,63 @@ footer.site-footer .ft-kartica p {
   color: inherit;
   text-decoration: none;
 }
-.as-stavka h3 {
-  margin: 0;
-  font-family: var(--font-playfair), serif;
-  font-size: clamp(17px, 5.2vw, 23px);
-  font-weight: 400;
-  letter-spacing: -0.005em;
-  line-height: 1.1;
-}
-.as-podnaslov {
+/*
+  Okvir postoji samo zato da ime grupe ima od cega da racuna svoje mjesto.
+  Ne sijece nista — ime namjerno izlazi van njega; sjecivo je `.as-slika`.
+*/
+.as-okvir {
+  position: relative;
   display: block;
-  margin-top: 4px;
-  font-family: var(--font-playfair), serif;
-  font-size: 11px;
-  font-style: italic;
-  line-height: 1.3;
-  opacity: 0.82;
 }
 .as-slika {
   position: relative;
   display: block;
   overflow: hidden;
   width: 100%;
-  margin-top: 16px;
   background: var(--cream-tint);
+}
+/*
+  Ime grupe je pisano preko kadra i ivica ga sijece na pola: `translateX`
+  od pola sopstvene sirine, uz ivicu slike, daje tacno pola na kadru i
+  pola na podlozi — koliko god rijec bila duga.
+
+  Boja je ista tamna koju nosi i ostatak sekcije, jer rijec lezi na oba
+  poda — svijetla bi na kremu nestala.
+
+  Ispod slova stoji mekana krem mrlja koja se gubi ka ivicama. Na kremu je
+  nema (krem na kremu), a na tamnom kadru — zidni paneli su snimljeni u
+  mraku — podigne pod ispod slova toliko da se rijec cita.
+*/
+.as-rijec {
+  position: absolute;
+  bottom: 11%;
+  display: block;
+  padding: 0.1em 0.42em 0.16em;
+  background: radial-gradient(
+    ellipse closest-side,
+    rgba(245, 243, 238, 0.88),
+    rgba(245, 243, 238, 0.72) 55%,
+    rgba(245, 243, 238, 0) 100%
+  );
+  color: var(--ink);
+  font-family: var(--font-parisienne), cursive;
+  font-size: clamp(30px, 9.2vw, 44px);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* Stavke u desnoj koloni pisu ulijevo, u zljeb izmedju kolona. */
+.as-mreza > .as-stavka:nth-of-type(1) .as-rijec,
+.as-mreza > .as-stavka:nth-of-type(3) .as-rijec,
+.as-mreza > .as-stavka:nth-of-type(4) .as-rijec {
+  left: 0;
+  transform: translateX(-50%);
+}
+/* Stavke u lijevoj koloni pisu udesno — ulijevo bi izasle iz stranice. */
+.as-mreza > .as-stavka:nth-of-type(2) .as-rijec,
+.as-mreza > .as-stavka:nth-of-type(5) .as-rijec {
+  right: 0;
+  transform: translateX(50%);
 }
 .as-slika img {
   object-fit: cover;

@@ -14,7 +14,6 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import Asortiman from "./landing/Asortiman";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
-import CategoryCarousel from "./mobile/CategoryCarousel";
 import OvalDugme from "./landing/OvalDugme";
 import Traka from "./landing/Traka";
 import MobileMenu from "./MobileMenu";
@@ -209,13 +208,6 @@ export default function SitePage() {
           ono sto sekcija ispod sada pokazuje.
         */}
         <Asortiman />
-        {/*
-          Ponuda odmah ispod izjave: uspravne slike po grupama, kroz koje se
-          prevlaci prstom. Ovdje je ranije stajao par slika koji se nije dao
-          listati — jedan enterijer i traka teksture, bez veze sa ostatkom
-          ponude.
-        */}
-        <CategoryCarousel />
         {/* Sekcija o kvalitetu je bila pri dnu, iza dva prikaza proizvoda i
             klizaca; sada stoji odmah iza ponude. */}
         <QualityPage />
