@@ -55,11 +55,14 @@ html {
 }
 body {
   /* Sve sto je bilo sans (Manrope, Archivo) sada je Arial.
-     Lora je serif - nosi naslove i naglasena mjesta. */
+     Serif je Mansory — nosi naslove i naglasena mjesta. Stara imena
+     (newsreader, bodoni, lora) ostaju kao aliasi: pod njima ih zove
+     tridesetak pravila po fajlu, a sva pokazuju na isti rez. */
   --font-manrope: Arial, Helvetica, sans-serif;
   --font-archivo: Arial, Helvetica, sans-serif;
-  --font-newsreader: var(--font-lora);
-  --font-bodoni: var(--font-lora);
+  --font-lora: var(--font-mansory);
+  --font-newsreader: var(--font-mansory);
+  --font-bodoni: var(--font-mansory);
   margin: 0;
   background: var(--c);
   color: var(--i);
@@ -4797,10 +4800,10 @@ main > section.editorial-statement {
   text-align: left;
   text-wrap: pretty;
   color: var(--ink);
-  /* Namjerno --font-lora, ne --font-newsreader: .quality-page tu varijablu
-     pretvara u Arial za cijelu sekciju. Ovaj slog je preuzet od izjave o
-     firmi i mora ostati serif, kao i tamo. */
-  font-family: var(--font-lora), Georgia, serif;
+  /* Namjerno --font-mansory, ne --font-newsreader: .quality-page tu
+     varijablu pretvara u Arial za cijelu sekciju. Ovaj slog mora ostati
+     serif. */
+  font-family: var(--font-mansory), Georgia, serif;
   font-weight: 400;
   font-size: clamp(1.7rem, 2.9vw, 3rem);
   line-height: 1.12;
@@ -8307,9 +8310,22 @@ main .how.process-section .process-card.is-active {
   letter-spacing: .18em;
   text-transform: uppercase;
 }
-/* Drugi snimak dolazi poslije teksta — bez razmaka bi se sudarili. */
-.spc-slog + .spc-snimak {
+/* Snimak dolazi poslije teksta — bez razmaka bi se sudarili. */
+.spc-slog + .spc-snimak,
+.spc-slog + .spc-video {
   margin-top: clamp(44px, 11vw, 72px);
+}
+/* Snimak stoji na mjestu sivog okvira: ista sirina, ista uloga. */
+.spc-video {
+  display: block;
+  /* `max-width: none` jer globalno pravilo drzi svaku sliku i snimak na
+     100% — bez toga se sirina odsijece nazad na kolonu teksta. */
+  max-width: none;
+  width: calc(100% + 2 * var(--page-gutter));
+  margin: 0 calc(var(--page-gutter) * -1) clamp(28px, 7vw, 44px);
+  aspect-ratio: 1280 / 570;
+  object-fit: cover;
+  background: var(--ink-black);
 }
 /* Mreza ide u guteru stranice, snimak i traka do ivica. */
 .spc-stranica .catalog-grid {

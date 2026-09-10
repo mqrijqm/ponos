@@ -55,13 +55,22 @@ export default async function Page({
     <>
       <Header />
       <main>
-        <PageHero
-          kicker={c.kicker}
-          title={c.title}
-          copy={c.desc}
-          lead={pageLead[slug] ?? c.desc}
-          foot={pageFoot[slug]}
-        />
+        {/*
+          Decking stranica pocinje snimkom, bez zaglavlja sa naslovom i
+          putanjom. Naslov ipak postoji — kao `h1` koji se ne vidi: stranica
+          bez naslova nema sta da ponudi ni citacu ekrana ni pretrazivacu.
+        */}
+        {slug === "spc-vinyl-decking" ? (
+          <h1 className="sr-only">{c.title}</h1>
+        ) : (
+          <PageHero
+            kicker={c.kicker}
+            title={c.title}
+            copy={c.desc}
+            lead={pageLead[slug] ?? c.desc}
+            foot={pageFoot[slug]}
+          />
+        )}
         {/*
           Eksplodirani presjek daske - prva sekcija sadrzaja na /proizvodi/parketi.
           Stoji odmah iznad teksta o visesloju, jer ga taj tekst opisuje.
@@ -104,9 +113,20 @@ export default async function Page({
               </p>
             </div>
 
-            <div className="spc-snimak" role="img" aria-label="Mjesto za snimak — WPC Decking">
-              <span aria-hidden="true">video</span>
-            </div>
+            {/* Isti snimak koji stoji i na naslovnoj, poslije racunice. */}
+            <video
+              className="spc-video"
+              poster="/video/decking-poster.webp"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              aria-label="WPC decking na terasi"
+            >
+              <source src="/video/decking.webm" type="video/webm" />
+              <source src="/video/decking.mp4" type="video/mp4" />
+            </video>
             <ProductGrid items={items.filter((x) => x.brand === "WPC")} />
             <div className="spc-traka">
               <h2>WPC DECKING PODOVI ZA TERASE I DASKE</h2>
@@ -117,12 +137,6 @@ export default async function Page({
                 rješenje ukoliko tražite prirodan i postojan izgled. Izuzetno
                 su otporni na vanjske uticaje, vodootporni su i imaju UV
                 zaštitu. Odlikuje ih jednostavnost ugradnje i održavanja.
-              </p>
-              <p>
-                WPC daske, nastale kombinacijom prirodnih sastojaka sa
-                termoplastičnim polimerima, nude prirodan izgled drveta bez
-                potrebe za održavanjem istog. Decking podove moguće je naručiti
-                u našim poslovnim objektima u Dervišima i Lazarevu.
               </p>
             </div>
           </section>
@@ -283,7 +297,7 @@ export default async function Page({
               </QuoteCta>
             </article>
           </section>
-        ) : (
+        ) : slug === "spc-vinyl-decking" ? null : (
           <section className="editorial-copy">
             <h2>Dostupno po narudžbi.</h2>
             <p>

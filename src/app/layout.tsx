@@ -5,18 +5,21 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import PoruciCursor from "@/components/PoruciCursor";
 import QuoteProvider from "@/components/QuoteProvider";
-// Dva fonta se ucitavaju: Lora nosi serif/naglasena mjesta, Comfortaa natpis
-// preko heroja. Sve ostalo sto je sans ide na Arial (sistemski, nista se ne
-// skida) - vidi globals.css.
-const lora = localFont({
-  src: [
-    { path: "../fonts/Lora-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/Lora-Italic.woff2", weight: "400", style: "italic" },
-    { path: "../fonts/Lora-Bold.woff2", weight: "700", style: "normal" },
-    { path: "../fonts/Lora-BoldItalic.woff2", weight: "700", style: "italic" },
-  ],
+/*
+  Mansory nosi serif — naslove i naglasena mjesta. Dosao je umjesto Lore,
+  koja je bila klasican citalacki serif; ovaj je uzi i ostriji, blize
+  krupnom slogu kojim govori ostatak stranice.
+
+  Ima samo uspravnu tezinu: gdje je serif kurziv (par natpisa uz slike),
+  browser ga sam iskosi. Podebljanog serifa na sajtu nema.
+
+  Podrezan na latinicu sa Latin Extended-A: 18 kB umjesto cetiri Lorina
+  fajla od 180 kB ukupno.
+*/
+const mansory = localFont({
+  src: [{ path: "../fonts/Mansory-Regular.woff2", weight: "400", style: "normal" }],
   display: "swap",
-  variable: "--font-lora",
+  variable: "--font-mansory",
 });
 /*
   SK Gothenburg Rounded — krupan slog: natpis na herou, izjava o firmi,
@@ -76,7 +79,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <body className={`${lora.variable} ${comfortaa.variable} ${gothenburg.variable}`}>
+      <body className={`${mansory.variable} ${comfortaa.variable} ${gothenburg.variable}`}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
           <PoruciCursor />
