@@ -6,9 +6,10 @@ import SmoothScroll from "@/components/SmoothScroll";
 import PoruciCursor from "@/components/PoruciCursor";
 import QuoteProvider from "@/components/QuoteProvider";
 /*
-  Mansory nosi serif — naslove i naglasena mjesta. Dosao je umjesto Lore,
-  koja je bila klasican citalacki serif; ovaj je uzi i ostriji, blize
-  krupnom slogu kojim govori ostatak stranice.
+  Mansory nosi sav slog koji nije Arial: naslove, krupne recenice na
+  naslovnoj, brojeve koraka. Dosao je umjesto dva reza — Lore, koja je
+  bila klasican citalacki serif, i SK Gothenburga, koji je nosio krupan
+  slog. Jedan rez za cijelu stranicu umjesto dva koja se nigdje ne sretnu.
 
   Ima samo uspravnu tezinu: gdje je serif kurziv (par natpisa uz slike),
   browser ga sam iskosi. Podebljanog serifa na sajtu nema.
@@ -20,29 +21,6 @@ const mansory = localFont({
   src: [{ path: "../fonts/Mansory-Regular.woff2", weight: "400", style: "normal" }],
   display: "swap",
   variable: "--font-mansory",
-});
-/*
-  SK Gothenburg Rounded — krupan slog: natpis na herou, izjava o firmi,
-  brojevi koraka. Stigao je umjesto Aurene, koja je imala samo 95 glifova,
-  ciste ASCII: nasa slova (č, ć, ž, š, đ) padala su na Arial iza nje, pa je
-  svaka druga rijec bila u drugom rezu.
-
-  Podrezan na latinicu sa Latin Extended-A, gdje ta slova i stoje: 25 kB
-  umjesto 40, i nista se ne gubi — sajt je na jednom jeziku.
-
-  PAZNJA: fajl je skinut kao "Demo / Trial" (befonts.com). Prije nego sajt
-  ode uzivo treba puna licenca od autora.
-*/
-const gothenburg = localFont({
-  src: [
-    {
-      path: "../fonts/SKGothenburgRounded-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-  ],
-  display: "swap",
-  variable: "--font-gothenburg",
 });
 /* Samo srednja debljina i samo latinica: natpis preko heroja je jedini
    tekst u ovom fontu, pa nema smisla skidati cijelu familiju. */
@@ -79,7 +57,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <body className={`${mansory.variable} ${comfortaa.variable} ${gothenburg.variable}`}>
+      <body className={`${mansory.variable} ${comfortaa.variable}`}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
           <PoruciCursor />
