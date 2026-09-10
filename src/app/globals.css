@@ -8280,3 +8280,89 @@ main .how.process-section .process-card.is-active {
     color: var(--naslov-smedji);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SPC / WPC STRANICA
+   Dvije grupe, obje istog sloga: mjesto za snimak, mreza od cetiri
+   artikla, naslov u traci izmedju crta, pa tekst. Prvo se vidi sta se
+   kupuje, pa tek onda objasnjenje — ranije su dva pasusa stajala prije
+   prve fotografije.
+   ═══════════════════════════════════════════════════════════════════ */
+.spc-stranica {
+  padding: 0 0 clamp(56px, 12vw, 96px);
+}
+/* Prazan okvir do dolaska snimka. Visina je mala namjerno: snimak je
+   uvod u grupu, ne kadar preko ekrana. */
+.spc-snimak {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(160px, 34vw, 260px);
+  /* Do ivica ekrana: guter stranice se ponisti negativnom marginom. */
+  margin: 0 calc(var(--page-gutter) * -1) clamp(28px, 7vw, 44px);
+  background: #d9d9d9;
+  color: #7c7c7c;
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+/* Drugi snimak dolazi poslije teksta — bez razmaka bi se sudarili. */
+.spc-slog + .spc-snimak {
+  margin-top: clamp(44px, 11vw, 72px);
+}
+/* Mreza ide u guteru stranice, snimak i traka do ivica. */
+.spc-stranica .catalog-grid {
+  padding: 0 var(--page-gutter);
+}
+.spc-traka {
+  margin: clamp(26px, 7vw, 40px) 0 clamp(26px, 7vw, 38px);
+  padding: 13px var(--page-gutter);
+  border-top: 1px solid var(--brand-line);
+  border-bottom: 1px solid var(--brand-line);
+}
+.spc-traka h2 {
+  margin: 0;
+  font-family: var(--font-manrope), Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--naslov-smedji);
+}
+/* Isti slog kao izjave na naslovnoj: krupan rez, rijetki redovi, uvucen
+   prvi red svakog pasusa. */
+.spc-slog {
+  padding: 0 var(--page-gutter);
+}
+.spc-slog p {
+  margin: 0 0 .7em;
+  font-family: var(--font-gothenburg), Arial, Helvetica, sans-serif;
+  font-size: clamp(1.15rem, 4.8vw, 1.5rem) !important;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+  text-indent: 1.1em;
+  color: var(--tekst-beige);
+}
+.spc-slog p:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 901px) {
+  /* Siroki ekran za sada nosi isti raspored, samo u koloni koja se cita. */
+  .spc-slog,
+  .spc-stranica .catalog-grid,
+  .spc-traka {
+    max-width: 1180px;
+    margin-inline: auto;
+  }
+  .spc-snimak {
+    height: 340px;
+  }
+  .spc-stranica .catalog-grid,
+  .spc-slog,
+  .spc-traka {
+    padding-inline: 8vw;
+  }
+}

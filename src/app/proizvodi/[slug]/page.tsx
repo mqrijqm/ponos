@@ -70,13 +70,48 @@ export default async function Page({
         {slug === "parketi" && <LayerStack />}
         {/*
           Decking stranica ne ide kroz `catalog-section` na dnu: artikli su
-          podijeljeni na dvije grupe i svaka stoji odmah ispod svog opisa.
+          podijeljeni na dvije grupe i svaka nosi svoj blok.
+
+          Redoslijed u bloku je namjeran: prvo se vidi sta se kupuje (mreza),
+          pa tek onda naslov i objasnjenje. Ranije je bilo obrnuto — dva
+          pasusa teksta prije prve fotografije.
+
+          Mjesto za snimak je za sada prazan sivi okvir. Stoji u kodu, a ne
+          ceka da stigne fajl: kad snimak dodje, mijenja se sadrzaj okvira, a
+          ne raspored stranice oko njega.
         */}
         {slug === "spc-vinyl-decking" && (
-          <section className="flooring-editorial is-split">
-            <article className="decking-story">
-              <span className="flooring-index">01</span>
-              <h3>WPC Decking</h3>
+          <section className="spc-stranica">
+            <div className="spc-snimak" role="img" aria-label="Mjesto za snimak — SPC Vinyl">
+              <span aria-hidden="true">video</span>
+            </div>
+            <ProductGrid items={items.filter((x) => x.brand !== "WPC")} />
+            <div className="spc-traka">
+              <h2>SPC VINYL</h2>
+            </div>
+            <div className="spc-slog">
+              <p>
+                Kolekcija inspirisana prirodnim ljepotama šume. Prigušene boje
+                i struktura drveta osiguravaju sklad i jedinstvenu atmosferu.
+                Pod je ekološki prihvatljiv i u potpunosti se može reciklirati.
+              </p>
+              <p>
+                Natural Floor kolekcija idealna je za podno grijanje i efikasno
+                provodi toplotu bez promjene svojih parametara. Inovativna
+                jezgra sačinjena je od 80% prirodnih komponenti, uz polimere
+                koji podu daju otpornost na udarce i oštećenja, stabilne
+                dimenzije i jednostavnu ugradnju.
+              </p>
+            </div>
+
+            <div className="spc-snimak" role="img" aria-label="Mjesto za snimak — WPC Decking">
+              <span aria-hidden="true">video</span>
+            </div>
+            <ProductGrid items={items.filter((x) => x.brand === "WPC")} />
+            <div className="spc-traka">
+              <h2>WPC DECKING PODOVI ZA TERASE I DASKE</h2>
+            </div>
+            <div className="spc-slog">
               <p>
                 WPC Decking podovi za terase i daske za ograde idealno su
                 rješenje ukoliko tražite prirodan i postojan izgled. Izuzetno
@@ -89,25 +124,7 @@ export default async function Page({
                 potrebe za održavanjem istog. Decking podove moguće je naručiti
                 u našim poslovnim objektima u Dervišima i Lazarevu.
               </p>
-            </article>
-            <ProductGrid items={items.filter((x) => x.brand === "WPC")} />
-            <article className="decking-story">
-              <span className="flooring-index">02</span>
-              <h3>SPC Vinyl</h3>
-              <p>
-                Kolekcija inspirisana prirodnim ljepotama šume. Prigušene boje
-                i struktura drveta osiguravaju sklad i jedinstvenu atmosferu.
-                Pod je ekološki prihvatljiv i u potpunosti se može reciklirati.
-              </p>
-              <p>
-                Natural Floor kolekcija idealna je za podno grijanje i
-                efikasno provodi toplotu bez promjene svojih parametara.
-                Inovativna jezgra sačinjena je od 80% prirodnih komponenti, uz
-                polimere koji podu daju otpornost na udarce i oštećenja,
-                stabilne dimenzije i jednostavnu ugradnju.
-              </p>
-            </article>
-            <ProductGrid items={items.filter((x) => x.brand !== "WPC")} />
+            </div>
           </section>
         )}
         {slug === "lajsne" && (
