@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 /**
- * Znak koji se okrece oko svoje ose. Stoji na dva mjesta — uz uvodnu
- * recenicu i u sekciji o kvalitetu — pa oblik zivi ovdje, a ne dvaput
- * prepisan; kad se putanje promijene, promijene se na oba mjesta.
+ * Znak koji se okrece oko svoje ose. Stajao je na dva mjesta — uz uvodnu
+ * recenicu ispod snimka i u sekciji o kvalitetu; uvodna sekcija je izasla,
+ * pa mu je ostalo ovo drugo.
  *
  * Crta se u kodu, ne kroz <Image>: tako se okrece bez jos jednog zahtjeva
  * i bez skoka dok se fajl ceka. Vodi na katalog.
@@ -12,7 +12,7 @@ export default function Znak({ className }: { className?: string }) {
   return (
     <Link
       href="/proizvodi"
-      className={`uvod-znak${className ? ` ${className}` : ""}`}
+      className={`znak${className ? ` ${className}` : ""}`}
       aria-label="Pogledaj proizvode"
     >
       <svg viewBox="0 0 266 286" fill="currentColor" aria-hidden="true">

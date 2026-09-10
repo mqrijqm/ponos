@@ -6712,17 +6712,8 @@ main > section.hero-video {
   .hv-frame {
     --hv-p: 1;
   }
-  /*
-    Traka stoji. Kad se ne krece sama, mora se moci pomjeriti rukom — inace
-    ostane vidljivo samo prvih par artikala.
-  */
-  .uvod-kartice,
-  .uvod-znak svg {
+  .znak svg {
     animation: none;
-  }
-  .uvod-traka {
-    overflow-x: auto;
-    scrollbar-width: none;
   }
 }
 
@@ -6882,7 +6873,7 @@ header.home-sticky-header.is-solid {
 /* ═══════════════════════════════════════════════════════════════════
    UVODNE SEKCIJE ISPOD HEROJA
    Redom kako stoje na stranici: recenica sa strelicom i tri artikla
-   (.uvod), traka sa jednom recenicom (.traka), par slika (.galerija).
+   traka sa jednom recenicom (.traka), par slika (.galerija).
    Pisano za telefon; siroki ekran je na kraju bloka.
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -6968,99 +6959,32 @@ header.home-sticky-header.is-solid {
   color: #fff;
 }
 
-/* ─── Traka artikala ─── */
-main > section.uvod {
-  padding: clamp(38px, 8vw, 64px) var(--page-gutter) clamp(40px, 9vw, 72px);
-  background: #fff;
-}
 /*
   Znak se okrece u mjestu; nema okvira oko sebe — sam oblik nosi mjesto.
-  Malen je i u beige tonu slova, ne u punoj smedjoj: stoji uz recenicu kao
-  znak, a ne kao drugi naslov pored nje.
+  Stajao je uz uvodnu recenicu ispod snimka; ta sekcija je izasla, pa mu je
+  ostalo jedno mjesto — sekcija o kvalitetu.
 */
-.uvod-znak {
+.znak {
   flex: 0 0 auto;
   display: block;
   width: 26px;
   color: var(--brand-muted);
 }
-.uvod-znak svg {
+.znak svg {
   display: block;
   width: 100%;
   height: auto;
   transform-origin: center;
   /* Sporo: znak stoji uz recenicu, ne takmici se s njom. */
-  animation: uvod-znak-vrti 18s linear infinite;
+  animation: znak-vrti 18s linear infinite;
 }
-@keyframes uvod-znak-vrti {
+@keyframes znak-vrti {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
-}
-/*
-  Traka artikala, ne mreza. Dvije kartice u redu su bile kraj ponude; ovako
-  ih ide koliko ih ima u katalogu i traka sama kazuje da ima jos — zadnja
-  vidljiva je odsjecena na ivici ekrana.
-
-  Negativne margine izvlace traku iz --page-gutter do same ivice, a isti taj
-  guter se vraca kao padding, pa prva kartica ostaje poravnata sa tekstom
-  iznad dok ostale idu van stranice.
-*/
-/*
-  Okvir trake. Ide do ivice ekrana (negativne margine ponistavaju --page-gutter)
-  i sijece ono sto izadje; prva kartica ostaje u osi teksta iznad jer je guter
-  vracen kao padding.
-*/
-.uvod-traka {
-  margin-top: clamp(30px, 8vw, 56px);
-  margin-right: calc(-1 * var(--page-gutter));
-  margin-left: calc(-1 * var(--page-gutter));
-  padding-left: var(--page-gutter);
-  overflow: hidden;
-}
-/*
-  Spisak ide dva puta, a pomjeranje staje tacno na duzinu jednog kruga
-  (`-50%` je pola dvostruke trake, plus pola razmaka koji ostaje izmedju dva
-  kruga). Kad prvi krug izadje, drugi je piksel u piksel na njegovom mjestu,
-  pa se vrti bez sastava.
-*/
-.uvod-kartice {
-  display: flex;
-  gap: 10px;
-  width: max-content;
-  animation: uvod-klizi 42s linear infinite;
-}
-@keyframes uvod-klizi {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-50% - 5px));
-  }
-}
-/*
-  Ne staje pod misem — traka ide bez prekida. Staje samo kad je neko u njoj
-  tastaturom: fokusirani artikal bi inace otklizao ispod prsta prije nego sto
-  se stigne otvoriti.
-*/
-.uvod-traka:focus-within .uvod-kartice {
-  animation-play-state: paused;
-}
-.uvod-kartica {
-  position: relative;
-  flex: 0 0 auto;
-  /* 42vw: dvije stanu cijele, treca je zarezana — traka se vidi kao traka. */
-  width: 42vw;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: var(--cream-tint);
-  text-decoration: none;
-}
-.uvod-kartica img {
-  object-fit: cover;
 }
 /* ─── Traka sa jednom recenicom ─── */
 .traka {
@@ -7153,15 +7077,8 @@ main > section.galerija {
 }
 
 @media (min-width: 1024px) {
-  .uvod-znak {
+  .znak {
     width: 32px;
-  }
-  /* Na sirokom ekranu kartica ima svoju mjeru; traka se i dalje lista. */
-  .uvod-kartice {
-    gap: 16px;
-  }
-  .uvod-kartica {
-    width: 220px;
   }
   .galerija-slike {
     gap: 18px;

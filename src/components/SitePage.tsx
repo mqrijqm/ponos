@@ -15,7 +15,6 @@ import EditorialStatement from "./EditorialStatement";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
 import CategoryCarousel from "./mobile/CategoryCarousel";
-import LandingUvod from "./landing/LandingUvod";
 import OvalDugme from "./landing/OvalDugme";
 import Traka from "./landing/Traka";
 import MobileMenu from "./MobileMenu";
@@ -204,12 +203,11 @@ export default function SitePage() {
         <span id="podovi" />
         <span id="o-nama" />
         {/*
-          Otvaranje stranice ide redom sa predloska: recenica sa strelicom i
-          tri artikla, traka, izjava, par slika, pa "Kako funkcionise".
-          Ispod toga stranica nastavlja onako kako je i bila.
+          Ispod snimka je stajala traka artikala koja se vrti sama, pa traka
+          sa jednom recenicom. Oboje je izaslo: ista takva traka slika stoji
+          na dnu stranice, iznad podnozja, i dvaput je bilo jednom previse.
+          Sada snimak vodi pravo u izjavu.
         */}
-        <LandingUvod />
-        <Traka tekst="Ono što čini svaki dom." />
         <EditorialStatement />
         {/*
           Ponuda odmah ispod izjave: uspravne slike po grupama, kroz koje se
