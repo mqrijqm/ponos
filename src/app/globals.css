@@ -8223,3 +8223,60 @@ main .how.process-section .process-card.is-active {
   outline: 2px solid #fff;
   outline-offset: 4px;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   IZJAVE NA TELEFONU — TRAKA, SLOG, DUGME
+   Bio je citat: sitan natpis, tekst u navodnicima poravnat obostrano i
+   potpis ispod. Sada isti slog kao ostatak telefona — natpis u traci
+   izmedju crta, recenica u krupnom rezu, dugme i strelice u dnu.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* Traka ide do ivica ekrana, pa negativna margina ponisti guter sekcije. */
+  .m-quotes .m-quotes-traka {
+    margin: 0 calc(var(--m-gutter) * -1) clamp(30px, 8vw, 44px);
+    padding: 13px var(--m-gutter);
+    border-top: 1px solid var(--brand-line);
+    border-bottom: 1px solid var(--brand-line);
+    text-align: center;
+  }
+  .m-quotes .m-quotes-traka .m-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    color: var(--naslov-smedji);
+  }
+  .m-quotes .m-quote {
+    margin: 0;
+  }
+  /*
+    Isti slog kao izjava o firmi i recenica o kvalitetu: krupan rez, rijetki
+    redovi, uvucen prvi red. Obostrano poravnanje je izaslo — na uskoj koloni
+    je razvlacilo razmake izmedju rijeci u rupe.
+  */
+  .m-quotes .m-quote p {
+    margin: 0;
+    font-family: var(--font-gothenburg), Arial, Helvetica, sans-serif;
+    font-size: clamp(1.5rem, 6.6vw, 2rem) !important;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    text-align: left;
+    text-indent: 1.1em;
+    color: var(--tekst-beige) !important;
+  }
+  /* Dugme lijevo, listanje desno — u istom redu, na istoj osi. */
+  .m-quotes .m-quote-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: clamp(28px, 7vw, 40px);
+  }
+  .m-quotes .m-quote-nav {
+    margin: 0;
+    gap: 14px;
+  }
+  .m-quotes .m-quote-count {
+    color: var(--naslov-smedji);
+  }
+}

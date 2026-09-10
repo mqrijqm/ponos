@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 
+import OvalDugme from "../landing/OvalDugme";
+
 /**
- * Jedna izjava odjednom, autor ispod, strelice u dnu sekcije.
+ * Jedna izjava odjednom: natpis u traci, tekst, pa dugme i strelice u dnu.
+ *
+ * `autor` se ne ispisuje — potpis ispod svake izjave je izasao iz sloga —
+ * ali ostaje uz tekst: kad stignu prave recenzije, ime govornika je jedino
+ * sto ih razlikuje od ovih firminih recenica.
  *
  * VAZNO: ovdje NEMA recenzija kupaca — nemamo ni jednu pravu. Umjesto
  * izmisljenih citata stoje izjave same firme i cinjenice koje se vec nalaze
@@ -41,7 +47,11 @@ export default function StatementSlider() {
 
   return (
     <section className="m-band m-quotes" aria-labelledby="m-quotes-title">
-      <span className="m-label">IZ NAŠE PRAKSE</span>
+      {/* Natpis u traci izmedju dvije crte — isto kao godine u sekciji o
+          kvalitetu i naslov "Kako se odluciti" ispod nje. */}
+      <div className="m-quotes-traka">
+        <span className="m-label">IZ NAŠE PRAKSE</span>
+      </div>
       <h2 id="m-quotes-title" className="sr-only">
         Iz naše prakse
       </h2>
@@ -49,22 +59,28 @@ export default function StatementSlider() {
       {/*
         `aria-live` javlja citacu ekrana da se tekst promijenio — bez toga
         strelice mijenjaju sadrzaj koji on nikad ne procita.
+
+        Bez navodnika i bez potpisa ispod: izjave su firmine, ne tudje, pa su
+        se navodnici citali kao citat nekog treceg. Ko govori kazuje natpis u
+        traci iznad.
       */}
       <blockquote className="m-quote" aria-live="polite">
-        <p>„{izjava.tekst}”</p>
-        <cite>— {izjava.autor}</cite>
+        <p>{izjava.tekst}</p>
       </blockquote>
 
-      <div className="m-quote-nav">
-        <button type="button" onClick={() => pomjeri(-1)} aria-label="Prethodna izjava">
-          ←
-        </button>
-        <span className="m-quote-count" aria-hidden="true">
-          {i + 1} / {IZJAVE.length}
-        </span>
-        <button type="button" onClick={() => pomjeri(1)} aria-label="Sljedeća izjava">
-          →
-        </button>
+      <div className="m-quote-foot">
+        <OvalDugme natpis="Više o nama" href="/o-nama" className="m-quote-cta" />
+        <div className="m-quote-nav">
+          <button type="button" onClick={() => pomjeri(-1)} aria-label="Prethodna izjava">
+            ←
+          </button>
+          <span className="m-quote-count" aria-hidden="true">
+            {i + 1} / {IZJAVE.length}
+          </span>
+          <button type="button" onClick={() => pomjeri(1)} aria-label="Sljedeća izjava">
+            →
+          </button>
+        </div>
       </div>
     </section>
   );

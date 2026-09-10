@@ -12,7 +12,6 @@ import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
 import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
-import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
 import CategoryCarousel from "./mobile/CategoryCarousel";
@@ -399,10 +398,16 @@ export default function SitePage() {
             </article>
           ))}
         </section>
-        <ProductShowcase />
+        {/*
+          Ovdje su stajala dva prikaza artikla — Wicked Harvest Oak i Miram —
+          jedan uz drugi, sa WPC-om izmedju. Tri puna kadra proizvoda zaredom
+          na telefonu su bila duza od ostatka stranice; ostaje WPC, koji nosi
+          izbor boje i time radi nesto sto kartica u traci ne moze.
+
+          Komponenta `ProductShowcase` je i dalje u kodu, samo je naslovna ne
+          zove.
+        */}
         <WpcDeckingSection />
-        {/* Isti detalj kao Krono, samo preslikan — tekstura lijevo. */}
-        <ProductShowcase product={miram} mirrored titleId="showcase-miram" />
         <StatementSlider />
         {/*
           "Na jednom mjestu" zatvara stranicu, tik iznad podnozja. Bila je
