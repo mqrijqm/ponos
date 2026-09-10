@@ -11,10 +11,13 @@ import { useMediaQuery, usePrefersReducedMotion } from "./hooks";
  * preko njega.
  *
  * Vrijeme se ne broji tajmerom nego se cita sa snimka. Snimak mijenja
- * proizvod svakih ~0.73s; rezovi izmjereni na fajlu stoje na 1.47, 2.17,
- * 2.90, 3.67, 4.40, 5.90, 6.67, 8.17 i 8.93 sekundi. Natpis i dugme ulaze
- * tacno na prva dva reza, pa promjena proizvoda i pojava teksta padaju u isti
- * kadar umjesto da se sudaraju.
+ * proizvod svakih ~0.83s; rezovi izmjereni na fajlu stoje na 0.83, 1.73,
+ * 2.57, 3.30, 4.17, 5.00 i 6.73 sekunde. Natpis i dugme ulaze tacno na rez,
+ * pa promjena proizvoda i pojava teksta padaju u isti kadar umjesto da se
+ * sudaraju.
+ *
+ * Brojevi vaze za `public/video/hero.*` — kad se snimak zamijeni, treba ih
+ * ponovo izmjeriti, inace tekst ulazi nasred kadra.
  *
  * Zato `timeupdate`, a ne `setTimeout`: tajmer krene od trenutka montiranja,
  * a snimak od trenutka kad ga browser pusti — to nije isto ako je fajl jos u
@@ -22,9 +25,9 @@ import { useMediaQuery, usePrefersReducedMotion } from "./hooks";
  */
 
 /** Rez na kojem ulazi natpis. */
-const REZ_NATPIS = 1.47;
+const REZ_NATPIS = 1.73;
 /** Sljedeci rez — dugme. */
-const REZ_DUGME = 2.17;
+const REZ_DUGME = 2.57;
 
 /**
  * Ako snimak ne krene (iOS stednja baterije, blokiran autoplay), natpis ne
