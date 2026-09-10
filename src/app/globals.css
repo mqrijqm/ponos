@@ -27,6 +27,17 @@
   --tekst-pasus: var(--text-soft);  /* svi pasusi */
   --naslov-smedji: var(--ink);   /* sitni verzalni natpisi */
   --font-support: 14px;
+  /*
+    Naslovna govori sa dvije mjere. Serifni naslovi sekcija ("Četvrt vijeka
+    pod nogama", "sa Ponosom", "Asortiman", "Laminati") svi idu istim
+    stepenom, istim razmakom redova i istim razmakom slova — bez obzira na
+    to je li rijec jedna ili ih je pet. Sav sitan sans na naslovnoj ide
+    jednim stepenom; razlikuju se samo verzal i razmak slova, tamo gdje ih
+    natpis vec nosi.
+  */
+  --naslov-serif: clamp(36px, 12.6vw, 70px);
+  --naslov-serif-ls: -0.015em;
+  --sitni-sans: 12px;
   /* Kratki aliasi — zadrzani jer ih koristi puno starijeg koda */
   --c: var(--cream);
   --i: var(--ink);
@@ -7933,22 +7944,16 @@ footer.site-footer .ft-kartica p {
   margin: 0;
   color: var(--ink) !important;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 15px !important;
+  font-size: var(--sitni-sans) !important;
   letter-spacing: normal;
   text-align: center;
 }
 .as-naslov {
   margin: 8px 0 0;
   font-family: var(--font-playfair), serif;
-  /*
-    Rijec je razmaknuta i drzi skoro cijelu sirinu kolone; sirina se dobija
-    razmakom medju slovima, ne samo velicinom.
-  */
-  font-size: clamp(38px, 14vw, 72px);
+  font-size: var(--naslov-serif);
   font-weight: 400;
-  letter-spacing: 0.06em;
-  /* Razmak stoji i iza zadnjeg slova — bez ovoga rijec sjedne ulijevo. */
-  text-indent: 0.06em;
+  letter-spacing: var(--naslov-serif-ls);
   line-height: 1;
   text-align: center;
 }
@@ -7967,7 +7972,7 @@ footer.site-footer .ft-kartica p {
   align-self: start;
   color: inherit;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 15px;
+  font-size: var(--sitni-sans);
   text-decoration: none;
   transition: opacity 200ms ease;
 }
@@ -8060,8 +8065,8 @@ footer.site-footer .ft-kartica p {
   display: block;
   margin-top: 13px;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.04em;
+  font-size: var(--sitni-sans);
+  letter-spacing: normal;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -8087,10 +8092,10 @@ footer.site-footer .ft-kartica p {
 .isk-naslov {
   margin: 0;
   font-family: var(--font-playfair), serif;
-  font-size: clamp(38px, 13vw, 68px);
+  font-size: var(--naslov-serif);
   font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.98;
+  letter-spacing: var(--naslov-serif-ls);
+  line-height: 1;
 }
 .isk-naslov span,
 .isk-naslov em {
@@ -8119,8 +8124,8 @@ footer.site-footer .ft-kartica p {
 .iskustvo .isk-slika figcaption {
   margin-top: 9px;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 11px !important;
-  letter-spacing: 0.02em;
+  font-size: var(--sitni-sans) !important;
+  letter-spacing: normal;
   line-height: 1.3;
   opacity: 0.72;
 }
@@ -8206,24 +8211,24 @@ footer.site-footer .ft-kartica p {
 }
 .isk-godina span {
   font-family: var(--font-manrope), sans-serif;
-  font-size: 11px;
+  font-size: var(--sitni-sans);
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 .isk-tekst h3 {
   margin: 0 0 10px;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 14px;
+  font-size: var(--sitni-sans);
   font-weight: 700;
-  letter-spacing: 0.005em;
+  letter-spacing: normal;
 }
 .iskustvo .isk-tekst p {
   margin: 0;
   /* Zatecena pravila vode svaki <p> na telefonu u beige, sa `!important`. */
   color: var(--ink) !important;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 12px !important;
+  font-size: var(--sitni-sans) !important;
   line-height: 1.55;
   opacity: 0.76;
 }
@@ -8258,19 +8263,18 @@ main > section.predah {
   padding: 0 var(--page-gutter);
   color: var(--ink);
   font-family: var(--font-playfair), serif;
+  font-size: var(--naslov-serif);
   font-weight: 400;
+  letter-spacing: var(--naslov-serif-ls);
   line-height: 1;
   text-align: center;
   white-space: nowrap;
 }
 .pr-naslov em {
-  margin-right: 0.14em;
-  font-size: clamp(26px, 9vw, 52px);
+  margin-right: 0.1em;
   font-style: italic;
 }
 .pr-naslov span {
-  font-size: clamp(34px, 12vw, 68px);
-  letter-spacing: -0.015em;
   text-transform: uppercase;
 }
 
@@ -8368,15 +8372,15 @@ main > section.pregled {
   padding-bottom: 3px;
   border-bottom: 1px solid currentColor;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 11px;
+  font-size: var(--sitni-sans);
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: normal;
   opacity: 0.6;
 }
 .pg-info > span {
   font-family: var(--font-manrope), sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.13em;
+  font-size: var(--sitni-sans);
+  letter-spacing: 0.1em;
   line-height: 1.3;
   text-transform: uppercase;
   opacity: 0.55;
@@ -8386,9 +8390,9 @@ main > section.pregled {
   margin: clamp(56px, 15vw, 104px) 0 0;
   color: var(--ink);
   font-family: var(--font-playfair), serif;
-  font-size: clamp(34px, 12vw, 68px);
+  font-size: var(--naslov-serif);
   font-weight: 400;
-  letter-spacing: -0.015em;
+  letter-spacing: var(--naslov-serif-ls);
   line-height: 1;
   text-align: center;
   text-transform: uppercase;

@@ -18,8 +18,12 @@ import { catalog, productImage } from "@/data/catalog";
  * biran po boji: bijeli, zlatni, sivi, srednji hrast i tamna cokolada —
  * da se niz vidi kao raspon, a ne kao pet puta isti pod. Svaki je i iz
  * druge kolekcije, pa se imena desno ne ponavljaju.
+ *
+ * Ime kolekcije mora stati u jedan red: pola bloka je 135px, a natpis u
+ * dva reda razbija ritam niza. Zato "Floordreams Vario" nije u izboru
+ * iako je boja odgovarala — ime mu je za jedan red predugo.
  */
-const izbor = ["5953", "K450", "K4386", "K470", "K635"];
+const izbor = ["5953", "37813", "34268", "K470", "K635"];
 const laminati = izbor
   .map((k) => catalog.find((p) => p.code === k))
   .filter((p): p is NonNullable<typeof p> => Boolean(p));
