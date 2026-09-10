@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Comfortaa, Parisienne, Playfair_Display } from "next/font/google";
+import { Comfortaa, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import PoruciCursor from "@/components/PoruciCursor";
@@ -37,17 +37,6 @@ const playfair = Playfair_Display({
   display: "swap",
   variable: "--font-playfair",
 });
-/*
-  Parisienne nosi pet rijeci — imena grupa preko slika u "Asortimanu". Ima
-  jednu tezinu i to je sve sto joj treba; da nosi bilo sta duze od jedne
-  rijeci, ne bi se dala citati.
-*/
-const parisienne = Parisienne({
-  subsets: ["latin-ext"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-parisienne",
-});
 /* Samo srednja debljina i samo latinica: natpis preko heroja je jedini
    tekst u ovom fontu, pa nema smisla skidati cijelu familiju. */
 const comfortaa = Comfortaa({
@@ -83,7 +72,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <body className={`${mansory.variable} ${comfortaa.variable} ${playfair.variable} ${parisienne.variable}`}>
+      <body className={`${mansory.variable} ${comfortaa.variable} ${playfair.variable}`}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
           <PoruciCursor />

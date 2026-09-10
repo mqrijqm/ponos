@@ -8009,8 +8009,9 @@ footer.site-footer .ft-kartica p {
     rgba(245, 243, 238, 0) 100%
   );
   color: var(--ink);
-  font-family: var(--font-parisienne), cursive;
-  font-size: clamp(30px, 9.2vw, 44px);
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(26px, 8vw, 38px);
+  font-style: italic;
   line-height: 1;
   white-space: nowrap;
   pointer-events: none;
