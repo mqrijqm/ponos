@@ -39,6 +39,23 @@ export default function CategoryCarousel() {
               </span>
               <span className="m-rail-caption">{c.title}</span>
             </Link>
+            {/*
+              Znak akcije stoji uz laminate jer su oba akcijska artikla iz
+              kataloga laminati — kad to prestane da vazi, prestaje i znak.
+
+              Van je kartice, ne u njoj: link u linku nije dozvoljen, a i
+              vodi na drugo mjesto (/akcija) nego sama kartica.
+            */}
+            {c.slug === "laminati" && (
+              <Link href="/akcija" className="m-rail-akcija">
+                <Image
+                  src="/images/akcija-ponuda.svg"
+                  alt="Akcijska ponuda"
+                  width={493}
+                  height={135}
+                />
+              </Link>
+            )}
           </li>
         ))}
       </ul>

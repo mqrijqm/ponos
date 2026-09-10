@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 
 import { useQuote } from "./QuoteProvider";
 import BasketMenu from "./BasketMenu";
+import OvalDugme from "./landing/OvalDugme";
 
 /**
  * Meni preko cijelog ekrana. Ranije je to bila trakica koja se spustala ispod
@@ -108,17 +109,17 @@ export default function MobileMenu({
         <BasketMenu />
       </div>
 
+      {/* Isti oval kao svako drugo dugme na sajtu — ranije je ovdje stajao
+          taman pravougaonik, jedini takav na stranici. */}
       <div className="menu-overlay-foot">
-        <button
-          type="button"
+        <OvalDugme
+          natpis="Pogledaj ponudu"
           className="menu-overlay-cta"
           onClick={() => {
             onClose();
             openQuote();
           }}
-        >
-          Pogledaj ponudu
-        </button>
+        />
       </div>
     </div>
   );

@@ -234,8 +234,15 @@ export default function SitePage() {
         >
           {menu ? <X /> : <Menu />}
         </button>
-        <MobileMenu open={menu} onClose={() => setMenu(false)} />
       </header>
+      {/*
+        Meni stoji izvan zaglavlja, iako ga zaglavlje otvara. Unutra je nosio
+        njegova pravila: dok je traka providna preko snimka, sve u njoj je
+        bijelo — pa je i spisak u meniju bio bijel, na kremastoj podlozi
+        preklopa. Preklop je ionako `fixed` preko cijelog ekrana; zaglavlju
+        ne pripada ni po izgledu ni po znacenju.
+      */}
+      <MobileMenu open={menu} onClose={() => setMenu(false)} />
       <main id="top">
         <HeroVideo />
         <span id="naslovna" />
