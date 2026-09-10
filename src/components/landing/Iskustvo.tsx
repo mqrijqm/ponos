@@ -1,13 +1,14 @@
 import Image from "next/image";
 
-import QuoteCta from "../QuoteCta";
+import IskustvoKadar from "./IskustvoKadar";
 
 /**
  * Sekcija odmah ispod snimka, prije "Asortimana".
  *
  * Slog je iz predloska (stranica o istoriji muzeja): krupan naslov u tri
  * reda gdje je srednji kurzivan i uvucen, mala slika sa natpisom gore
- * desno, dugme na sredini, i na dnu godina osnivanja uz kratak tekst.
+ * desno, kvadratni kadar na sredini, i na dnu godina osnivanja uz kratak
+ * tekst.
  *
  * Prazan prostor je dio sloga, ne previd: sekcija ima tri bloka i mnogo
  * vazduha medju njima — poslije snimka stranica treba da uspori prije nego
@@ -36,14 +37,7 @@ export default function Iskustvo() {
         </figure>
       </div>
 
-      {/*
-        Dugme je inline element pa ga omotac centrira poravnanjem teksta;
-        `margin: auto` na njemu ne bi radilo, a da mu se mijenja `display`,
-        moralo bi se nadjacati zajednicko pravilo za svu dugmad.
-      */}
-      <div className="isk-red-dugme">
-        <QuoteCta className="cta-dot cta-puno">Zatraži ponudu</QuoteCta>
-      </div>
+      <IskustvoKadar />
 
       <div className="isk-dno">
         <p className="isk-godina">

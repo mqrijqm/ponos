@@ -24,7 +24,7 @@
     verzalni natpis u smedju — bez treceg tona, da stranica ima jedan glas.
     Bijelo u podnozju i u traci preko snimka nije dio ovoga.
   */
-  --tekst-beige: #b39779;        /* svi pasusi */
+  --tekst-pasus: var(--text-soft);  /* svi pasusi */
   --naslov-smedji: var(--brand-brown); /* sitni verzalni natpisi */
   --font-support: 14px;
   /* Kratki aliasi — zadrzani jer ih koristi puno starijeg koda */
@@ -5484,7 +5484,7 @@ main > section.hero-sequence .hero-stage-frame {
 .menu-overlay-list a {
   padding: 24px;
   border-bottom: 1px solid #d0c8bf;
-  color: var(--tekst-beige);
+  color: var(--tekst-pasus);
   font-family: var(--font-newsreader), serif;
   font-size: 19px;
   font-weight: 400;
@@ -7445,8 +7445,9 @@ main .how.process-section .process-card.is-active {
 /* ═══════════════════════════════════════════════════════════════════
    TELEFON: DVIJE BOJE TEKSTA I NISTA TRECE
    Stranica je skupila desetak tonova sivo-smedjeg, svaki iz svoje
-   sekcije i nijedan namjeran. Ovdje se svode na dva: pasusi u beige
-   (--tekst-beige), sitni verzalni natpisi u smedju (--naslov-smedji).
+   sekcije i nijedan namjeran. Ovdje se svode na dva: pasusi u mekoj
+   tamnoj (--tekst-pasus), sitni verzalni natpisi u smedju
+   (--naslov-smedji).
 
    Zasto `!important`: boje su na dvadesetak mjesta postavljene kroz
    selektore tezine `main .sekcija .element`, cesto uz `!important` iz
@@ -7465,7 +7466,7 @@ main .how.process-section .process-card.is-active {
   /* Recenica o kvalitetu je naslov po ulozi, ali se sa dopunom ispod cita
      kao jedan pasus — u dva tona bi izgledala kao previd. */
   main .quality-statement h2 {
-    color: var(--tekst-beige) !important;
+    color: var(--tekst-pasus) !important;
   }
   /* Natpis preko snimka je bijel jer stoji na tamnom kadru. */
   main .hero-video p {
@@ -7519,7 +7520,7 @@ main .how.process-section .process-card.is-active {
     letter-spacing: 0;
     text-align: left;
     text-indent: 1.1em;
-    color: var(--tekst-beige) !important;
+    color: var(--tekst-pasus) !important;
   }
   /* Dugme lijevo, listanje desno — u istom redu, na istoj osi. */
   .m-quotes .m-quote-foot {
@@ -7596,7 +7597,7 @@ main .how.process-section .process-card.is-active {
   line-height: 1.5;
   letter-spacing: 0;
   text-indent: 1.1em;
-  color: var(--tekst-beige);
+  color: var(--tekst-pasus);
 }
 .spc-slog p:last-child {
   margin-bottom: 0;
@@ -7935,18 +7936,16 @@ footer.site-footer .ft-kartica p {
   margin: 8px 0 0;
   font-family: var(--font-playfair), serif;
   /*
-    Rijec je razmaknuta i drzi cijelu sirinu kolone. Stepen je nizi nego sto
-    izgleda: verzal je siri od mijesanog sloga, a razmak medju slovima jos
-    ga siri, pa se sirina dobija razmakom a ne velicinom.
+    Rijec je razmaknuta i drzi skoro cijelu sirinu kolone; sirina se dobija
+    razmakom medju slovima, ne samo velicinom.
   */
-  font-size: clamp(33px, 12vw, 62px);
+  font-size: clamp(38px, 14vw, 72px);
   font-weight: 400;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.06em;
   /* Razmak stoji i iza zadnjeg slova — bez ovoga rijec sjedne ulijevo. */
-  text-indent: 0.09em;
+  text-indent: 0.06em;
   line-height: 1;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .as-mreza {
@@ -8140,9 +8139,23 @@ footer.site-footer .ft-kartica p {
 .cta-dot.cta-puno:not(.catalog-count):not(.catalog-filter)::before {
   background: var(--brand-brown);
 }
-.isk-red-dugme {
-  margin-top: clamp(72px, 22vw, 150px);
-  text-align: center;
+/*
+  Kadar raste dok se lista: `--isk-r` (0 → 1) upisuje IskustvoKadar na
+  svaki frejm, a sirina se racuna iz njega. Bez prelaza — vrijednost vec
+  dolazi zaglađena, a prelaz bi je vukao i kadar bi kasnio za prstom.
+*/
+.isk-kadar {
+  --isk-r: 0;
+  width: calc(32% + 42% * var(--isk-r));
+  margin: clamp(72px, 22vw, 150px) auto;
+  overflow: hidden;
+}
+.isk-kadar img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 .isk-dno {
@@ -8151,6 +8164,16 @@ footer.site-footer .ft-kartica p {
   gap: 20px;
   margin-top: clamp(72px, 22vw, 150px);
 }
+/*
+  Cijela sekcija govori jednom bojom; razliku u tezini nosi providnost, ne
+  drugi ton. Godina i natpis uz sliku su <p> i <figcaption>, a zatecena
+  pravila i jedno i drugo vode u meku tamnu sa `!important` — pa moraju
+  istom tezinom nazad.
+*/
+.iskustvo .isk-godina,
+.iskustvo .isk-slika figcaption {
+  color: var(--ink) !important;
+}
 .iskustvo .isk-godina {
   display: flex;
   flex-direction: column;
@@ -8158,7 +8181,6 @@ footer.site-footer .ft-kartica p {
   margin: 0;
 }
 .isk-godina b {
-  color: var(--brand-brown);
   font-family: var(--font-playfair), serif;
   font-size: clamp(38px, 12vw, 62px);
   font-weight: 400;
