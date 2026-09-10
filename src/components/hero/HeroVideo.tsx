@@ -128,13 +128,21 @@ export default function HeroVideo() {
       return;
     }
 
-    /* Brzina se gubi kad browser ucita novi izvor, pa se postavlja i sada i
-       na `loadedmetadata`. */
-    const ubrzaj = () => {
+    /*
+      Brzina se gubi kad browser ucita novi izvor, pa se postavlja i sada i
+      na `loadedmetadata`.
+
+      Uz nju i povratak na nulu: pri osvjezavanju stranice browser vrati
+      snimak tamo gdje je stao. Natpis i dugme se vezuju za vrijeme snimka,
+      pa bi na zateceno vrijeme odmah bili tu — bez cekanja i bez prelaza.
+      Sa nule svako otvaranje izgleda isto.
+    */
+    const odPocetka = () => {
       video.playbackRate = BRZINA;
+      if (video.currentTime > 0) video.currentTime = 0;
     };
-    ubrzaj();
-    video.addEventListener("loadedmetadata", ubrzaj);
+    odPocetka();
+    video.addEventListener("loadedmetadata", odPocetka);
 
     const naVrijeme = () => {
       const t = video.currentTime;
@@ -155,7 +163,7 @@ export default function HeroVideo() {
 
     return () => {
       video.removeEventListener("timeupdate", naVrijeme);
-      video.removeEventListener("loadedmetadata", ubrzaj);
+      video.removeEventListener("loadedmetadata", odPocetka);
       window.clearTimeout(rezerva);
     };
   }, [reducedMotion]);

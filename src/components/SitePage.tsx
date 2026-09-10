@@ -14,7 +14,6 @@ import WpcDeckingSection from "./WpcDeckingSection";
 import EditorialStatement from "./EditorialStatement";
 import ProductShowcase, { miram } from "./ProductShowcase";
 import BasketMenu from "./BasketMenu";
-import { useMediaQuery } from "./hero/hooks";
 import HeroVideo from "./hero/HeroVideo";
 import CategoryCarousel from "./mobile/CategoryCarousel";
 import LandingUvod from "./landing/LandingUvod";
@@ -145,20 +144,32 @@ export default function SitePage() {
     Na sirokom ekranu snimak stoji u stranici, ispod trake, pa je traka tamo
     uvijek puna.
   */
-  const [prekoSnimka, setPrekoSnimka] = useState(false);
-  const uzakEkran = useMediaQuery("(max-width: 1023px)");
+  /*
+    Pocinje na `true` — dakle bez podloge. Stranica se otvara na vrhu, gdje je
+    snimak tacno pod trakom; a i sirina ekrana i polozaj snimka se mogu
+    izmjeriti tek u browseru, poslije prvog iscrtavanja.
+
+    Ranije je pocinjala na `false`: prvi kadar je onda bio kremasta traka
+    preko snimka, koja bi tek u sljedecem frejmu nestala. Na telefonu se to
+    vidjelo kao bijela traka na videu pri svakom otvaranju stranice.
+
+    Obrnuta greska ne postoji na oko: na sirokom ekranu je traka takodje
+    kremasta, pa jedan frejm bez podloge preko kremastog heroja ne mijenja
+    sliku.
+  */
+  const [naSnimku, setNaSnimku] = useState(true);
 
   useEffect(() => {
-    /* Sirok ekran nema sta da prati; vrijednost se tamo i ne koristi
-       (vidi `naSnimku` ispod), pa se ovdje samo izlazi. */
-    if (!uzakEkran) return;
     let raf = 0;
     const izmjeri = () => {
+      /* Sirina se cita ovdje, ne kroz hook: hook prvi render uvijek vrati
+         `false`, pa bi traka opet bljesnula puna prije nego se popravi. */
+      const usko = window.matchMedia("(max-width: 1023px)").matches;
       const hero = document.querySelector(".hero-video");
-      if (!hero) return;
       /* Prag je dno snimka manje visina trake — traka se zatamni tacno kad
-         snimak izadje ispod nje. */
-      setPrekoSnimka(hero.getBoundingClientRect().bottom > 64);
+         snimak izadje ispod nje. Na sirokom ekranu snimak stoji u stranici,
+         ispod trake, pa je traka tamo uvijek puna. */
+      setNaSnimku(!!hero && usko && hero.getBoundingClientRect().bottom > 64);
     };
     const naScroll = () => {
       cancelAnimationFrame(raf);
@@ -172,10 +183,7 @@ export default function SitePage() {
       window.removeEventListener("scroll", naScroll);
       window.removeEventListener("resize", naScroll);
     };
-  }, [uzakEkran]);
-
-  /* Traka je providna samo na uskom ekranu i samo dok je snimak pod njom. */
-  const naSnimku = uzakEkran && prekoSnimka;
+  }, []);
 
   return (
     <>
