@@ -12,6 +12,7 @@ import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
 import WpcDeckingSection from "./WpcDeckingSection";
 import Asortiman from "./landing/Asortiman";
+import Iskustvo from "./landing/Iskustvo";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
 import OvalDugme from "./landing/OvalDugme";
@@ -206,7 +207,11 @@ export default function SitePage() {
           jednom recenicom, pa izjava o asortimanu. Sve troje je izaslo:
           ista takva traka slika stoji na dnu stranice, a izjava je govorila
           ono sto sekcija ispod sada pokazuje.
+
+          Sada snimak vodi u sekciju o iskustvu — jedan krupan naslov i
+          malo teksta, sa mnogo vazduha — pa tek onda u ponudu.
         */}
+        <Iskustvo />
         <Asortiman />
         {/* Sekcija o kvalitetu je bila pri dnu, iza dva prikaza proizvoda i
             klizaca; sada stoji odmah iza ponude. */}

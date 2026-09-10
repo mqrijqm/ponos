@@ -6417,16 +6417,14 @@ main > section.hero-video {
   margin: 0;
   font-family: var(--font-playfair), "Times New Roman", Times, serif;
   font-weight: 400;
-  font-size: clamp(30px, 8.4vw, 40px);
-  line-height: 1.3;
+  /* Jedan red — stepen je onoliki koliki stane preko kadra. */
+  font-size: clamp(22px, 6.6vw, 34px);
+  line-height: 1.2;
   letter-spacing: -0.005em;
+  white-space: nowrap;
   text-align: center;
   color: #fff;
   text-shadow: 0 2px 28px rgba(20, 15, 11, 0.5);
-}
-/* Na telefonu dvije linije, na sirokom ekranu jedna — vidi @media dole. */
-.hv-title span {
-  display: block;
 }
 .hv-cta {
   grid-row: 1;
@@ -6509,13 +6507,10 @@ main > section.hero-video {
     width: auto;
     margin: 0 auto;
   }
-  /*
-    Natpis ostaje u dva reda i na sirokom ekranu. Jedan red je stajao dok je
-    okvir bio sirok 640px; sada je okvir uspravan i uzi od natpisa, pa bi mu
-    "PROSTORA" izaslo van kadra.
-  */
+  /* Okvir je uspravan i uzi od telefona, pa natpis u jednom redu mora biti
+     sitniji nego sto bi na ovoj sirini ekrana inace bio. */
   .hv-title {
-    font-size: clamp(28px, 2.2vw, 38px);
+    font-size: clamp(21px, 2.1vw, 30px);
   }
   /* Duze prelivanje nego na telefonu — na velikom kadru djeluje mirnije. */
   .hv-title,
@@ -8027,4 +8022,133 @@ footer.site-footer .ft-kartica p {
   font-family: var(--font-manrope), sans-serif;
   font-size: 12px;
   letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ISKUSTVO — SEKCIJA IZMEDJU SNIMKA I PONUDE
+   Slog je iz predloska (stranica o istoriji muzeja): krupan naslov u tri
+   reda sa kurzivnim srednjim, mala slika sa natpisom gore desno, dugme na
+   sredini, i na dnu godina osnivanja uz kratak tekst.
+
+   Prazan prostor je dio sloga. Poslije snimka stranica treba da uspori
+   prije nego sto krene da nabraja, pa su razmaci medju tri bloka veci
+   nego bilo gdje drugdje na naslovnoj.
+   ═══════════════════════════════════════════════════════════════════ */
+.iskustvo {
+  padding: clamp(52px, 14vw, 104px) var(--page-gutter) clamp(56px, 15vw, 110px);
+  background: var(--cream);
+  color: var(--ink);
+}
+/* Slika stoji apsolutno, uz desnu ivicu i uz prvi red naslova. Da je u
+   toku, gurnula bi naslov nadole i treci red joj ne bi mogao proci ispod. */
+.isk-vrh {
+  position: relative;
+}
+.isk-naslov {
+  margin: 0;
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(38px, 13vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+.isk-naslov span,
+.isk-naslov em {
+  display: block;
+}
+/* Srednji red je kurzivan i uvucen — kao "of the" u predlosku. */
+.isk-naslov em {
+  margin-left: 1.15em;
+  font-style: italic;
+}
+.isk-slika {
+  position: absolute;
+  top: 0.35em;
+  right: 0;
+  width: 35%;
+  max-width: 240px;
+  margin: 0;
+}
+.isk-slika img {
+  position: relative !important;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.iskustvo .isk-slika figcaption {
+  margin-top: 9px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px !important;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  opacity: 0.72;
+}
+
+/*
+  Dugme je puno, ne samo okvir — jedino takvo na sajtu, jer je jedino koje
+  stoji samo na sredini prazne sekcije.
+
+  Selektor nosi ista dva `:not` kao i zajednicko pravilo za dugmad: bez
+  njih je slabiji i puna povrsina bi pala na `background: none` odatle.
+
+  Crta ispod okvira ide u smedju: `currentColor` je ovdje krem i na kremu
+  se ne bi vidjela.
+*/
+.cta-dot.cta-puno:not(.catalog-count):not(.catalog-filter),
+.cta-dot.cta-puno:not(.catalog-count):not(.catalog-filter):hover {
+  background: var(--brand-brown);
+  border-color: var(--brand-brown);
+  color: var(--cream);
+}
+.cta-dot.cta-puno:not(.catalog-count):not(.catalog-filter)::before {
+  background: var(--brand-brown);
+}
+.isk-red-dugme {
+  margin-top: clamp(72px, 22vw, 150px);
+  text-align: center;
+}
+
+.isk-dno {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: 20px;
+  margin-top: clamp(72px, 22vw, 150px);
+}
+.iskustvo .isk-godina {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+.isk-godina b {
+  color: var(--brand-brown);
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(38px, 12vw, 62px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+.isk-godina span {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.isk-tekst h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+}
+.iskustvo .isk-tekst p {
+  margin: 0;
+  /* Zatecena pravila vode svaki <p> na telefonu u beige, sa `!important`. */
+  color: var(--ink) !important;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 12px !important;
+  line-height: 1.55;
+  opacity: 0.76;
 }
