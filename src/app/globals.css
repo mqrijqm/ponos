@@ -7947,8 +7947,9 @@ footer.site-footer .ft-kartica p {
   font-family: var(--font-manrope), sans-serif;
   font-size: var(--sitni-sans) !important;
   letter-spacing: normal;
-  text-align: center;
 }
+/* Natpis i ime stoje uz lijevu ivicu, kao naslov sekcije ispod snimka —
+   dvije sekcije jedna za drugom, isti pocetak reda. */
 .as-naslov {
   margin: 8px 0 0;
   font-family: var(--font-playfair), serif;
@@ -7956,7 +7957,6 @@ footer.site-footer .ft-kartica p {
   font-weight: 400;
   letter-spacing: var(--naslov-serif-ls);
   line-height: 1;
-  text-align: center;
 }
 
 .as-mreza {

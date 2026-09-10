@@ -3,6 +3,7 @@ import Image from "next/image";
 import LayerStack from "@/components/layers/LayerStack";
 import CategoryCatalog from "@/components/CategoryCatalog";
 import ProductGrid from "@/components/ProductGrid";
+import WpcDeckingSection from "@/components/WpcDeckingSection";
 import QuoteCta from "@/components/QuoteCta";
 import { Footer, Header, PageHero } from "@/components/SiteChrome";
 import { catalog, categories } from "@/data/catalog";
@@ -85,25 +86,10 @@ export default async function Page({
           pa tek onda naslov i objasnjenje. Ranije je bilo obrnuto — dva
           pasusa teksta prije prve fotografije.
 
-          Mjesto za snimak je za sada prazan sivi okvir. Stoji u kodu, a ne
-          ceka da stigne fajl: kad snimak dodje, mijenja se sadrzaj okvira, a
-          ne raspored stranice oko njega.
+          Snimci su izasli — dva su se vrtjela sama, svaki iznad jedne mreze.
         */}
         {slug === "spc-vinyl-decking" && (
           <section className="spc-stranica">
-            <video
-              className="spc-video"
-              poster="/video/parket-poster.webp"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="none"
-              aria-label="SPC pod u dnevnom boravku, snimljen odozgo"
-            >
-              <source src="/video/parket.webm" type="video/webm" />
-              <source src="/video/parket.mp4" type="video/mp4" />
-            </video>
             <ProductGrid items={items.filter((x) => x.brand !== "WPC")} />
             <div className="spc-traka">
               <h2>SPC VINYL</h2>
@@ -121,20 +107,12 @@ export default async function Page({
               </p>
             </div>
 
-            {/* Isti snimak koji stoji i na naslovnoj, poslije racunice. */}
-            <video
-              className="spc-video"
-              poster="/video/decking-poster.webp"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="none"
-              aria-label="WPC decking na terasi"
-            >
-              <source src="/video/decking.webm" type="video/webm" />
-              <source src="/video/decking.mp4" type="video/mp4" />
-            </video>
+            {/*
+              Izbor boje decka je do sada stajao na naslovnoj. Ovdje je na
+              svom mjestu: stoji tacno iznad mreze WPC artikala, pa se boja
+              bira uz ono sto se kupuje.
+            */}
+            <WpcDeckingSection />
             <ProductGrid items={items.filter((x) => x.brand === "WPC")} />
             <div className="spc-traka">
               <h2>WPC DECKING PODOVI ZA TERASE I DASKE</h2>

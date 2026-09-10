@@ -7,7 +7,6 @@ import Calculator, { calculableItems } from "./Calculator";
 import { useQuote } from "./QuoteProvider";
 import { track } from "@/lib/analytics";
 import { Footer, ProductsNav } from "./SiteChrome";
-import WpcDeckingSection from "./WpcDeckingSection";
 import Asortiman from "./landing/Asortiman";
 import Iskustvo from "./landing/Iskustvo";
 import Predah from "./landing/Predah";
@@ -147,10 +146,11 @@ export default function SitePage() {
         <PregledLaminata />
         <Asortiman />
         {/*
-          Poslije ponude stranica ide na racunicu, pa na izbor boje decka, i
-          tu staje. Sekcija o kvalitetu, snimak terase, tri koraka, izjave i
-          traka detalja su izasli — naslovna je bila duza od svega sto ima
-          da kaze.
+          Poslije ponude stranica ide na racunicu i tu staje. Sekcija o
+          kvalitetu, snimak terase, tri koraka, izjave i traka detalja su
+          izasli — naslovna je bila duza od svega sto ima da kaze. Izbor
+          boje decka je presao na /proizvodi/spc-vinyl-decking, gdje mu je
+          i mjesto: tamo se ta grupa i kupuje.
 
           Traka nosi naslov kalkulatora koji stoji odmah ispod nje.
         */}
@@ -166,7 +166,6 @@ export default function SitePage() {
             }}
           />
         </section>
-        <WpcDeckingSection />
       </main>
       <Footer />
     </>
