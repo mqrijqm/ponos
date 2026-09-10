@@ -9,7 +9,7 @@
   --brand-line: #e7e1d8;         /* sve horizontalne linije i separatori */
   --brand-muted: #8b7e6e;        /* sekundarni tekst */
   --brand-beige: #c8bba4;        /* veliki naslov u herou */
-  --cream: #f5f3ee;              /* svaka krem pozadina + svijetli tekst na tamnom */
+  --cream: #fffbf5;              /* svaka krem pozadina + svijetli tekst na tamnom */
   --cream-tint: #eeeae2;         /* podloga ispod slika i kartica — nijansu tamnija od kreme */
   --sand: #d8cbbe;               /* pjescane povrsine i ikone */
   --ink: #3b2a21;                /* topla tamna, glavni tekst */
@@ -119,7 +119,7 @@ header {
   display: flex;
   align-items: center;
   padding: 0 3.5vw;
-  background: #f5f3eef5;
+  background: #fffbf5f5;
   border-bottom: 1px solid var(--l);
   gap: 26px;
   backdrop-filter: blur(8px);
@@ -2727,7 +2727,7 @@ header:has(.brand-image) {
 
 .flooring-editorial {
   padding: clamp(75px, 9vw, 140px) 7vw;
-  background: #f5f3ee;
+  background: var(--cream);
   border-bottom: 1px solid var(--l);
 }
 .visualizer-unavailable {
@@ -2736,7 +2736,7 @@ header:has(.brand-image) {
   display: grid;
   place-items: center;
   text-align: center;
-  background: #f5f3ee;
+  background: var(--cream);
 }
 .visualizer-unavailable > div {
   max-width: 700px;
@@ -5665,7 +5665,7 @@ html.menu-open body {
     gap: 0;
   }
   header.site-header {
-    background: #f5f3eef2;
+    background: #fffbf5f2;
     border-bottom: 1px solid rgba(59, 42, 33, .08);
   }
   header nav,
@@ -6192,7 +6192,7 @@ html.menu-open body {
   /* Zaglavlje naslovne: providno preko snimka, puno poslije njega.
      Bez toga tamni znak stoji nad tamnom sekcijom i ne vidi se. */
   header.home-sticky-header.is-solid {
-    background: #f5f3eef2;
+    background: #fffbf5f2;
     border-bottom: 1px solid rgba(59, 42, 33, .08);
   }
 
@@ -6586,7 +6586,7 @@ header.home-sticky-header {
   backdrop-filter: none;
 }
 header.home-sticky-header.is-solid {
-  background: #f5f3eef2;
+  background: #fffbf5f2;
   border-bottom: 1px solid rgba(59, 42, 33, .08);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
@@ -8004,9 +8004,9 @@ footer.site-footer .ft-kartica p {
   padding: 0.1em 0.42em 0.16em;
   background: radial-gradient(
     ellipse closest-side,
-    rgba(245, 243, 238, 0.88),
-    rgba(245, 243, 238, 0.72) 55%,
-    rgba(245, 243, 238, 0) 100%
+    rgba(255, 251, 245, 0.88),
+    rgba(255, 251, 245, 0.72) 55%,
+    rgba(255, 251, 245, 0) 100%
   );
   color: var(--ink);
   font-family: var(--font-playfair), serif;
