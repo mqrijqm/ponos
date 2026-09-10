@@ -8167,10 +8167,17 @@ footer.site-footer .ft-kartica p {
   margin: clamp(96px, 28vw, 190px) auto;
 }
 
+/*
+  Dvije kolone krecu od istog vrha. Serifna godina ima gotovo prazan
+  prostor iznad slova (`line-height: 0.9`), a sitni sans naslov desno nosi
+  svoj razmak reda — zato mala uvlaka na godini, da im se vrhovi slova
+  poklope a ne kutije.
+*/
 .isk-dno {
   display: grid;
   grid-template-columns: 40% 1fr;
   gap: 20px;
+  align-items: start;
   margin-top: clamp(96px, 28vw, 190px);
 }
 /*
@@ -8190,6 +8197,7 @@ footer.site-footer .ft-kartica p {
   margin: 0;
 }
 .isk-godina b {
+  margin-top: -0.06em;
   font-family: var(--font-playfair), serif;
   font-size: clamp(38px, 12vw, 62px);
   font-weight: 400;
@@ -8229,7 +8237,10 @@ footer.site-footer .ft-kartica p {
    Kadar raste dok se lista, kao onaj u sekciji o iskustvu, ali ide dalje:
    ovdje je slika glavna stvar, pa se penje skoro do ivica ekrana.
    ═══════════════════════════════════════════════════════════════════ */
-.predah {
+/* `main > section:not(.home-hero)` gore dodaje uspravni padding svakoj
+   sekciji i jaci je od same klase — zato ovaj selektor. Dno je nula:
+   pregled se nastavlja na istu podlogu, a razmak drze tri tacke. */
+main > section.predah {
   padding: clamp(56px, 16vw, 120px) 0 0;
   background: var(--cream-tint);
 }
@@ -8272,8 +8283,13 @@ footer.site-footer .ft-kartica p {
    ulazak u vidno polje sam po sebi ne bi dao red — zastoj po mjestu u
    nizu upisuje komponenta, u `style`, jer zavisi od rednog broja.
    ═══════════════════════════════════════════════════════════════════ */
-.pregled {
-  padding: 0 var(--page-gutter) clamp(76px, 21vw, 150px);
+/*
+  Razmak iznad tacaka je padding sekcije, ne margina tacaka: margina bi
+  iscurila kroz vrh sekcije (nema ni okvira ni paddinga da je zaustavi) i
+  izmedju dva bloka bi se otvorila traka podloge stranice.
+*/
+main > section.pregled {
+  padding: clamp(84px, 24vw, 164px) var(--page-gutter) clamp(76px, 21vw, 150px);
   background: var(--cream-tint);
 }
 /* Tri sitne tacke, jedna pod drugom, na osi stranice. Razmak oko njih je
@@ -8283,7 +8299,7 @@ footer.site-footer .ft-kartica p {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  margin: clamp(88px, 25vw, 170px) auto clamp(80px, 23vw, 156px);
+  margin: 0 auto clamp(84px, 24vw, 164px);
 }
 .pg-tacka i {
   width: 5px;
@@ -8327,18 +8343,23 @@ footer.site-footer .ft-kartica p {
   display: block;
   overflow: hidden;
   aspect-ratio: 1.7 / 1;
-  background: var(--cream);
+  background: var(--cream-tint);
 }
 .pg-slika img {
   object-fit: cover;
 }
+/*
+  Blok nema svoju povrsinu — sjedi na podlozi sekcije, a drzi ga crta.
+  Bijela kartica bi ga podigla sa stranice; ovako je okvir jedino sto ga
+  odvaja, kao u predlosku.
+*/
 .pg-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 8px;
   padding: 0 14px;
-  background: var(--cream);
+  background: none;
 }
 /* Broj nosi kratku crtu pod sobom, kao u predlosku — zato `align-self`,
    da se crta zaustavi na sirini broja a ne cijele kolone. */

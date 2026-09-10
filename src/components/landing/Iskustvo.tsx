@@ -45,7 +45,7 @@ export default function Iskustvo() {
 
       <div className="isk-dno">
         <p className="isk-godina">
-          <b>2000</b>
+          <b>2000.</b>
           <span>Osnovani</span>
         </p>
         <div className="isk-tekst">
