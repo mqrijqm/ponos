@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { categories } from "@/data/catalog";
 import QuoteCta from "./QuoteCta";
+import FooterKartica from "./FooterKartica";
 import BasketMenu from "./BasketMenu";
 import { MobileMenuButton } from "./MobileMenu";
 
@@ -69,8 +70,8 @@ export function Footer() {
         nisu <hr> nego `border-top` na bloku koji dolazi — jedan element
         manje po razmaku.
 
-        U predlosku ispod kartice stoje tri tackice, jer je tamo niz koji
-        se lista. Ovdje je jedna kartica, pa tackica nema.
+        Kartica na dnu se mijenja sama i nosi tackice, kao u predlosku;
+        oblik i mjere su u `FooterKartica`.
       */}
       <div className="ft-meta">
         <div className="ft-kolona">
@@ -103,21 +104,7 @@ export function Footer() {
         nas
       </Link>
 
-      <Link href="/proizvodi/spc-vinyl-decking" className="ft-kartica">
-        <Image
-          src="/images/footer/decking-terasa.webp"
-          alt=""
-          width={320}
-          height={320}
-        />
-        <div>
-          <h3>Vanjski decking</h3>
-          <p>
-            Daske za terase i dvorišta. Ne trunu i ne cijepaju se — voda, mraz
-            i sunce ih ne diraju.
-          </p>
-        </div>
-      </Link>
+      <FooterKartica />
 
       <div className="ft-dno">
         <span>© {new Date().getFullYear()} MT PONOS. Sva prava zadržana.</span>
