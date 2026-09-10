@@ -5380,6 +5380,116 @@ main > section.wpc-section {
   margin-top: clamp(24px, 3vw, 36px);
 }
 
+/* ═══ WPC na telefonu: naslov, pa kartica sa bojama sa strane ═══
+   Na uskom ekranu je red bio: kartica, naslov, dugme, boje, crtez sa
+   mjerama — pet blokova jedan ispod drugog, pa je sekcija bila duza od
+   dva ekrana i proizvod se vidio prije nego sto se zna sta je.
+
+   Ovdje ide: mini naslov i naslov, ispod njih kartica sa bojama desno
+   od nje uspravno, pa dugme centrirano. Crtez presjeka sa mjerama se ne
+   prikazuje — na 390px su brojevi bili sitniji od cega ima smisla citati,
+   a mjere stoje na stranici artikla.
+
+   `display: contents` na .wpc-copy: omotac prestaje da bude kutija, pa
+   njegova djeca (naslov, dugme, boje) postaju polja iste mreze kao i
+   kartica. Tako se redoslijed slaze bez diranja HTML-a, dakle bez
+   posljedica po siri ekran. */
+@media (max-width: 767px) {
+  /* Na telefonu blok popuni sirinu; blize 767px stao bi da se razvlaci, pa
+     kartica ostane prazna oko panela.
+
+     Selektor ponavlja `:not(...)` lanac globalnog pravila koje svakoj
+     sekciji postavlja `max-width: none`. Bez tog lanca je slabiji od njega
+     i ne vazi, ma gdje u fajlu stajao — CSS prvo gleda koliko je selektor
+     odredjen, pa tek onda ko je zadnji. */
+  main
+    > section.wpc-section:not(.hero-fullbleed):not(.placeholder-section) {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+  .wpc-section {
+    /* Visina slike, precnik kruga i razmak stoje ovdje kao brojevi jer se
+       jedan racuna iz drugih — poravnanje krugova sa slikom ispod. */
+    --wpc-media: clamp(200px, 54vw, 250px);
+    --wpc-okvir: 12px;
+    --wpc-krug: 52px;
+    --wpc-razmak: 16px;
+    /* koliko panel viri iznad kartice — isti broj drzi razmak ispod naslova */
+    --wpc-viri: 34px;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "lead lead"
+      "naslov naslov"
+      "kartica boje"
+      "dugme dugme";
+    column-gap: 20px;
+    row-gap: 0;
+    align-items: start;
+    justify-items: stretch;
+  }
+  .wpc-copy {
+    display: contents;
+  }
+  .wpc-copy .wpc-lead {
+    grid-area: lead;
+    margin: 0 0 10px;
+  }
+  .wpc-copy h2 {
+    grid-area: naslov;
+    /* panel se penje iznad kartice, pa naslov mora da mu se skloni */
+    margin: 0 0 calc(var(--wpc-viri) + 20px);
+    font-size: clamp(2.1rem, 9vw, 2.9rem);
+  }
+  .wpc-card {
+    grid-area: kartica;
+    width: 100%;
+    max-width: none;
+    padding: var(--wpc-okvir) var(--wpc-okvir) 18px;
+  }
+  .wpc-card-media {
+    height: var(--wpc-media);
+  }
+  .wpc-panel {
+    height: calc(100% + var(--wpc-viri));
+  }
+  .wpc-card-caption {
+    margin-top: 14px;
+    gap: 5px;
+  }
+  .wpc-card-caption strong {
+    font-size: 1.35rem;
+  }
+  /* Krugovi uspravno uz karticu. Niz se centrira na sliku, ne na cijelu
+     karticu — inace visi nize, pored natpisa umjesto pored panela. Zato
+     se spusta za pola razlike izmedju visine slike i visine niza. */
+  .wpc-swatches {
+    grid-area: boje;
+    align-self: start;
+    margin: calc(
+        var(--wpc-okvir) +
+        (var(--wpc-media) - (4 * var(--wpc-krug) + 3 * var(--wpc-razmak))) / 2
+      )
+      0 0;
+    flex-direction: column;
+    gap: var(--wpc-razmak);
+  }
+  .wpc-swatch {
+    width: var(--wpc-krug);
+    height: var(--wpc-krug);
+  }
+  .wpc-swatch-ring {
+    inset: -8px;
+  }
+  .wpc-cta {
+    grid-area: dugme;
+    justify-self: center;
+    margin: clamp(26px, 7vw, 38px) 0 0;
+  }
+  .wpc-section-detail {
+    display: none;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    DVA TEKSTA JEDAN PORED DRUGOG
    Uspravna linija razdvaja kolone, a razmak oko nje je s obje strane
