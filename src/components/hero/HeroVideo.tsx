@@ -24,23 +24,28 @@ import { useMediaQuery, usePrefersReducedMotion } from "./hooks";
  * mrezi ili ako je kartica bila u pozadini.
  */
 
-/** Rez na kojem ulazi natpis. */
-const REZ_NATPIS = 1.73;
-/** Sljedeci rez — dugme. */
-const REZ_DUGME = 2.57;
+/**
+ * Rez na kojem ulazi natpis. Trazeno je da se pojavi oko tri sekunde od
+ * pocetka; snimak ide 1.7x svoje brzine, pa tri sekunde gledanja padnu na
+ * 5.1s snimka — a najblizi rez je onaj na 5.00, dakle 2.9s stvarnog vremena.
+ */
+const REZ_NATPIS = 5;
+/** Sljedeci rez — dugme, oko 4s od pocetka. */
+const REZ_DUGME = 6.73;
 
 /**
  * Ako snimak ne krene (iOS stednja baterije, blokiran autoplay), natpis ne
- * smije ostati nevidljiv. Poslije ovoliko cekanja se pusta bez snimka.
+ * smije ostati nevidljiv. Poslije ovoliko cekanja se pusta bez snimka —
+ * duze nego sto natpis inace ceka, da rezerva ne pretekne rez.
  */
-const REZERVA_MS = 2600;
+const REZERVA_MS = 3600;
 
 /**
  * Koliko brze snimak ide od svoje brzine. Rezovi se ne pomjeraju — mjere se
  * u vremenu snimka (`currentTime`), koje ide istim redom, samo brze; mijenja
  * se koliko se ceka na njih, ne gdje su.
  */
-const BRZINA = 1.4;
+const BRZINA = 1.7;
 
 /** Udio scrolla kroz sekciju na kojem kadar dostigne punu mjeru. */
 const KRAJ_ZUMA = 0.62;

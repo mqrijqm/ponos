@@ -248,6 +248,9 @@ export default function SitePage() {
           ponude.
         */}
         <CategoryCarousel />
+        {/* Sekcija o kvalitetu je bila pri dnu, iza dva prikaza proizvoda i
+            klizaca; sada stoji odmah iza ponude, prije "Kako funkcionise". */}
+        <QualityPage />
         <section className="how process-section">
           <div className="how-heading">
             <span className="eyebrow">KAKO FUNKCIONIŠE</span>
@@ -364,7 +367,6 @@ export default function SitePage() {
         {/* Isti detalj kao Krono, samo preslikan — tekstura lijevo. */}
         <ProductShowcase product={miram} mirrored titleId="showcase-miram" />
         <StatementSlider />
-        <QualityPage />
         {/*
           "Na jednom mjestu" zatvara stranicu, tik iznad podnozja. Bila je
           prva sekcija ispod heroja; sada je zadnja, pa se plocice i natpis

@@ -4784,14 +4784,6 @@ main > section.editorial-statement {
     margin-top: 0;
   }
 }
-.qs-label {
-  color: var(--brand-muted);
-  font-family: var(--font-manrope), Arial, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .24em;
-  text-transform: uppercase;
-}
 .quality-page .quality-statement h2 {
   max-width: 100%;
   margin: clamp(22px, 3.2vh, 40px) 0 0;
@@ -8007,5 +7999,83 @@ main .how.process-section .process-card.is-active {
   }
   .home-sticky-header:not(.is-solid) .nav-basket {
     border-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   KVALITET NA TELEFONU
+   Natpis "VIŠE O KVALITETU" je izbrisan iz koda. Ostatak sloga se ovdje
+   preslaze: godine idu na vrh kao traka preko cijele sirine, ispod nje
+   recenica u jednom dahu, pa znak koji se okrece.
+
+   `order: -1` na podnozju: u kodu ono i dalje stoji zadnje, jer siri
+   ekran crta slog onako kako je i crtao. Mijenja se samo redoslijed
+   iscrtavanja, ne i redoslijed citanja za citac ekrana.
+   ═══════════════════════════════════════════════════════════════════ */
+/* Znak je za sada mobilna odluka — siri ekran crta ovaj slog kao i ranije. */
+.qs-znak {
+  display: none;
+}
+@media (max-width: 767px) {
+  .quality-statement {
+    padding-top: 0;
+  }
+  /* Traka sa godinama: crte idu do ivica ekrana, pa negativna margina
+     ponisti guter stranice, a isti taj guter se vrati kao padding. */
+  .quality-statement .qs-foot {
+    order: -1;
+    margin: 0 calc(var(--page-gutter) * -1) clamp(30px, 8vw, 44px);
+    padding: 13px var(--page-gutter);
+    border-top: 1px solid var(--brand-line);
+    border-bottom: 1px solid var(--brand-line);
+    justify-content: center;
+  }
+  .quality-statement .qs-kicker {
+    gap: 0;
+    color: var(--brand-brown);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-align: center;
+  }
+  /* Crtica ispred natpisa je stajala uz lijevo poravnanje; u centriranoj
+     traci bi natpis odgurala sa ose. */
+  .quality-statement .qs-kicker i {
+    display: none;
+  }
+  /*
+    Recenica i dopuna govore istim glasom kao izjava o firmi: Aurena,
+    rijetki redovi, uvucen prvi red. Dvije su zbog citaca ekrana i dalje
+    naslov i pasus, ali se citaju kao jedan slog — zato bez razmaka
+    izmedju njih.
+  */
+  .quality-page .quality-statement h2,
+  .quality-page .quality-statement .qs-lede {
+    max-width: none;
+    margin: 0;
+    color: var(--brand-muted);
+    font-family: var(--font-aurena), Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 6.6vw, 2rem);
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+  /* `!important` jer pri vrhu fajla stoji globalno
+     `p, li, ... { font-size: var(--font-support) !important }` — bez ovoga
+     dopuna ostane na 13px ma koliko selektor bio tezak. */
+  .quality-page .quality-statement .qs-lede {
+    font-size: clamp(1.5rem, 6.6vw, 2rem) !important;
+  }
+  .quality-page .quality-statement h2 {
+    text-indent: 1.1em;
+  }
+  /* Aurena ima samo jedan rez — kurziva nema, browser bi ga iskosio sam. */
+  .quality-page .quality-statement h2 em {
+    color: inherit;
+    font-style: normal;
+  }
+  .qs-znak {
+    display: block;
+    margin-top: clamp(26px, 7vw, 38px);
+    width: 32px;
   }
 }

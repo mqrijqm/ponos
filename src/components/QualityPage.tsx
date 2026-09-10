@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
+import Znak from "./landing/Znak";
+
 const qualityImages = {
   clickLock: "/images/quality/quality-click-lock-warm.webp",
   deckingTerrace: "/images/quality/quality-decking-terrace.webp",
@@ -33,15 +35,19 @@ export function QualityAccordionSection() {
       {/* Slog lijevo, popis desno — dvije kolone koje se na uskom slazu jedna
           ispod druge. */}
       <div className="quality-split">
-      {/* Isti slog kao izjava o firmi: natpis, serif recenica lijevo, podnozje. */}
+      {/* Isti slog kao izjava o firmi: serif recenica lijevo, podnozje.
+          Na telefonu podnozje ide na vrh kao traka — CSS ga preslaze, pa
+          redoslijed u kodu ostaje onaj koji siri ekran i dalje crta. */}
       <div className="quality-statement">
-        <span className="qs-label">VIŠE O KVALITETU</span>
         <h2 id="quality-intro-title">
           Kvalitet poda počinje od materijala, <em>završava se osjećajem doma.</em>
         </h2>
         <p className="qs-lede">
           Pažljivo biramo kolekcije koje spajaju trajnost, preciznu izradu i bezvremenski izgled.
         </p>
+        {/* Isti znak koji stoji uz uvodnu recenicu. Za sada samo na telefonu:
+            na sirokom ekranu slog ove sekcije nije diran. */}
+        <Znak className="qs-znak" />
         <div className="qs-foot">
           <span className="qs-kicker">
             <i aria-hidden="true" />
