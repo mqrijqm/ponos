@@ -8083,12 +8083,14 @@ footer.site-footer {
 }
 
 /* ─── Navigacija: krupan serif, samo prvo slovo veliko ─── */
+/* Crte sjede odmah uz cetiri natpisa — i gore i dole. */
 .ft-nav {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 24px 0 28px;
+  padding: 10px 0 12px;
   border-top: 1px solid #ffffff29;
+  border-bottom: 1px solid #ffffff29;
   font-family: var(--font-newsreader), serif;
   font-size: clamp(25px, 7.7vw, 34px);
   line-height: 1.18;
@@ -8106,16 +8108,17 @@ footer.site-footer {
   meni preko cijelog ekrana i donji dio je gurnut na dno. Ovdje je to
   obican razmak — podnozje nema visinu ekrana da je puni.
 */
-/* Natpis ide u dva reda, pa moze biti krupniji od navigacije iznad. */
+/* Isti serifni stepen kao navigacija — u podnozju je jedna velicina
+   serifa, ne dvije. Crta iznad je vec donja crta navigacije. */
 .ft-poziv {
   display: block;
-  margin-top: 34px;
-  padding: 24px 0 22px;
-  border-top: 1px solid #ffffff29;
+  margin-top: 42px;
+  padding-bottom: 24px;
   color: inherit;
   font-family: var(--font-newsreader), serif;
-  font-size: clamp(30px, 9.6vw, 44px);
-  line-height: 1.06;
+  font-size: clamp(25px, 7.7vw, 34px);
+  line-height: 1.18;
+  letter-spacing: -0.012em;
   text-decoration: none;
   transition: opacity 200ms ease;
 }
