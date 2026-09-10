@@ -8294,28 +8294,11 @@ main .how.process-section .process-card.is-active {
 .spc-stranica {
   padding: 0 0 clamp(56px, 12vw, 96px);
 }
-/* Prazan okvir do dolaska snimka. Visina je mala namjerno: snimak je
-   uvod u grupu, ne kadar preko ekrana. */
-.spc-snimak {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: clamp(160px, 34vw, 260px);
-  /* Do ivica ekrana: guter stranice se ponisti negativnom marginom. */
-  margin: 0 calc(var(--page-gutter) * -1) clamp(28px, 7vw, 44px);
-  background: #d9d9d9;
-  color: #7c7c7c;
-  font-family: var(--font-manrope), Arial, sans-serif;
-  font-size: 13px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-}
 /* Snimak dolazi poslije teksta — bez razmaka bi se sudarili. */
-.spc-slog + .spc-snimak,
 .spc-slog + .spc-video {
   margin-top: clamp(44px, 11vw, 72px);
 }
-/* Snimak stoji na mjestu sivog okvira: ista sirina, ista uloga. */
+/* Snimak ide do ivica ekrana, kao sto je i sivi okvir isao prije njega. */
 .spc-video {
   display: block;
   /* `max-width: none` jer globalno pravilo drzi svaku sliku i snimak na
@@ -8373,8 +8356,8 @@ main .how.process-section .process-card.is-active {
     max-width: 1180px;
     margin-inline: auto;
   }
-  .spc-snimak {
-    height: 340px;
+  .spc-video {
+    aspect-ratio: 1280 / 480;
   }
   .spc-stranica .catalog-grid,
   .spc-slog,

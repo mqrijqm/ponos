@@ -91,9 +91,19 @@ export default async function Page({
         */}
         {slug === "spc-vinyl-decking" && (
           <section className="spc-stranica">
-            <div className="spc-snimak" role="img" aria-label="Mjesto za snimak — SPC Vinyl">
-              <span aria-hidden="true">video</span>
-            </div>
+            <video
+              className="spc-video"
+              poster="/video/parket-poster.webp"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              aria-label="SPC pod u dnevnom boravku, snimljen odozgo"
+            >
+              <source src="/video/parket.webm" type="video/webm" />
+              <source src="/video/parket.mp4" type="video/mp4" />
+            </video>
             <ProductGrid items={items.filter((x) => x.brand !== "WPC")} />
             <div className="spc-traka">
               <h2>SPC VINYL</h2>
@@ -105,11 +115,9 @@ export default async function Page({
                 Pod je ekološki prihvatljiv i u potpunosti se može reciklirati.
               </p>
               <p>
-                Natural Floor kolekcija idealna je za podno grijanje i efikasno
-                provodi toplotu bez promjene svojih parametara. Inovativna
-                jezgra sačinjena je od 80% prirodnih komponenti, uz polimere
-                koji podu daju otpornost na udarce i oštećenja, stabilne
-                dimenzije i jednostavnu ugradnju.
+                Inovativna jezgra sačinjena je od 80% prirodnih komponenti, uz
+                polimere koji podu daju otpornost na udarce i oštećenja,
+                stabilne dimenzije i jednostavnu ugradnju.
               </p>
             </div>
 
