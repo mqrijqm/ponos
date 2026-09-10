@@ -2,19 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { catalog, productImage } from "@/data/catalog";
-import Znak from "./Znak";
 
 /**
- * Prvi blok ispod heroja: recenica o firmi sa strelicom, pa dva artikla.
+ * Prvi blok ispod heroja: traka artikala.
  *
- * Artikli nisu prepisani nego uzeti iz kataloga — ista tri koja stoje i na
+ * Artikli nisu prepisani nego uzeti iz kataloga — isti koji stoje i na
  * /proizvodi. Kad se katalog promijeni, promijeni se i ovdje; dva spiska
  * istih artikala razidju se prvi put kad neko doda cetvrti.
  *
- * Kartica nosi samo dekor i oznaku. Ime artikla i kolekcija stoje na
- * /proizvodi i na stranici artikla; ovdje bi tri natpisa preko tri slike
- * potukla ono zbog cega red i postoji — sam dekor. Ime i dalje postoji za
- * citac ekrana, kroz `alt` fotografije.
+ * Kartica nosi samo dekor — bez natpisa i bez oznake. Ime artikla i
+ * kolekcija stoje na /proizvodi i na stranici artikla; ovdje bi natpisi
+ * preko slika potukli ono zbog cega red i postoji — sam dekor. Ime i dalje
+ * postoji za citac ekrana, kroz `alt` fotografije.
  */
 
 /*
@@ -45,18 +44,6 @@ const artikli = catalog.filter((p) => !izrezNaBijelom.has(p.code));
 export default function LandingUvod() {
   return (
     <section className="uvod is-fullbleed" aria-label="Šta radimo">
-      <div className="uvod-red">
-        <p className="uvod-tekst">
-          Specijalizovan je za veleprodaju i maloprodaju, dostavu i ugradnju
-          laminata, parketa, vinila i deckinga.
-        </p>
-        {/*
-          Znak se okrece oko svoje ose i vodi na katalog — isto odrediste kao
-          i kartice ispod. Isti znak stoji i u sekciji o kvalitetu.
-        */}
-        <Znak />
-      </div>
-
       {/*
         Traka ide sama, u krug. Zato dva puta isti spisak: kad prvi prodje,
         drugi je vec na njegovom mjestu, pa se sastav ne vidi. Kopija je samo
@@ -84,7 +71,6 @@ export default function LandingUvod() {
                   fill
                   sizes="(max-width: 767px) 42vw, 220px"
                 />
-                {p.badge && <span className="uvod-oznaka">{p.badge}</span>}
               </Link>
             )),
           )}
