@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Comfortaa } from "next/font/google";
+import { Comfortaa, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import PoruciCursor from "@/components/PoruciCursor";
@@ -21,6 +21,21 @@ const mansory = localFont({
   src: [{ path: "../fonts/Mansory-Regular.woff2", weight: "400", style: "normal" }],
   display: "swap",
   variable: "--font-mansory",
+});
+/*
+  Playfair Display nosi samo sekciju "Asortiman" ispod snimka. Predlozak za
+  tu sekciju je visokokontrastni serif sa tankim potezima i kuglicama na
+  zavrsecima — Mansory je drugaciji rez i taj slog ne daje.
+
+  Uspravni i kurzivni rez: kurziv nosi natpise uz slike, kao u predlosku.
+  `latin-ext` je zbog nasih slova (c, s, z sa kvacicama).
+*/
+const playfair = Playfair_Display({
+  subsets: ["latin-ext"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-playfair",
 });
 /* Samo srednja debljina i samo latinica: natpis preko heroja je jedini
    tekst u ovom fontu, pa nema smisla skidati cijelu familiju. */
@@ -57,7 +72,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bs">
-      <body className={`${mansory.variable} ${comfortaa.variable}`}>
+      <body className={`${mansory.variable} ${comfortaa.variable} ${playfair.variable}`}>
         <QuoteProvider>
           <SmoothScroll>{children}</SmoothScroll>
           <PoruciCursor />

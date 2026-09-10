@@ -11,7 +11,7 @@ import { track } from "@/lib/analytics";
 import { Footer, ProductsNav } from "./SiteChrome";
 import QualityPage from "./QualityPage";
 import WpcDeckingSection from "./WpcDeckingSection";
-import EditorialStatement from "./EditorialStatement";
+import Asortiman from "./landing/Asortiman";
 import BasketMenu from "./BasketMenu";
 import HeroVideo from "./hero/HeroVideo";
 import CategoryCarousel from "./mobile/CategoryCarousel";
@@ -203,12 +203,12 @@ export default function SitePage() {
         <span id="podovi" />
         <span id="o-nama" />
         {/*
-          Ispod snimka je stajala traka artikala koja se vrti sama, pa traka
-          sa jednom recenicom. Oboje je izaslo: ista takva traka slika stoji
-          na dnu stranice, iznad podnozja, i dvaput je bilo jednom previse.
-          Sada snimak vodi pravo u izjavu.
+          Ispod snimka je stajala traka artikala koja se vrti sama, traka sa
+          jednom recenicom, pa izjava o asortimanu. Sve troje je izaslo:
+          ista takva traka slika stoji na dnu stranice, a izjava je govorila
+          ono sto sekcija ispod sada pokazuje.
         */}
-        <EditorialStatement />
+        <Asortiman />
         {/*
           Ponuda odmah ispod izjave: uspravne slike po grupama, kroz koje se
           prevlaci prstom. Ovdje je ranije stajao par slika koji se nije dao
