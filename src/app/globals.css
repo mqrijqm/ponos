@@ -8455,3 +8455,28 @@ main > section.video-traka {
   aspect-ratio: 1280 / 570;
   object-fit: cover;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DVIJE KRUPNE RECENICE — FIKSAN REZ I BOJA
+   Izjava o firmi i recenica o kvalitetu su isti slog i moraju stajati
+   isto na svakoj sirini: serif, bez obzira na to sta koja sekcija
+   postavlja oko njih, i u #8b7e6e — ne u beige kojim ide ostatak
+   pasusa.
+
+   `!important` jer pravilo koje sve pasuse vodi u beige takodje ide sa
+   `!important` (vidi "TELEFON: DVIJE BOJE TEKSTA"); bez toga bi ove dvije
+   recenice bile jedini izuzetak koji ne moze da se izbori.
+   ═══════════════════════════════════════════════════════════════════ */
+.editorial-statement .es-text,
+.editorial-statement .es-word,
+.quality-page .quality-statement h2,
+.quality-page .quality-statement .qs-lede,
+main .quality-statement h2,
+main .quality-statement .qs-lede {
+  color: #8b7e6e !important;
+  font-family: var(--font-mansory), Georgia, serif !important;
+}
+/* Naglasene rijeci u izjavi ne izlaze iz boje — nosila ih je smedja. */
+.editorial-statement .es-word-accent {
+  color: #8b7e6e !important;
+}
